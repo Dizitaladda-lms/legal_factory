@@ -6,7 +6,7 @@ import { FaInstagram, FaYoutube, FaLinkedinIn } from "react-icons/fa6";
 // Shared footer for public law coaching pages. Replace contact/social placeholders before launch.
 export default function BatchesFooter({
   brandName = "Legal Factory",
-  phone = "[Add phone number]",
+  phone = "9266500226",
   email = "[Add email address]",
 }) {
   return (
@@ -53,7 +53,7 @@ export default function BatchesFooter({
           <div>
             <h2 className="text-sm font-bold">Contact</h2>
             <ul className="mt-4 space-y-3 text-sm text-white/70">
-              <li><span className="block text-xs uppercase tracking-wide text-white/45">Phone</span>{phone}</li>
+              <li><span className="block text-xs uppercase tracking-wide text-white/45">Phone</span><a className="hover:text-white" href={`tel:${phone.replace(/\D/g, "")}`}>{phone}</a></li>
               <li><span className="block text-xs uppercase tracking-wide text-white/45">Email</span>{email}</li>
               <li><span className="block text-xs uppercase tracking-wide text-white/45">Address</span>[Add office address]</li>
             </ul>
