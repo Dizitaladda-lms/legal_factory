@@ -437,6 +437,12 @@ button, input, select, textarea {
 .law-site #current-affairs,
 .law-site #roadmap,
 .law-site #latest-blogs { background-color: var(--lf-section-soft); }
+.law-site .news-card__shade { background: linear-gradient(180deg, rgba(20, 22, 28, 0.06) 5%, rgba(20, 22, 28, 0.92) 100%); }
+.law-site .news-card:hover img { transform: scale(1.04); }
+.law-site .news-card h3,
+.law-site .news-card p,
+.law-site .news-card time,
+.law-site .news-card a { color: var(--lf-white) !important; }
 .law-site h1 { font-size: clamp(2.5rem, 4.2vw, 3.5rem); }
 
 /* Supreme Court hero photo with the existing copy layered above it. */
@@ -464,6 +470,13 @@ button, input, select, textarea {
 .roadmap-step { display: flex; flex-direction: column; align-items: stretch; }
 .roadmap-step article { grid-column: auto; margin-top: 1rem; }
 .roadmap-card { width: 100%; aspect-ratio: 1 / 1; min-height: 0; }
+.roadmap-card { position: relative; isolation: isolate; transition: transform 220ms ease, box-shadow 220ms ease; }
+.roadmap-card::before { content: ""; position: absolute; z-index: -1; inset: 0; background: var(--lf-crimson); opacity: 0; transition: opacity 220ms ease; }
+.roadmap-card:hover::before,
+.roadmap-card:focus-within::before,
+.roadmap-card:active::before { opacity: 0.62; }
+.roadmap-card:hover,
+.roadmap-card:focus-within { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(20, 22, 28, 0.2); }
 .roadmap-track::before { display: none !important; }
 @media (max-width: 767px) {
   .roadmap-card { aspect-ratio: auto; min-height: 360px; }

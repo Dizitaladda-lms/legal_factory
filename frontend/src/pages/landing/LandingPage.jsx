@@ -43,6 +43,8 @@ const learningPillars = [
   },
 ];
 
+const fallbackNewsThumbnail = "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202305/sc_clear_with_1bird-sixteen_nine.jpg?VersionId=IVPCmYoTLq6B.E_JCWaZKBbrcOYnjJaS";
+
 // Replace the profile text and photo placeholders with verified trainer details.
 const trainers = [
   { subject: "CLAT UG", name: "[Trainer name]", qualification: "[Verified qualification]", experience: "[Add relevant teaching experience]" },
@@ -334,13 +336,23 @@ export default function LandingPage() {
           ) : visibleNews.length ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {visibleNews.map((post) => (
-                <article key={post.id || post.url} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
-                  <p className="text-sm font-semibold text-[#d74752]">{post.source || post.category || "Law and current affairs"}</p>
-                  <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
-                  <p className="mt-3 flex-1 text-[#686868]">{post.category || "Law and current affairs"}</p>
-                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
-                    <time dateTime={post.published_at || undefined}>{formatNewsDate(post.published_at)}</time>
-                    <a href={post.url} target="_blank" rel="noreferrer" className="font-semibold text-[#d74752] hover:underline">Read at source</a>
+                <article key={post.id || post.url} className="news-card relative flex min-h-[320px] flex-col justify-end overflow-hidden rounded-2xl border border-[#eee8e8] bg-[#292929]">
+                  <img
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500"
+                    src={post.thumbnail || fallbackNewsThumbnail}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="news-card__shade absolute inset-0" aria-hidden="true" />
+                  <div className="relative z-10 p-6 text-white">
+                    <p className="text-sm font-semibold text-white">{post.source || post.category || "Law and current affairs"}</p>
+                    <h3 className="mt-3 text-xl font-bold leading-snug text-white">{post.title}</h3>
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/30 pt-4 text-sm text-white">
+                      <time dateTime={post.published_at || undefined}>{formatNewsDate(post.published_at)}</time>
+                      <a href={post.url} target="_blank" rel="noreferrer" className="font-semibold text-white underline underline-offset-4">Read</a>
+                    </div>
                   </div>
                 </article>
               ))}

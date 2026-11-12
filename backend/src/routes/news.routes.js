@@ -23,6 +23,19 @@ const readTag = (xml, tag) => {
   return match ? decodeXml(match[1]) : "";
 };
 
+const readThumbnail = (item) => {
+  const mediaMatch = item.match(/<(?:media:thumbnail|media:content|enclosure)\b[^>]*\burl=["']([^"']+)["']/i);
+  const description = readTag(item, "description");
+  const imageMatch = description.match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
+  const thumbnail = decodeXml(mediaMatch?.[1] || imageMatch?.[1] || "");
+  try {
+    const parsed = new URL(thumbnail);
+    return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : null;
+  } catch {
+    return null;
+  }
+};
+
 const makeFeedUrl = (query) => {
   const params = new URLSearchParams({ q: query, hl: "en-IN", gl: "IN", ceid: "IN:en" });
   return `https://news.google.com/rss/search?${params.toString()}`;
@@ -47,6 +60,7 @@ const fetchFeed = async (query, category) => {
       url: link,
       source: source || "Google News",
       category,
+      thumbnail: readThumbnail(item),
       published_at: Number.isNaN(Date.parse(publishedAt)) ? null : new Date(publishedAt).toISOString(),
     };
   }).filter(Boolean);
