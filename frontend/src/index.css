@@ -136,6 +136,17 @@ button, input, select, textarea {
   border-collapse: collapse;
   margin: 1.25rem 0;
 }
+
+/* Scoped public law-coaching design system; dashboard screens keep their existing theme. */
+.law-site {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+.law-site :is(h1, h2, h3, h4) {
+  font-family: 'Poppins', 'Inter', sans-serif;
+}
+.law-site :is(button, input, select, textarea) {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
 .blog-editor-canvas th, .blog-editor-canvas td {
   border: 1px solid #CBD5E1;
   padding: 0.5rem 0.75rem;

@@ -1,6 +1,6 @@
--- Public course catalog for the standalone law coaching pages.
--- Run this in the Supabase SQL Editor, then add confirmed prices, schedules,
--- faculty and policy details before setting is_published = true.
+-- Public course catalog for the law coaching pages.
+-- The starter records are published with missing prices/dates left null; the UI
+-- displays clear placeholders until the institute adds confirmed details.
 
 create table if not exists public.law_courses (
   id uuid primary key default gen_random_uuid(),
@@ -137,7 +137,7 @@ create policy "Public can read faculty for published courses" on public.law_cour
   );
 
 -- Starter CLAT record: known course details only. Prices, dates and faculty stay empty
--- until supplied by the institute. Add course content through the Supabase dashboard.
+-- until supplied by the institute. Course content can be edited in the Supabase dashboard.
 insert into public.law_courses (slug, name, description, language, duration_label)
 values (
   'clat-ug-2028-1-year-batch',
@@ -148,8 +148,31 @@ values (
 )
 on conflict (slug) do nothing;
 
+insert into public.law_courses (slug, name, description, language, duration_label)
+values
+  (
+    'judiciary-online-coaching',
+    'Judiciary Exam Coaching',
+    'Build a strong foundation in core legal subjects with structured lessons, legal writing practice and preparation that can be adapted to the notified syllabus of your target state.',
+    'Hindi + English',
+    'Duration to be announced'
+  ),
+  (
+    'clat-pg-online-coaching',
+    'CLAT PG Coaching',
+    'Prepare for postgraduate law entrance with subject revision, passage-based legal comprehension and practice across the official CLAT PG subject areas.',
+    'Hindi + English',
+    'Duration to be announced'
+  )
+on conflict (slug) do nothing;
+
+-- These three courses are visible with honest placeholders for price and date.
+update public.law_courses
+set is_published = true
+where slug in ('clat-ug-2028-1-year-batch', 'judiciary-online-coaching', 'clat-pg-online-coaching');
+
 insert into public.law_course_benefits (course_id, title, description, icon, position)
-select id, item.title, item.description, item.icon, item.position
+select c.id, item.title, item.description, item.icon, item.position
 from public.law_courses c
 cross join (values
   ('Live Classes', 'Attend guided lessons and ask questions in class.', '◷', 1),
@@ -159,20 +182,33 @@ cross join (values
   ('Doubt Support', 'Get help with questions and difficult concepts.', '?', 5),
   ('Mentorship', 'Get guidance for planning and consistent study.', '✦', 6)
 ) as item(title, description, icon, position)
-where c.slug = 'clat-ug-2028-1-year-batch'
+where c.slug in ('clat-ug-2028-1-year-batch', 'judiciary-online-coaching', 'clat-pg-online-coaching')
 on conflict (course_id, position) do nothing;
 
 insert into public.law_course_modules (course_id, title, description, position)
 select c.id, item.title, item.description, item.position
 from public.law_courses c
 cross join (values
-  ('English Language', 'Build reading comprehension, vocabulary and language skills through guided practice.', 1),
-  ('Current Affairs and GK', 'Study current affairs and general knowledge with regular revision prompts.', 2),
-  ('Legal Reasoning', 'Practice legal principles, passages and application-based questions.', 3),
-  ('Logical Reasoning', 'Develop reasoning skills with structured methods and question practice.', 4),
-  ('Quantitative Techniques', 'Review core quantitative concepts and apply them to CLAT-style sets.', 5)
-) as item(title, description, position)
-where c.slug = 'clat-ug-2028-1-year-batch'
+  ('clat-ug-2028-1-year-batch', 'English Language', 'Build reading comprehension, vocabulary and language skills through guided practice.', 1),
+  ('clat-ug-2028-1-year-batch', 'Current Affairs and GK', 'Study current affairs and general knowledge with regular revision prompts.', 2),
+  ('clat-ug-2028-1-year-batch', 'Legal Reasoning', 'Practice legal principles, passages and application-based questions.', 3),
+  ('clat-ug-2028-1-year-batch', 'Logical Reasoning', 'Develop reasoning skills with structured methods and question practice.', 4),
+  ('clat-ug-2028-1-year-batch', 'Quantitative Techniques', 'Review core quantitative concepts and apply them to CLAT-style sets.', 5),
+  ('judiciary-online-coaching', 'Constitutional and Administrative Law', 'Study constitutional principles, governance and administrative law. Confirm the final topic list against your target state notification.', 1),
+  ('judiciary-online-coaching', 'Civil Law', 'Build foundations in civil procedure, contracts, torts and property law, with state-specific coverage added where applicable.', 2),
+  ('judiciary-online-coaching', 'Criminal Law and Procedure', 'Revise core criminal law and procedure topics for judicial services preparation; update the exact statutes and syllabus for the target state.', 3),
+  ('judiciary-online-coaching', 'Law of Evidence', 'Practice rules of relevancy, admissibility and proof, with current statutory references.', 4),
+  ('judiciary-online-coaching', 'Family and Personal Laws', 'Review family and personal law principles commonly covered in state judicial services syllabi.', 5),
+  ('judiciary-online-coaching', 'Judgment Writing and Legal Language', 'Develop structured legal writing, judgment drafting and language skills through guided exercises.', 6),
+  ('judiciary-online-coaching', 'State Laws and General Knowledge', 'Add the local laws, language paper and general knowledge topics required by the selected state exam.', 7),
+  ('clat-pg-online-coaching', 'Constitutional Law', 'Refresh key constitutional principles, doctrines, provisions and landmark judgments through passage-based practice.', 1),
+  ('clat-pg-online-coaching', 'Jurisprudence and Administrative Law', 'Review jurisprudential schools, legal concepts, administrative principles and leading decisions.', 2),
+  ('clat-pg-online-coaching', 'Contract, Torts, Family and Property Law', 'Revise the core private-law subjects and apply concepts to extracts from legal materials.', 3),
+  ('clat-pg-online-coaching', 'Criminal, Company and Public International Law', 'Review the core principles and important legal developments across these subject areas.', 4),
+  ('clat-pg-online-coaching', 'Tax, Environmental, Labour and Industrial Law', 'Cover these CLAT PG subject areas through concise revision and passage-based questions.', 5),
+  ('clat-pg-online-coaching', 'Legal Passage Comprehension', 'Practice reading judgments, statutes and regulations, identifying issues and applying legal principles.', 6)
+) as item(slug, title, description, position)
+where c.slug = item.slug
 on conflict (course_id, position) do nothing;
 
 insert into public.law_module_items (module_id, title, position)
@@ -183,7 +219,7 @@ cross join (values
   ('Concept videos', 1), ('Notes / PDF', 2), ('Practice questions', 3),
   ('Sectional test', 4), ('Doubt session', 5)
 ) as item(title, position)
-where c.slug = 'clat-ug-2028-1-year-batch'
+where c.slug in ('clat-ug-2028-1-year-batch', 'judiciary-online-coaching', 'clat-pg-online-coaching')
 on conflict (module_id, position) do nothing;
 
 insert into public.law_course_tests (course_id, title, description, icon, position)
@@ -194,5 +230,5 @@ cross join (values
   ('Previous year papers', 'Practice with previous year question papers and review solutions.', '↻', 2),
   ('Performance analysis', 'Review scores and section-wise performance after each test.', '⌁', 3)
 ) as item(title, description, icon, position)
-where c.slug = 'clat-ug-2028-1-year-batch'
+where c.slug in ('clat-ug-2028-1-year-batch', 'judiciary-online-coaching', 'clat-pg-online-coaching')
 on conflict (course_id, position) do nothing;

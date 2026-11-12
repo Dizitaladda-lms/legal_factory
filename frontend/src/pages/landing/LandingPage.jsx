@@ -1,582 +1,314 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
-
-// Shared Components & Data
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  CheckCircle2,
+  Clock3,
+  FileQuestion,
+  Gavel,
+  GraduationCap,
+  Languages,
+  Scale,
+  Target,
+} from "lucide-react";
+import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
-import BatchCard from "../../components/batches/BatchCard";
 import BatchesFooter from "../../components/batches/BatchesFooter";
-import FloatingHelpButton from "../../components/batches/FloatingHelpButton";
-import { CA_BATCHES_DATA, FACULTY_MEMBERS } from "../../data/caBatchesData";
 
-const getMentorVideo = (url) => {
-  const value = String(url || "").trim();
-  if (!value) return { type: "placeholder" };
-  const youtubeId = value.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|shorts\/|watch\?v=))([\w-]{11})/)?.[1];
-  if (youtubeId) return { type: "embed", src: `https://www.youtube-nocookie.com/embed/${youtubeId}?rel=0` };
-  const vimeoId = value.match(/vimeo\.com\/(?:video\/)?(\d+)/)?.[1];
-  if (vimeoId) return { type: "embed", src: `https://player.vimeo.com/video/${vimeoId}` };
-  if (/^https:\/\/[^\s]+\.(mp4|webm)(?:\?.*)?$/i.test(value)) return { type: "file", src: value };
-  return { type: "placeholder" };
+const formatPrice = (amount, currency = "INR") => {
+  if (amount == null || amount === "") return "Contact for price";
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: currency || "INR",
+    maximumFractionDigits: 0,
+  }).format(Number(amount));
 };
 
+const formatDate = (value) => {
+  if (!value) return "To be announced";
+  const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+  return Number.isNaN(date.getTime())
+    ? "To be announced"
+    : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+};
+
+const courseType = (course) => {
+  const slug = (course.slug || "").toLowerCase();
+  if (slug.includes("judiciary")) return "JUDICIARY";
+  if (slug.includes("pg")) return "CLAT PG";
+  return "CLAT UG";
+};
+
+const learningPillars = [
+  {
+    icon: BookOpen,
+    title: "Learn with structure",
+    copy: "Follow a planned course path across your selected law exam subjects.",
+  },
+  {
+    icon: Target,
+    title: "Practice with purpose",
+    copy: "Build consistency with questions, sectional practice and mock tests.",
+  },
+  {
+    icon: FileQuestion,
+    title: "Get learning support",
+    copy: "Use classes and doubt support to clarify concepts as you prepare.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Which law entrance courses are available?",
+    a: "The current catalog includes CLAT UG, Judiciary and CLAT PG courses. Open Courses to see the published batches and their latest details.",
+  },
+  {
+    q: "Can I study in Hindi and English?",
+    a: "Course language is listed on each course card. The current law programs are planned for Hindi + English learning support.",
+  },
+  {
+    q: "How can I see the latest batch date and fee?",
+    a: "Open a course card for the current database details. If a date or fee has not been announced yet, the page will say so clearly.",
+  },
+  {
+    q: "Can I attend a demo class?",
+    a: "Use the Free Demo Class link on a course page to find the current demo booking details.",
+  },
+];
+
 export default function LandingPage() {
-  const navigate = useNavigate();
-  const BRAND_NAME = "CS Factory";
-  const mentorVideo = getMentorVideo(import.meta.env.VITE_MENTOR_MESSAGE_VIDEO_URL);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
-  // Tab state for Popular Courses
-  const [courseCategory, setCourseCategory] = useState("all");
-
-  // FAQ Accordion State
-  const [openFaqIndex, setOpenFaqIndex] = useState(0);
-
-  // Filter Popular Courses
-  const popularCourses = CA_BATCHES_DATA.filter((course) => {
-    if (courseCategory === "all") {
-      // Pick top flagship courses across levels
-      return [
-        "ca-foundation-sampurna-3-0-jan-2027",
-        "ca-inter-udesh-regular-sep-2027-group--1-2--combo",
-        "ca-inter-udesh-regular-sep-2027-group-1",
-        "ca-final-regular-batch-2-0-group-1-combo",
-        "ca-final-regular-batch-2-0-financial-reporting",
-        "cs-executive-group-combo",
-      ].includes(course.id);
-    }
-    if (courseCategory === "foundation") {
-      return course.level === "foundation";
-    }
-    if (courseCategory === "intermediate") {
-      return course.level === "intermediate";
-    }
-    if (courseCategory === "final") {
-      return course.level === "final";
-    }
-    if (courseCategory === "cs") {
-      return course.exam === "cs";
-    }
-    return true;
-  }).slice(0, 6);
-
-  // FAQ Data for CA & CS Aspirants
-  const faqs = [
-    {
-      q: "What programs are offered at CA Factory?",
-      a: "CA Factory provides full-spectrum coaching across all 3 levels of Chartered Accountancy: CA Foundation (all 4 papers), CA Intermediate (Group 1 & Group 2), and CA Final (FR, AFM, DT, IDT, Audit & IBS). We also provide specialized batches for Company Secretary (CSEET, CS Executive, and CS Professional).",
-    },
-    {
-      q: "Are the lectures aligned with the latest ICAI & ICSI New Scheme?",
-      a: "Yes, 100%. All batches are updated under the latest ICAI and ICSI New Schemes, including the 30% case-scenario MCQ weightage, negative marking rules, Self-Paced Online Modules (SPOM) strategy, and latest Finance Act tax amendments.",
-    },
-    {
-      q: "Can I watch recorded lectures if I miss a live session?",
-      a: "Absolutely! Every live lecture is automatically archived in crisp 1080p HD within 2 hours of completion. You get unlimited playback views at adjustable speeds (1x, 1.25x, 1.5x, 2x) until your exam attempt is completed.",
-    },
-    {
-      q: "How does doubt support work at CA Factory?",
-      a: "We provide dual-layer doubt resolution. During live sessions, students can ask real-time audio and chat questions. After class, students can upload photos of problematic problems to our 24/7 in-app Doubt Engine, where subject faculties solve doubts within 15 minutes.",
-    },
-    {
-      q: "Do you offer hardcopy books and study materials?",
-      a: "Yes! Our Pro and Infinity packs include colored hardcopy theory modules, question banks with ICAI RTP/MTP/PYQs, and summary formula charts delivered right to your residential address with free tracking.",
-    },
-    {
-      q: "Is there a test series included with evaluation?",
-      a: "Every batch includes chapter-wise Daily Practice Problems (DPPs), weekly unit tests, and 2 full-syllabus ICAI simulation mock tests. Subjective answer sheets are audited by qualified Chartered Accountants with step-by-step marking within 72 hours.",
-    },
-  ];
-
-  // Key stats
-  const stats = [
-    { value: "1,50,000+", label: "Aspirants Mentored" },
-    { value: "87.4%", label: "First Attempt Pass Rate" },
-    { value: "50+ AIR", label: "Top Ranks Produced" },
-    { value: "10,000+", label: "Hours HD Content" },
-  ];
-
-  // Why choose us items
-  const whyChooseUsFeatures = [
-    {
-      step: "01",
-      title: "Conceptual Clarity over Rote Learning",
-      desc: "Master the fundamental 'Why' behind every Ind AS standard, Companies Act section, and Income Tax provision with real-world corporate case studies.",
-      badge: "Concept First",
-    },
-    {
-      step: "02",
-      title: "100% ICAI & ICSI New Scheme Aligned",
-      desc: "Complete coverage of the revised 6-paper Intermediate and Final structures, SPOM modules, and latest Finance Act direct/indirect tax amendments.",
-      badge: "Always Updated",
-    },
-    {
-      step: "03",
-      title: "Daily Practice & Answer Auditing",
-      desc: "Comprehensive DPPs with step marking evaluated by qualified CAs. Learn how to structure answers to score guaranteed 70+ exemption marks.",
-      badge: "Evaluated Mocks",
-    },
-    {
-      step: "04",
-      title: "Unlimited Views & Offline Downloads",
-      desc: "Never fall behind your study timetable. Watch live or download lectures offline in our mobile app to learn anytime, anywhere at your convenience.",
-      badge: "Flexible Access",
-    },
-    {
-      step: "05",
-      title: "24/7 Dedicated Doubt Engine",
-      desc: "Stuck on a complex consolidation or taxation problem at midnight? Upload your question and get detailed step-by-step solutions from subject mentors.",
-      badge: "Instant Resolution",
-    },
-    {
-      step: "06",
-      title: "All-India Test Series & Ranking",
-      desc: "Benchmark your preparation against thousands of students across India with simulated ICAI 3-hour tests and granular question analytics.",
-      badge: "All-India Rank",
-    },
-  ];
+  useEffect(() => {
+    let active = true;
+    api
+      .get("/api/law-courses")
+      .then(({ data }) => {
+        if (!active) return;
+        setCourses(Array.isArray(data?.courses) ? data.courses : []);
+        setLoadError(false);
+      })
+      .catch(() => {
+        if (active) setLoadError(true);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-white text-[#1B2124] flex flex-col antialiased">
-      {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName={BRAND_NAME} />
-
-      {/* 2. HERO SECTION: INTRO TO CA FACTORY */}
-      <section className="relative bg-white pt-10 pb-16 md:pt-16 md:pb-24 border-b border-[#EFEFEF]">
-
-        <div className="edtech-container relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column: Heading & Intro */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              {/* Slogan Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#5A4BFF]/10 border border-[#5A4BFF]/20 text-[#5A4BFF] text-xs font-bold tracking-wide">
-                <span>India's Dedicated CA & CS Edtech • Selection Hoga Yahi Se!!</span>
-              </div>
-
-              {/* Main Heading */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-extrabold tracking-tight text-[#1B2124] leading-[1.15]">
-                Welcome to{" "}
-                <span className="text-[#5A4BFF] relative inline-block">
-                  CA Factory
-                  <span className="absolute left-0 bottom-1 w-full h-[6px] bg-[#F59E0B]/30 rounded-full -z-10" />
-                </span>
-                <br />
-                Your Gateway to CA & CS Ranks
-              </h1>
-
-              {/* Intro Description */}
-              <p className="text-sm sm:text-base md:text-lg text-[#757575] leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                <strong className="text-[#1B2124] font-semibold">{BRAND_NAME}</strong> is India's premier online coaching platform built exclusively for Chartered Accountancy & Company Secretary aspirants. We blend All-India Ranker mentors, 100% ICAI syllabus coverage, daily answer evaluation, and 24/7 doubt resolution to make passing exams predictable and achievable.
+    <div className="law-site min-h-screen bg-white text-[#292929]">
+      <BatchesHeader brandName="[WEBSITE NAME]" />
+      <main>
+        {/* Hero and primary course discovery */}
+        <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#fffafa]">
+          <div className="pointer-events-none absolute -right-32 -top-40 h-[430px] w-[430px] rounded-full border border-[#f1dfe0]" />
+          <div className="pointer-events-none absolute -right-16 -top-24 h-[300px] w-[300px] rounded-full border border-[#f1dfe0]" />
+          <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
+            <div className="relative z-10">
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#edc9cc] bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#bd2531]">
+                <Scale size={15} /> Law entrance and judiciary preparation
               </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-                <Link
-                  to="/courses"
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-[6px] bg-[#5A4BFF] hover:bg-[#4939E8] text-white text-sm font-bold transition shadow-md hover:shadow-lg flex items-center justify-center cursor-pointer"
-                >
-                  Explore Batches
-                </Link>
-
-                <a
-                  href="#why-choose-us"
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-[6px] border border-[#EFEFEF] bg-white hover:bg-slate-50 text-[#1B2124] text-sm font-semibold transition flex items-center justify-center cursor-pointer"
-                >
-                  Why CA Factory?
+              <h1 className="max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-.045em] text-[#252525] sm:text-5xl lg:text-[3.7rem]">
+                Prepare for your <span className="text-[#c92835]">future in law.</span>
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-[#666] sm:text-lg sm:leading-8">
+                Explore structured online coaching for CLAT UG, Judiciary and CLAT PG, with course information and learning support in Hindi + English.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#a91f2b]">
+                  Explore Courses <ArrowRight size={17} />
                 </a>
-
-                <Link
-                  to="/courses?exam=cs"
-                  className="w-full sm:w-auto px-5 py-3.5 rounded-[6px] border border-amber-300 bg-amber-50/70 hover:bg-amber-100/70 text-amber-900 text-sm font-semibold transition flex items-center justify-center"
-                >
-                  CS Programs
-                </Link>
+                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] transition hover:bg-[#fff3f3]">
+                  Book a Free Demo
+                </a>
               </div>
-
-              {/* Trust Indicators */}
-              <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-xs text-[#757575] font-medium">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
-                  <span>100% ICAI New Scheme Syllabus</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
-                  <span>Live Classes + Unlimited Backup</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0" />
-                  <span>Personal Doubt Support</span>
-                </div>
+              <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#676767]">
+                <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-[#c92835]" />Hindi + English support</span>
+                <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-[#c92835]" />Online learning</span>
               </div>
             </div>
 
-            {/* Right Column: Hero Visual Card */}
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl border border-[#EFEFEF] edtech-card-shadow p-6 sm:p-7 relative overflow-hidden space-y-6">
-                {/* Top Badge Strip */}
-                <div className="flex items-center justify-between border-b border-[#EFEFEF] pb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs font-bold text-[#1B2124]">Admissions Open • 2026-27</span>
+            <div className="relative mx-auto w-full max-w-xl">
+              <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#efd5d7] bg-white p-5 shadow-[0_22px_70px_rgba(96,28,34,.09)] sm:min-h-[400px] sm:p-7">
+                <div className="absolute inset-x-0 top-0 h-2 bg-[#c92835]" />
+                <div className="flex h-full min-h-[290px] flex-col justify-between rounded-[22px] bg-[#fff8f8] p-6 sm:min-h-[350px] sm:p-8">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Your legal learning path</span>
+                      <h2 className="mt-3 max-w-xs text-2xl font-bold leading-tight tracking-tight sm:text-3xl">Choose the exam you are preparing for</h2>
+                    </div>
+                    <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#c92835] text-white"><Gavel size={27} /></div>
+                  </div>
+                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                    {["CLAT UG", "Judiciary", "CLAT PG"].map((label, index) => (
+                      <a key={label} href="#courses" className="group rounded-2xl border border-[#eedcdd] bg-white p-4 transition hover:-translate-y-1 hover:border-[#c92835] hover:shadow-md">
+                        <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff0f1] text-[#c92835]">
+                          {index === 0 ? <GraduationCap size={19} /> : index === 1 ? <Scale size={19} /> : <BookOpen size={19} />}
+                        </span>
+                        <span className="mt-3 block text-sm font-bold">{label}</span>
+                        <span className="mt-1 inline-flex items-center text-xs text-[#777] group-hover:text-[#c92835]">View course <ArrowUpRight size={13} className="ml-1" /></span>
+                      </a>
+                    ))}
                   </div>
                 </div>
-
-                {/* Mentor's welcome video for CA and CS students */}
-                <section aria-label="Mentor welcome video" className="overflow-hidden rounded-xl border border-slate-200 bg-slate-950">
-                  <div className="relative aspect-video">
-                    {mentorVideo.type === "embed" ? (
-                      <iframe src={mentorVideo.src} title="A welcome message from your mentor" className="absolute inset-0 h-full w-full" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
-                    ) : mentorVideo.type === "file" ? (
-                      <video className="absolute inset-0 h-full w-full" controls playsInline preload="metadata" aria-label="A welcome message from your mentor">
-                        <source src={mentorVideo.src} />
-                        Your browser does not support video playback.
-                      </video>
-                    ) : (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[radial-gradient(circle_at_top_left,rgba(99,102,241,0.55),transparent_48%),linear-gradient(135deg,#111827,#172554)] px-6 text-center text-white">
-                        <span aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-white/70 bg-white/10 text-2xl">▶</span>
-                        <div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </section>
-
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Stats Ribbon */}
-          <div className="mt-14 pt-8 border-t border-[#EFEFEF] grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((item, idx) => (
-              <div key={idx} className="border-l-2 border-[#5A4BFF] pl-3.5">
-                <p className="text-2xl sm:text-3xl font-extrabold text-[#1B2124] tracking-tight">
-                  {item.value}
-                </p>
-                <p className="text-xs text-[#757575] font-medium mt-0.5">{item.label}</p>
-              </div>
+        {/* Exam-track navigation */}
+        <section className="border-b border-[#eee8e8] bg-white">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2.5 px-4 py-5 sm:px-6 lg:px-8">
+            <span className="mr-2 text-sm font-bold text-[#555]">Explore by goal</span>
+            {["CLAT UG", "Judiciary", "CLAT PG", "Test Series", "Free Resources"].map((label) => (
+              <a key={label} href={label.includes("Resource") ? "#resources" : label.includes("Test") ? "#test-series" : "#courses"} className="rounded-full border border-[#ece3e4] px-4 py-2 text-xs font-semibold text-[#5d5d5d] transition hover:border-[#c92835] hover:text-[#c92835] sm:text-sm">
+                {label}
+              </a>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 3. POPULAR COURSES SECTION */}
-      <section className="py-16 bg-white border-b border-[#EFEFEF]">
-        <div className="edtech-container">
-          {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#5A4BFF]/10 text-[#5A4BFF] text-xs font-bold rounded-full mb-2">
-                <span>Flagship Learning Batches</span>
+        {/* Learning pillars */}
+        <section id="approach" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">A considered way to prepare</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learning built around your law exam goals</h2>
+            <p className="mt-3 leading-7 text-[#686868]">Review the program structure, practice regularly and find support as your preparation progresses.</p>
+          </div>
+          <div className="mt-9 grid gap-4 md:grid-cols-3">
+            {learningPillars.map(({ icon: Icon, title, copy }, index) => (
+              <article key={title} className="rounded-2xl border border-[#eee8e8] bg-white p-6 transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(35,25,25,.07)]">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><Icon size={23} /></span>
+                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-[#c92835]">0{index + 1}</p>
+                <h3 className="mt-2 text-lg font-bold">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#6b6b6b]">{copy}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Course cards are loaded from the law-course catalog API. */}
+        <section id="courses" className="bg-[#fffafa] py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Find your program</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Courses for your next step in law</h2>
+                <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Current batch dates, language and pricing are shown from the course catalog.</p>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#3D3D3D]">
-                Our Popular CA & CS Courses
-              </h2>
-              <p className="text-xs md:text-sm text-[#757575] mt-1 max-w-xl">
-                Structured batches for Foundation, Intermediate, Final, and CS students with live classes, hardcopy books, and mentorship.
-              </p>
+              <Link to="/courses" className="inline-flex items-center gap-2 self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all courses <ArrowRight size={16} /></Link>
             </div>
 
-            {/* Filter Pills */}
-            <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl overflow-x-auto no-scrollbar self-start md:self-auto">
-              {[
-                { id: "all", label: "All Flagship" },
-                { id: "foundation", label: "Foundation" },
-                { id: "intermediate", label: "Intermediate" },
-                { id: "final", label: "Final" },
-                { id: "cs", label: "CS Coaching" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setCourseCategory(tab.id)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-                    courseCategory === tab.id
-                      ? "bg-white text-[#5A4BFF] shadow-xs font-bold"
-                      : "text-[#757575] hover:text-[#1B2124]"
-                  }`}
-                >
-                  {tab.label}
-                </button>
+            {loading ? (
+              <div className="mt-9 grid gap-5 md:grid-cols-3" aria-label="Loading courses">
+                {[0, 1, 2].map((item) => <div key={item} className="h-72 animate-pulse rounded-2xl border border-[#eee8e8] bg-white" />)}
+              </div>
+            ) : loadError ? (
+              <div className="mt-9 rounded-2xl border border-[#edc9cc] bg-white p-7 text-sm text-[#686868]">Course information is temporarily unavailable. Please try again shortly.</div>
+            ) : courses.length ? (
+              <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {courses.map((course) => (
+                  <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
+                    <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f9e9ea] p-5">
+                      <div className="absolute -right-7 -top-14 h-44 w-44 rounded-full border border-[#e9c1c4]" />
+                      <div className="absolute -right-1 -top-8 h-32 w-32 rounded-full border border-[#e9c1c4]" />
+                      <span className="relative inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[11px] font-bold tracking-wide text-[#c92835]"><Scale size={14} />{courseType(course)}</span>
+                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-xl font-bold leading-snug">{course.name}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#696969]">{course.description}</p>
+                      <div className="mt-4 grid grid-cols-2 gap-y-2 border-t border-[#f0ebeb] pt-4 text-xs text-[#646464]">
+                        <span className="inline-flex items-center gap-1.5"><Clock3 size={14} className="text-[#c92835]" />{formatDate(course.batch_start_date)}</span>
+                        <span className="inline-flex items-center gap-1.5"><Languages size={14} className="text-[#c92835]" />{course.language || "Hindi + English"}</span>
+                        <span className="col-span-2 font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
+                      </div>
+                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#c92835] px-4 text-sm font-bold text-[#c92835] transition hover:bg-[#c92835] hover:text-white">
+                        View Course Details <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="mt-9 rounded-2xl border border-dashed border-[#dfb8bb] bg-white p-8 text-center text-sm text-[#686868]">Course information will appear here when a program is published.</div>
+            )}
+          </div>
+        </section>
+
+        {/* Test preparation and resource pathways */}
+        <section id="test-series" className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
+          <article className="rounded-[26px] bg-[#c92835] p-7 text-white sm:p-9">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/15"><CheckCircle2 size={24} /></span>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-white/75">Practice pathway</p>
+            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Test series and performance review</h2>
+            <p className="mt-3 max-w-md text-sm leading-6 text-white/85">Course pages show the tests, previous-paper practice and analysis included in each program as details are added.</p>
+            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-[#b3212d] hover:bg-[#fff2f2]">See course details <ArrowRight size={16} /></Link>
+          </article>
+          <article id="resources" className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><BookOpen size={24} /></span>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Free preparation resources</p>
+            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Start with helpful study material</h2>
+            <p className="mt-3 max-w-md text-sm leading-6 text-[#686868]">Resource links and downloadable practice material can be added here as they are ready.</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {["CLAT practice", "Judiciary guides", "CLAT PG revision"].map((label) => <span key={label} className="rounded-full border border-[#eee3e4] px-3 py-1.5 text-xs font-semibold text-[#5f5f5f]">{label}</span>)}
+            </div>
+          </article>
+        </section>
+
+        {/* Placeholder zones for verified faculty and student stories */}
+        <section id="faculty" className="border-y border-[#eee8e8] bg-[#fffafa] py-16 sm:py-20">
+          <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-8">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Faculty and guidance</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learn with experienced law educators</h2>
+              <p className="mt-4 leading-7 text-[#686868]">Verified faculty profiles, subject expertise and teaching information will be added here.</p>
+              <Link to="/faculty" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#c92835]">Meet the faculty <ArrowRight size={16} /></Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {["Faculty photo", "Faculty photo", "Faculty photo"].map((label, index) => (
+                <div key={index} className="grid min-h-40 place-items-center rounded-2xl border border-dashed border-[#dab5b8] bg-white text-center text-xs font-semibold text-[#b15d63] sm:min-h-48">[Add verified faculty profile]</div>
               ))}
             </div>
           </div>
+        </section>
 
-          {/* Courses Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularCourses.map((course) => (
-              <BatchCard key={course.id} course={course} />
-            ))}
-          </div>
-
-          {/* Bottom Action: View All Batches */}
-          <div className="mt-10 text-center">
-            <Link
-              to="/courses"
-              className="inline-flex items-center px-6 py-3 rounded-[6px] bg-slate-100 hover:bg-[#5A4BFF] text-[#1B2124] hover:text-white text-xs sm:text-sm font-bold transition shadow-xs cursor-pointer"
-            >
-              Explore All Batches & Study Packs
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. WHY CHOOSE US ("WHY CA FACTORY?") */}
-      <section id="why-choose-us" className="py-16 bg-slate-50/70 border-b border-[#EFEFEF]">
-        <div className="edtech-container">
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-800 text-xs font-bold rounded-full border border-amber-200">
-              <span>Proven Pedagogy for CA Aspirants</span>
+        <section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+          <div className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
+            <div className="flex items-start gap-4">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><GraduationCap size={24} /></span>
+              <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Student experiences</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Stories from learners</h2><p className="mt-2 text-sm leading-6 text-[#686868]">Genuine student feedback and outcomes will be added here after approval.</p></div>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[#3D3D3D]">
-              Why Thousands of Toppers Choose CA Factory
-            </h2>
-            <p className="text-xs sm:text-sm text-[#757575]">
-              We understand the precision Chartered Accountancy demands. Here is how our comprehensive learning methodology turns your efforts into single-attempt success.
-            </p>
-          </div>
-
-          {/* 6 Feature Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyChooseUsFeatures.map((feat, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-xl border border-[#EFEFEF] edtech-card-shadow p-6 flex flex-col justify-between hover:border-[#5A4BFF]/50 transition-all duration-200 group"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-black text-[#5A4BFF]/80 font-mono tracking-tight">
-                      {feat.step}
-                    </span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#757575] bg-slate-100 px-2 py-0.5 rounded">
-                      {feat.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-base font-bold text-[#1B2124] mb-2 group-hover:text-[#5A4BFF] transition-colors leading-snug">
-                    {feat.title}
-                  </h3>
-
-                  <p className="text-xs text-[#757575] leading-relaxed">
-                    {feat.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Slogan Banner Inside Why Choose Us */}
-          <div className="mt-12 bg-[#0F172A] text-white rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800 shadow-md">
-            <div className="space-y-1 text-center md:text-left">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                Uncompromising Dedication
-              </span>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-                "Selection Hoga Yahi Se!!"
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                Join thousands of students who cleared CA Foundation, Intermediate, and Final on their very first attempt with CA Factory.
-              </p>
-            </div>
-
-            <Link
-              to="/courses"
-              className="px-6 py-3 bg-[#5A4BFF] hover:bg-[#4939E8] text-white text-xs sm:text-sm font-bold rounded-[6px] whitespace-nowrap transition shadow-md"
-            >
-              Start Learning Today
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. TOP FACULTY (WITH PHOTOS) */}
-      <section id="faculty" className="py-16 bg-white border-b border-[#EFEFEF]">
-        <div className="edtech-container">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#5A4BFF]/10 text-[#5A4BFF] text-xs font-bold rounded-full mb-2">
-                <span>Mentors Who Have Been There</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#3D3D3D]">
-                Learn from India's Top CA & CS Faculties
-              </h2>
-              <p className="text-xs md:text-sm text-[#757575] mt-1 max-w-2xl">
-                All-India Rank holders, Ex-Big 4 tax consultants, and celebrated authors with decades of experience guiding students to the merit list.
-              </p>
-            </div>
-
-            <Link
-              to="/courses#faculty"
-              className="inline-flex items-center text-xs font-bold text-[#5A4BFF] hover:underline self-start md:self-auto"
-            >
-              View Full Faculty Directory
-            </Link>
-          </div>
-
-          {/* Faculty Grid with Photos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FACULTY_MEMBERS.map((mentor) => (
-              <div
-                key={mentor.id}
-                className="bg-white rounded-xl border border-[#EFEFEF] edtech-card-shadow p-5 flex flex-col justify-between hover:border-[#5A4BFF]/50 transition-all duration-200 group"
-              >
-                <div>
-                  <div className="flex items-start gap-4 mb-4">
-                    {/* Faculty Photo Avatar */}
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden bg-slate-100 shrink-0 border-2 border-[#5A4BFF]/30">
-                      <img
-                        src={mentor.avatar}
-                        alt={mentor.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80";
-                        }}
-                      />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#5A4BFF]/10 text-[#5A4BFF]">
-                          {mentor.exam}
-                        </span>
-                        <span className="text-[11px] text-[#757575] font-medium truncate">
-                          {mentor.level}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-bold text-[#1B2124] truncate group-hover:text-[#5A4BFF] transition-colors">
-                        {mentor.name}
-                      </h3>
-                      <p className="text-xs text-[#757575] truncate mt-0.5">{mentor.role}</p>
-                    </div>
-                  </div>
-
-                  {/* Subject Specialization Box */}
-                  <div className="bg-slate-50 rounded-lg p-3 border border-[#EFEFEF] mb-4 space-y-0.5">
-                    <span className="text-[11px] font-bold text-[#757575] block uppercase tracking-wider">
-                      Subject Specialization
-                    </span>
-                    <p className="text-xs font-semibold text-[#1B2124]">{mentor.subject}</p>
-                  </div>
-                </div>
-
-                {/* Footer Metrics */}
-                <div className="flex items-center justify-between text-xs text-[#757575] border-t border-[#EFEFEF] pt-3">
-                  <span className="font-medium">{mentor.exp}</span>
-                  <span className="font-semibold text-[#1B2124]">
-                    {mentor.taughtStudents} Students
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. FAQ SECTION */}
-      <section className="py-16 bg-[#F8FAFC] border-b border-[#EFEFEF]">
-        <div className="edtech-container max-w-4xl">
-          <div className="bg-white rounded-2xl border border-[#EFEFEF] edtech-card-shadow p-6 sm:p-10">
-            {/* Header */}
-            <div className="text-center max-w-xl mx-auto mb-10 space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#5A4BFF]/10 text-[#5A4BFF] text-xs font-semibold">
-                <span>Got Questions?</span>
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-[#3D3D3D]">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-xs md:text-sm text-[#757575]">
-                Clear answers to everything you need to know about CA Factory batches, ICAI new scheme, and study support.
-              </p>
-            </div>
-
-            {/* Accordion Items */}
-            <div className="space-y-3">
-              {faqs.map((faq, idx) => {
-                const isOpen = openFaqIndex === idx;
-                return (
-                  <div
-                    key={idx}
-                    className="border border-[#EFEFEF] rounded-xl overflow-hidden transition-all duration-200"
-                  >
-                    <button
-                      type="button"
-                      onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                      className="w-full p-4 sm:p-5 flex items-center justify-between text-left bg-white hover:bg-slate-50 transition cursor-pointer"
-                      aria-expanded={isOpen}
-                    >
-                      <span className="text-sm sm:text-base font-bold text-[#1B2124] pr-4">
-                        {faq.q}
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 text-[#7B7F86] shrink-0 transition-transform duration-200 ${
-                          isOpen ? "rotate-180 text-[#5A4BFF]" : ""
-                        }`}
-                      />
-                    </button>
-
-                    {isOpen && (
-                      <div className="px-4 pb-5 pt-1 sm:px-5 border-t border-[#EFEFEF] bg-slate-50/50">
-                        <p className="text-xs sm:text-sm text-[#757575] leading-relaxed">
-                          {faq.a}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {[0, 1, 2].map((item) => <div key={item} className="rounded-2xl bg-[#fffafa] p-5"><p className="text-sm text-[#686868]">[Add an approved student experience]</p><p className="mt-4 text-xs font-semibold text-[#a96065]">[Student name · course]</p></div>)}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 7. PRE-FOOTER CTA SECTION */}
-      <section className="py-14 bg-white">
-        <div className="edtech-container">
-          <div className="bg-[#0F172A] rounded-2xl p-8 sm:p-12 text-white relative flex flex-col md:flex-row items-center justify-between gap-8 border border-slate-800 shadow-md">
-            <div className="space-y-2 text-center md:text-left max-w-xl">
-              <span className="text-xs font-bold tracking-wider uppercase text-amber-400">
-                Transform Your Preparation Today
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                Ready to Join India's Most Trusted CA & CS Academy?
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300">
-                Enroll in your target batch today, access 550+ hours of live classes, and get personal rank mentorship. Selection Hoga Yahi Se!
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-              <Link
-                to="/courses"
-                className="w-full sm:w-auto px-7 py-3.5 bg-[#5A4BFF] hover:bg-[#4939E8] text-white text-xs sm:text-sm font-bold rounded-[6px] transition shadow-md text-center"
-              >
-                Browse All Batches
-              </Link>
-              <a
-                href="tel:9876543210"
-                className="w-full sm:w-auto px-5 py-3.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-semibold rounded-[6px] transition text-center"
-              >
-                Call +91 98765 43210
-              </a>
+        <section className="bg-[#fffafa] py-16 sm:py-20">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Need help choosing?</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Frequently asked questions</h2></div>
+            <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
+              {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold"><span>{faq.q}</span><span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* FLOATING HELP BUTTON */}
-      <FloatingHelpButton
-        brandName={BRAND_NAME}
-        phone="+91 98765 43210"
-        rawPhone="9876543210"
-      />
-
-      {/* 8. FOOTER */}
-      <BatchesFooter
-        brandName={BRAND_NAME}
-        phone="+91 98765 43210"
-        email="support@cafactory.in"
-      />
+        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="flex flex-col justify-between gap-5 rounded-[26px] bg-[#292929] p-7 text-white sm:flex-row sm:items-center sm:p-9">
+            <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#ffb8bd]">Take the next step</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Find the right law preparation course</h2><p className="mt-2 text-sm text-white/70">Explore course details or get in touch about a free demo.</p></div>
+            <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses <ArrowRight size={16} /></Link>
+          </div>
+        </section>
+      </main>
+      <BatchesFooter brandName="[WEBSITE NAME]" />
     </div>
   );
 }
