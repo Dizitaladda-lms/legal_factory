@@ -1,35 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', 'Segoe UI', sans-serif;
-  --color-page-bg: #FFFFFF;
-  --color-heading: #3D3D3D;
-  --color-strong: #1B2124;
-  --color-muted: #757575;
-  --color-icon-grey: #7B7F86;
-  --color-border-edtech: #EFEFEF;
-  --color-table-header: #c2e0f4;
-  --color-primary: #D74752;
-  --color-primary-10: rgba(215, 71, 82, 0.1);
-  --color-accent: #D74752;
+  --font-sans: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  --font-serif: 'Playfair Display', 'Noto Serif Devanagari', serif;
+  --color-page-bg: var(--lf-white);
+  --color-heading: var(--lf-heading);
+  --color-strong: var(--lf-heading);
+  --color-muted: var(--lf-body);
+  --color-icon-grey: var(--lf-body);
+  --color-border-edtech: var(--lf-border);
+  --color-table-header: var(--lf-section-soft);
+  --color-primary: var(--lf-crimson);
+  --color-primary-10: var(--lf-section-soft);
+  --color-accent: var(--lf-crimson);
 }
 
 :root {
-  --bg: #FFFFFF;
-  --heading: #3D3D3D;
-  --text-strong: #1B2124;
-  --text-muted: #757575;
-  --icon-grey: #7B7F86;
-  --border: #EFEFEF;
-  --dot-inactive: #D9DCE1;
-  --dot-active: #414347;
-  --table-header: #c2e0f4;
-  --table-border: #000000;
-  --primary: #D74752;
-  --primary-10: rgba(215, 71, 82, 0.1);
-  --accent: #D74752;
-  --card-shadow: 0 0 5px rgba(163, 163, 163, 0.54);
+  --lf-crimson: #9B1C2E;
+  --lf-crimson-dark: #7A1424;
+  --lf-white: #FFFFFF;
+  --lf-heading: #14161C;
+  --lf-body: #4A4F5A;
+  --lf-section-soft: rgba(155, 28, 46, 0.06);
+  --lf-border: rgba(155, 28, 46, 0.18);
+  --lf-shadow: 0 8px 24px rgba(20, 22, 28, 0.08);
+  --bg: var(--lf-white);
+  --heading: var(--lf-heading);
+  --text-strong: var(--lf-heading);
+  --text-muted: var(--lf-body);
+  --icon-grey: var(--lf-body);
+  --border: var(--lf-border);
+  --dot-inactive: var(--lf-border);
+  --dot-active: var(--lf-crimson);
+  --table-header: var(--lf-section-soft);
+  --table-border: var(--lf-border);
+  --primary: var(--lf-crimson);
+  --primary-10: var(--lf-section-soft);
+  --accent: var(--lf-crimson);
+  --card-shadow: var(--lf-shadow);
 }
 
 .edtech-card-shadow {
@@ -52,8 +60,8 @@
 
 /* Global Uniform Typography */
 html, body, #root {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  line-height: 1.5;
+  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -63,7 +71,9 @@ html, body, #root {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', 'Inter', sans-serif;
+  font-family: 'Playfair Display', 'Noto Serif Devanagari', serif;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 button, input, select, textarea {
@@ -144,13 +154,18 @@ button, input, select, textarea {
 
 /* Scoped public law-coaching design system; dashboard screens keep their existing theme. */
 .law-site {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: var(--lf-body);
+  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
 }
 .law-site :is(h1, h2, h3, h4) {
-  font-family: 'Poppins', 'Inter', sans-serif;
+  color: var(--lf-heading);
+  font-family: 'Playfair Display', 'Noto Serif Devanagari', serif;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 .law-site :is(button, input, select, textarea) {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  font-weight: 600;
 }
 .law-site svg {
   display: none;
@@ -171,7 +186,7 @@ button, input, select, textarea {
   width: 76%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgb(200 32 47 / 9%);
+  background: var(--lf-section-soft);
   animation: hero-blob-breathe 5s ease-in-out infinite;
 }
 .law-site .hero-visual__scales {
@@ -202,11 +217,11 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   padding: 12px 20px;
-  border: 1px solid rgb(200 32 47 / 18%);
+  border: 1px solid var(--lf-border);
   border-radius: 999px;
   background: #fff;
-  color: #c8202f;
-  box-shadow: 0 8px 24px rgb(200 32 47 / 12%);
+  color: var(--lf-crimson);
+  box-shadow: var(--lf-shadow);
   font: 600 15px/1.2 Inter, 'Segoe UI', sans-serif;
   text-decoration: none;
   white-space: nowrap;
@@ -215,21 +230,21 @@ button, input, select, textarea {
 }
 .hero-visual__tag:hover,
 .hero-visual__tag:focus-visible {
-  background: #fff5f6;
-  box-shadow: 0 10px 28px rgb(200 32 47 / 18%);
+  background: var(--lf-section-soft);
+  box-shadow: var(--lf-shadow);
 }
 .hero-visual__tag:focus-visible {
-  outline: 3px solid #c8202f;
+  outline: 3px solid var(--lf-crimson);
   outline-offset: 3px;
 }
 .hero-visual__tag--live {
-  border-color: #c8202f;
-  background: #c8202f;
-  color: #fff;
+  border-color: var(--lf-crimson);
+  background: var(--lf-crimson);
+  color: var(--lf-white);
 }
 .hero-visual__tag--live:hover,
 .hero-visual__tag--live:focus-visible {
-  background: #a91b28;
+  background: var(--lf-crimson-dark);
 }
 .hero-visual__tag--clat {
   top: 24%;
@@ -300,7 +315,7 @@ button, input, select, textarea {
   content: "";
   position: absolute;
   z-index: 0;
-  background: #d74752;
+  background: var(--lf-crimson);
   opacity: 0.28;
 }
 .roadmap-step {
@@ -361,8 +376,62 @@ button, input, select, textarea {
 }
 .law-site :is(p, li, dd, dt) {
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.65;
 }
+
+/* Lawyer Factory public palette overrides. These keep page structure intact. */
+.law-site { background-color: var(--lf-white); color: var(--lf-body); }
+.law-site :is(a, button)[class*="rounded-full"] { border-radius: 10px; }
+.law-site [class*="text-[#292929]"],
+.law-site [class*="text-[#252525]"],
+.law-site [class*="text-[#14161C]"] { color: var(--lf-heading) !important; }
+.law-site [class*="text-[#686868]"],
+.law-site [class*="text-[#666]"],
+.law-site [class*="text-[#646464]"],
+.law-site [class*="text-[#575757]"],
+.law-site [class*="text-[#5f5f5f]"],
+.law-site [class*="text-[#555]"] { color: var(--lf-body) !important; }
+.law-site [class*="text-slate-"] { color: var(--lf-body); }
+.law-site [class*="text-[#d74752]"],
+.law-site [class*="text-[#bd2531]"],
+.law-site [class*="text-[#a96065]"] { color: var(--lf-crimson) !important; }
+.law-site [class*="bg-[#d74752]"],
+.law-site [class*="bg-[#c8202f]"],
+.law-site [class*="bg-[#b73540]"],
+.law-site [class*="bg-[#861722]"] { background-color: var(--lf-crimson) !important; }
+.law-site [class*="hover:bg-[#b73540]"]:hover,
+.law-site [class*="hover:bg-[#861722]"]:hover,
+.law-site [class*="hover:bg-[#7A1424]"]:hover { background-color: var(--lf-crimson-dark) !important; }
+.law-site [class*="border-[#d74752]"],
+.law-site [class*="border-[#eee8e8]"],
+.law-site [class*="border-[#f0ebeb]"],
+.law-site [class*="border-[#edc9cc]"],
+.law-site [class*="border-[#dfb8bb]"],
+.law-site [class*="border-[#eadcdd]"],
+.law-site [class*="border-[#e6d8d9]"],
+.law-site [class*="border-slate-"] { border-color: var(--lf-border) !important; }
+.law-site [class*="bg-[#ffffff]"],
+.law-site [class*="bg-white"],
+.law-site [class*="bg-[#F8FAFC]"] { background-color: var(--lf-white); }
+.law-site [class*="shadow-sm"],
+.law-site [class*="shadow-lg"] { box-shadow: var(--lf-shadow); }
+.law-site header.sticky { background-color: var(--lf-white) !important; color: var(--lf-heading) !important; border-color: var(--lf-border) !important; }
+.law-site header.sticky nav[aria-label="Main navigation"] a { color: var(--lf-body) !important; }
+.law-site header.sticky nav[aria-label="Main navigation"] a:hover,
+.law-site header.sticky > div > div > a:first-child { color: var(--lf-crimson) !important; }
+.law-site header.sticky > div > a span { color: var(--lf-heading) !important; }
+.law-site header.sticky > div > button { border-color: var(--lf-border) !important; color: var(--lf-crimson) !important; }
+.law-site header.sticky nav[aria-label="Mobile navigation"] { color: var(--lf-body) !important; }
+.law-site header.sticky nav[aria-label="Mobile navigation"] a { color: var(--lf-body); }
+.law-site header.sticky nav[aria-label="Mobile navigation"] a[class*="bg-[#d74752]"] { color: var(--lf-white) !important; }
+.law-site header.sticky [class*="bg-[#d74752]"],
+.law-site header.sticky [class*="bg-[#b73540]"] { background-color: var(--lf-crimson) !important; }
+.law-site footer { background-color: var(--lf-crimson) !important; color: var(--lf-white) !important; }
+.law-site footer h2 { color: var(--lf-white) !important; }
+.law-site #current-affairs,
+.law-site #roadmap,
+.law-site #latest-blogs { background-color: var(--lf-section-soft); }
+.law-site h1 { font-size: clamp(2.5rem, 4.2vw, 3.5rem); }
 .blog-editor-canvas th, .blog-editor-canvas td {
   border: 1px solid #CBD5E1;
   padding: 0.5rem 0.75rem;

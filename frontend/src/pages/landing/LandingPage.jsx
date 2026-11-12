@@ -109,29 +109,33 @@ export default function LandingPage() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([
-      api.get("/api/blogs", { params: { page: 1, limit: 50 } }),
-      api.get("/api/blogs", { params: { page: 2, limit: 50 } }),
-    ])
-      .then(([latestResponse, archiveResponse]) => {
-        if (!active) return;
-        const legalTopics = /\b(clat|judiciary|legal|law|supreme court|high court|constitution|current affairs|case law|court|criminal|civil|ipc|bns|parliament|judgment|bill|act)\b/i;
-        const firstPage = Array.isArray(latestResponse.data?.blogs) ? latestResponse.data.blogs : [];
-        const secondPage = Array.isArray(archiveResponse.data?.blogs) ? archiveResponse.data.blogs : [];
-        const posts = [...firstPage, ...secondPage].filter((post, index, all) => all.findIndex((item) => item.slug === post.slug) === index);
+    const refreshContent = async () => {
+      const [newsResult, blogResult] = await Promise.allSettled([
+        api.get("/api/news"),
+        api.get("/api/blogs", { params: { page: 1, limit: 50 } }),
+      ]);
+      if (!active) return;
+
+      if (newsResult.status === "fulfilled") {
+        const feedNews = newsResult.value.data || {};
+        setCurrentAffairs([
+          ...(Array.isArray(feedNews.current) ? feedNews.current.map((item) => ({ ...item, newsPeriod: "current" })) : []),
+          ...(Array.isArray(feedNews.archive) ? feedNews.archive.map((item) => ({ ...item, newsPeriod: "archive" })) : []),
+        ]);
+      }
+      if (blogResult.status === "fulfilled") {
+        const firstPage = Array.isArray(blogResult.value.data?.blogs) ? blogResult.value.data.blogs : [];
         setLatestBlogs(firstPage.slice(0, 3));
-        setCurrentAffairs(posts.filter((post) => {
-          const tags = Array.isArray(post.tags) ? post.tags.join(" ") : post.tags || "";
-          return legalTopics.test([post.title, post.category, post.summary, post.keywords, tags].filter(Boolean).join(" "));
-        }).sort((a, b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0)));
-      })
-      .catch(() => {
-        if (!active) return;
-        setCurrentAffairs([]);
-        setLatestBlogs([]);
-      })
-      .finally(() => { if (active) setNewsLoading(false); });
-    return () => { active = false; };
+      }
+      setNewsLoading(false);
+    };
+
+    refreshContent();
+    const refreshTimer = window.setInterval(refreshContent, 15 * 60 * 1000);
+    return () => {
+      active = false;
+      window.clearInterval(refreshTimer);
+    };
   }, []);
 
   const formatNewsDate = (value) => {
@@ -140,13 +144,7 @@ export default function LandingPage() {
     return Number.isNaN(date.getTime()) ? "Recently published" : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   };
 
-  const archiveBoundary = new Date();
-  archiveBoundary.setFullYear(archiveBoundary.getFullYear() - 1);
-  const visibleNews = currentAffairs.filter((post) => {
-    const date = new Date(post.published_at || post.created_at || "");
-    const isRecent = !Number.isNaN(date.getTime()) && date >= archiveBoundary;
-    return newsPeriod === "current" ? isRecent : !isRecent;
-  }).slice(0, 3);
+  const visibleNews = currentAffairs.filter((post) => post.newsPeriod === newsPeriod).slice(0, 3);
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
@@ -316,13 +314,13 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Published law and exam updates from the existing blog database. */}
+        {/* Live legal headlines are refreshed by the server-side news feed. */}
         <section id="current-affairs" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Stay informed</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT and law related news</h2>
-              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Browse recent legal developments and older law-related updates for your preparation.</p>
+              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Legal, judiciary and CLAT headlines refresh automatically. Select a headline to read it from its publisher.</p>
             </div>
             <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all articles</Link>
           </div>
@@ -333,6 +331,7 @@ export default function LandingPage() {
               </button>
             ))}
           </div>
+          <p className="mt-3 text-sm text-[#777]">Headlines are collected from Google News and link to the original publishers.</p>
           {newsLoading ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
               {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
@@ -340,19 +339,19 @@ export default function LandingPage() {
           ) : visibleNews.length ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3">
               {visibleNews.map((post) => (
-                <article key={post.id || post.slug} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
-                  <p className="text-sm font-semibold text-[#d74752]">{post.category || "Law and current affairs"}</p>
+                <article key={post.id || post.url} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
+                  <p className="text-sm font-semibold text-[#d74752]">{post.source || post.category || "Law and current affairs"}</p>
                   <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
-                  <p className="mt-3 flex-1 text-[#686868]">{post.summary || post.meta_description || "Open this article to read the full update."}</p>
+                  <p className="mt-3 flex-1 text-[#686868]">{post.category || "Law and current affairs"}</p>
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
-                    <time dateTime={post.published_at || post.created_at || undefined}>{formatNewsDate(post.published_at || post.created_at)}</time>
-                    <Link to={`/blog/${post.slug}`} className="font-semibold text-[#d74752] hover:underline">Read article</Link>
+                    <time dateTime={post.published_at || undefined}>{formatNewsDate(post.published_at)}</time>
+                    <a href={post.url} target="_blank" rel="noreferrer" className="font-semibold text-[#d74752] hover:underline">Read at source</a>
                   </div>
                 </article>
               ))}
             </div>
           ) : (
-            <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] bg-white p-7 text-[#686868]">{newsPeriod === "current" ? "New CLAT and legal news updates will appear here when published." : "Earlier law-related articles will appear here when available."}</p>
+            <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] bg-white p-7 text-[#686868]">{newsLoading ? "Loading legal news…" : "The news feed is temporarily unavailable. Please check again shortly."}</p>
           )}
         </section>
 
