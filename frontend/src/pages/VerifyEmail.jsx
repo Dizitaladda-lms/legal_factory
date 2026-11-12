@@ -90,7 +90,7 @@ export default function VerifyEmail() {
   return (
     <div className="law-site min-h-screen bg-[#F8FAFC] flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="Legal Factory" />
+      <BatchesHeader brandName="Lawyer Factory" />
 
       <div className="flex-1 flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Main Container Card */}
@@ -98,7 +98,7 @@ export default function VerifyEmail() {
           {/* Header Ribbon */}
           <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 text-center border-b-4 border-[#5A4BFF]">
             <span className="text-xs font-bold uppercase tracking-widest text-amber-400 inline-flex items-center gap-1 mb-1">
-              <ShieldCheck size={14} /> Legal Factory Account Verification
+              <ShieldCheck size={14} /> Lawyer Factory Account Verification
             </span>
             <h2 className="text-2xl font-black text-white">Student Email Verification</h2>
           </div>
@@ -229,7 +229,7 @@ export default function VerifyEmail() {
     </div>
 
     {/* FOOTER */}
-    <BatchesFooter brandName="Legal Factory" />
+    <BatchesFooter brandName="Lawyer Factory" />
   </div>
   );
 }

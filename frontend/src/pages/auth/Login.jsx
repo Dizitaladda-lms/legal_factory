@@ -10,7 +10,7 @@ export default function Login({ defaultTab = "login" }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const BRAND_NAME = "Legal Factory";
+  const BRAND_NAME = "Lawyer Factory";
 
   // Login Form States (ID + Password, No OTP)
   const [loginId, setLoginId] = useState("");
@@ -109,10 +109,10 @@ export default function Login({ defaultTab = "login" }) {
             <div className="space-y-6">
               {/* Brand Logo */}
               <div>
-                <Link to="/" className="inline-block bg-white rounded-xl p-2.5 shadow-sm" aria-label="Legal Factory Home">
+                <Link to="/" className="inline-block bg-white rounded-xl p-2.5 shadow-sm" aria-label="Lawyer Factory Home">
                   <img
                     src="/logo.png"
-                    alt="Legal Factory Logo"
+                    alt="Lawyer Factory Logo"
                     className="h-12 sm:h-14 w-auto object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
@@ -127,7 +127,7 @@ export default function Login({ defaultTab = "login" }) {
                   Selection Hoga Yahi Se!!
                 </span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                  Welcome to Legal Factory
+                  Welcome to Lawyer Factory
                 </h1>
                 <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
                   Law Entrance Coaching
@@ -136,7 +136,7 @@ export default function Login({ defaultTab = "login" }) {
 
               {/* Short Description */}
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Sign in to access your Legal Factory courses, class resources, practice materials and learning support.
+                Sign in to access your Lawyer Factory courses, class resources, practice materials and learning support.
               </p>
 
               {/* Key Highlights (Clean editorial bullets, zero decorative AI icons) */}

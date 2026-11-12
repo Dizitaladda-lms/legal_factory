@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 // Shared footer for public law coaching pages. Replace contact/social placeholders before launch.
 export default function BatchesFooter({
-  brandName = "Legal Factory",
+  brandName = "Lawyer Factory",
   phone = "9266500226",
   email = "[Add email address]",
 }) {

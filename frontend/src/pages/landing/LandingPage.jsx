@@ -43,6 +43,22 @@ const learningPillars = [
   },
 ];
 
+// Replace the profile text and photo placeholders with verified trainer details.
+const trainers = [
+  { subject: "CLAT UG", name: "[Trainer name]", qualification: "[Verified qualification]", experience: "[Add relevant teaching experience]" },
+  { subject: "Judiciary", name: "[Trainer name]", qualification: "[Verified qualification]", experience: "[Add relevant teaching experience]" },
+  { subject: "CLAT PG", name: "[Trainer name]", qualification: "[Verified qualification]", experience: "[Add relevant teaching experience]" },
+];
+
+const lawyerRoadmap = [
+  { title: "Choose your entry route", detail: "After Class 12, explore a five-year integrated LL.B. After graduation, explore a three-year LL.B. Check each university’s eligibility and admission rules.", link: "https://www.barcouncilofindia.org/info/educationa-de7va7%3F", linkText: "BCI eligibility guidance" },
+  { title: "Prepare and apply", detail: "Prepare for CLAT UG if applying to participating NLUs. Other universities may use their own admission process.", link: "https://consortiumofnlus.ac.in/", linkText: "Official CLAT site" },
+  { title: "Complete your law degree", detail: "Choose a recognized law program and build strong foundations in core subjects, legal research and writing." },
+  { title: "Build practical experience", detail: "Use internships, moot courts, drafting exercises and research projects to develop practical skills." },
+  { title: "Complete enrolment steps", detail: "After graduation, review the current enrolment requirements with the relevant State Bar Council." },
+  { title: "Meet practice requirements", detail: "Check the latest AIBE and Certificate of Practice requirements before beginning legal practice.", link: "https://www.allindiabarexamination.com/", linkText: "Official AIBE site" },
+];
+
 const faqs = [
   {
     q: "Which law entrance courses are available?",
@@ -66,6 +82,8 @@ export default function LandingPage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [currentAffairs, setCurrentAffairs] = useState([]);
+  const [newsLoading, setNewsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
@@ -87,9 +105,32 @@ export default function LandingPage() {
     };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    api.get("/api/blogs", { params: { limit: 50 } })
+      .then(({ data }) => {
+        if (!active) return;
+        const legalTopics = /\b(clat|judiciary|legal|law|supreme court|high court|constitution|current affairs|case law|court|criminal|civil|ipc|bns|parliament|judgment|bill|act)\b/i;
+        const posts = Array.isArray(data?.blogs) ? data.blogs : [];
+        setCurrentAffairs(posts.filter((post) => {
+          const tags = Array.isArray(post.tags) ? post.tags.join(" ") : post.tags || "";
+          return legalTopics.test([post.title, post.category, post.summary, post.keywords, tags].filter(Boolean).join(" "));
+        }).slice(0, 3));
+      })
+      .catch(() => { if (active) setCurrentAffairs([]); })
+      .finally(() => { if (active) setNewsLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  const formatNewsDate = (value) => {
+    if (!value) return "Recently published";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "Recently published" : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  };
+
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
-      <BatchesHeader brandName="Legal Factory" />
+      <BatchesHeader brandName="Lawyer Factory" />
       <main>
         {/* Hero and primary course discovery */}
         <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#fffafa]">
@@ -174,6 +215,30 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Animated, high-level education and practice roadmap. */}
+        <section id="lawyer-roadmap" className="lawyer-roadmap overflow-hidden border-y border-[#eee8e8] bg-white py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Your legal career path</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Zero to Lawyer: the roadmap</h2>
+              <p className="mt-4 leading-7 text-[#686868]">A high-level guide from choosing a law degree to preparing for legal practice in India. Your route depends on your education, university and current bar requirements.</p>
+            </div>
+            <ol className="roadmap-track mt-10 grid gap-5 md:grid-cols-3 xl:grid-cols-6">
+              {lawyerRoadmap.map((step, index) => (
+                <li key={step.title} className="roadmap-step relative pt-1">
+                  <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#c92835] bg-white text-sm font-bold text-[#c92835]">{String(index + 1).padStart(2, "0")}</span>
+                  <article className="mt-4 h-full rounded-2xl border border-[#eee8e8] bg-[#fffafa] p-5">
+                    <h3 className="text-lg font-bold leading-snug">{step.title}</h3>
+                    <p className="mt-3 text-[#686868]">{step.detail}</p>
+                    {step.link && <a href={step.link} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-semibold text-[#c92835] underline underline-offset-4">{step.linkText}</a>}
+                  </article>
+                </li>
+              ))}
+            </ol>
+            <p className="mx-auto mt-6 max-w-4xl text-center text-sm text-[#777]">This roadmap is general information, not a guarantee of admission, enrolment or employment. Always confirm current requirements with the university, State Bar Council and official AIBE site.</p>
+          </div>
+        </section>
+
         {/* Course cards are loaded from the law-course catalog API. */}
         <section id="courses" className="bg-[#fffafa] py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -222,6 +287,39 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Published law and exam updates from the existing blog database. */}
+        <section id="current-affairs" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Stay informed</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT current affairs and legal news</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Read published updates relevant to CLAT, Judiciary and important legal developments.</p>
+            </div>
+            <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all articles</Link>
+          </div>
+          {newsLoading ? (
+            <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
+              {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#fffafa]" />)}
+            </div>
+          ) : currentAffairs.length ? (
+            <div className="mt-8 grid gap-5 md:grid-cols-3">
+              {currentAffairs.map((post) => (
+                <article key={post.id || post.slug} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
+                  <p className="text-sm font-semibold text-[#c92835]">{post.category || "Law and current affairs"}</p>
+                  <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
+                  <p className="mt-3 flex-1 text-[#686868]">{post.summary || post.meta_description || "Open this article to read the full update."}</p>
+                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
+                    <time dateTime={post.published_at || post.created_at || undefined}>{formatNewsDate(post.published_at || post.created_at)}</time>
+                    <Link to={`/blog/${post.slug}`} className="font-semibold text-[#c92835] hover:underline">Read article</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-8 rounded-2xl border border-dashed border-[#dfb8bb] bg-[#fffafa] p-7 text-[#686868]">New CLAT and legal affairs articles will appear here when published.</p>
+          )}
+        </section>
+
         {/* Test preparation and resource pathways */}
         <section id="test-series" className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
           <article className="rounded-[26px] bg-[#c92835] p-7 text-white sm:p-9">
@@ -240,18 +338,25 @@ export default function LandingPage() {
           </article>
         </section>
 
-        {/* Placeholder zones for verified faculty and student stories */}
+        {/* Trainer profiles: replace photo and details with verified information. */}
         <section id="faculty" className="border-y border-[#eee8e8] bg-[#fffafa] py-16 sm:py-20">
-          <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-8">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Faculty and guidance</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learn with experienced law educators</h2>
-              <p className="mt-4 leading-7 text-[#686868]">Verified faculty profiles, subject expertise and teaching information will be added here.</p>
-              <Link to="/faculty" className="mt-6 inline-flex items-center text-sm font-bold text-[#c92835]">Meet the faculty</Link>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Meet the team</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learn from our expert trainers</h2>
+              <p className="mt-4 leading-7 text-[#686868]">Meet the educators guiding students through CLAT UG, Judiciary and CLAT PG preparation.</p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              {["Faculty photo", "Faculty photo", "Faculty photo"].map((label, index) => (
-                <div key={index} className="grid min-h-40 place-items-center rounded-2xl border border-dashed border-[#dab5b8] bg-white text-center text-xs font-semibold text-[#b15d63] sm:min-h-48">[Add verified faculty profile]</div>
+            <div className="mt-9 grid gap-5 md:grid-cols-3">
+              {trainers.map((trainer, index) => (
+                <article key={`${trainer.subject}-${index}`} className="overflow-hidden rounded-2xl border border-[#eee8e8] bg-white">
+                  <div className="grid aspect-[4/3] place-items-center bg-[#f7f3f3] text-sm font-medium text-[#686868]">[Add trainer photo]</div>
+                  <div className="p-5">
+                    <p className="text-sm font-semibold text-[#c92835]">{trainer.subject}</p>
+                    <h3 className="mt-2 text-xl font-bold text-[#292929]">{trainer.name}</h3>
+                    <p className="mt-2 text-[#555]">{trainer.qualification}</p>
+                    <p className="mt-2 text-[#686868]">{trainer.experience}</p>
+                  </div>
+                </article>
               ))}
             </div>
           </div>
@@ -284,7 +389,7 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-      <BatchesFooter brandName="Legal Factory" />
+      <BatchesFooter brandName="Lawyer Factory" />
     </div>
   );
 }

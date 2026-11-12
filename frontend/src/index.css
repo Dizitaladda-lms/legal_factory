@@ -155,6 +155,72 @@ button, input, select, textarea {
 .law-site svg {
   display: none;
 }
+.roadmap-track {
+  position: relative;
+}
+.roadmap-track::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  background: #c92835;
+  opacity: 0.28;
+}
+.roadmap-step {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: start;
+  gap: 1rem;
+}
+.roadmap-step article {
+  margin-top: 0;
+  grid-column: 2;
+}
+.roadmap-track::before {
+  left: 21px;
+  top: 22px;
+  bottom: 22px;
+  width: 2px;
+  transform-origin: top;
+  animation: roadmap-draw-vertical 900ms ease-out both;
+}
+@keyframes roadmap-draw-vertical {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@media (min-width: 768px) {
+  .roadmap-step {
+    display: flex;
+    flex-direction: column;
+  }
+  .roadmap-step article {
+    margin-top: 1rem;
+  }
+  .roadmap-track::before {
+    display: none;
+  }
+}
+@media (min-width: 1280px) {
+  .roadmap-track::before {
+    display: block;
+    left: 22px;
+    right: 22px;
+    top: 22px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    transform-origin: left;
+    animation-name: roadmap-draw-horizontal;
+  }
+  @keyframes roadmap-draw-horizontal {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-track::before {
+    animation: none;
+  }
+}
 .law-site :is(p, li, dd, dt) {
   font-size: 16px;
   line-height: 1.5;

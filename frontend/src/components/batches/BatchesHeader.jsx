@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 // Shared responsive navigation for the public law coaching pages.
-export default function BatchesHeader({ brandName = "Legal Factory" }) {
+export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [

@@ -11,7 +11,7 @@ const faculty = [
 export default function FacultyPage() {
   return (
     <div className="law-site min-h-screen bg-white text-slate-700">
-      <BatchesHeader brandName="Legal Factory" />
+      <BatchesHeader brandName="Lawyer Factory" />
       <main className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
         <p className="text-sm font-semibold uppercase tracking-widest text-red-700">Our faculty</p>
         <h1 className="mt-3 text-4xl font-bold text-slate-900 sm:text-5xl">Learn with experienced law educators</h1>
@@ -24,7 +24,7 @@ export default function FacultyPage() {
         </div>
         <Link to="/courses" className="mt-9 inline-flex rounded-full bg-red-700 px-6 py-3 font-semibold text-white hover:bg-red-800">Browse law courses</Link>
       </main>
-      <BatchesFooter brandName="Legal Factory" />
+      <BatchesFooter brandName="Lawyer Factory" />
     </div>
   );
 }

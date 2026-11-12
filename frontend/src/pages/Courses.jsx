@@ -31,7 +31,7 @@ function Courses() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="Legal Factory" />
+      <BatchesHeader brandName="Lawyer Factory" />
 
       {/* HERO */}
       <div className="bg-[#0F172A] py-20 px-6 border-b border-slate-800">
@@ -181,7 +181,7 @@ function Courses() {
       </div>
 
       {/* FOOTER */}
-      <BatchesFooter brandName="Legal Factory" />
+      <BatchesFooter brandName="Lawyer Factory" />
     </div>
   );
 }

@@ -64,7 +64,7 @@ export default function VerifyCertificate() {
   return (
     <div className="law-site min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="Legal Factory" />
+      <BatchesHeader brandName="Lawyer Factory" />
 
       {/* MAIN CONTAINER */}
       <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full flex flex-col items-center">
@@ -194,7 +194,7 @@ export default function VerifyCertificate() {
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-slate-500 font-medium">Issuing Authority:</span>
                   <span className="font-semibold text-slate-700">
-                    {certificate.issued_by || "Legal Factory Administration"}
+                    {certificate.issued_by || "Lawyer Factory Administration"}
                   </span>
                 </div>
               </div>
@@ -213,7 +213,7 @@ export default function VerifyCertificate() {
                     <span>Download Official Certificate PDF</span>
                   </a>
                   <p className="text-[11px] text-slate-400 mt-2">
-                    Verified digital copy certified by Legal Factory Administration.
+                    Verified digital copy certified by Lawyer Factory Administration.
                   </p>
                 </div>
               ) : (
@@ -227,7 +227,7 @@ export default function VerifyCertificate() {
       </main>
 
       {/* FOOTER */}
-      <BatchesFooter brandName="Legal Factory" />
+      <BatchesFooter brandName="Lawyer Factory" />
     </div>
   );
 }
