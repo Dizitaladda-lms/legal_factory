@@ -51,12 +51,12 @@ const trainers = [
 ];
 
 const lawyerRoadmap = [
-  { title: "Choose your entry route", detail: "After Class 12, explore a five-year integrated LL.B. After graduation, explore a three-year LL.B. Check each university’s eligibility and admission rules.", link: "https://www.barcouncilofindia.org/info/educationa-de7va7%3F", linkText: "BCI eligibility guidance" },
-  { title: "Prepare and apply", detail: "Prepare for CLAT UG if applying to participating NLUs. Other universities may use their own admission process.", link: "https://consortiumofnlus.ac.in/", linkText: "Official CLAT site" },
-  { title: "Complete your law degree", detail: "Choose a recognized law program and build strong foundations in core subjects, legal research and writing." },
-  { title: "Build practical experience", detail: "Use internships, moot courts, drafting exercises and research projects to develop practical skills." },
-  { title: "Complete enrolment steps", detail: "After graduation, review the current enrolment requirements with the relevant State Bar Council." },
-  { title: "Meet practice requirements", detail: "Check the latest AIBE and Certificate of Practice requirements before beginning legal practice.", link: "https://www.allindiabarexamination.com/", linkText: "Official AIBE site" },
+  { title: "Choose your entry route", detail: "After Class 12: five-year integrated LL.B. After graduation: three-year LL.B. Check university eligibility.", imagePosition: "0% 0%", link: "https://www.barcouncilofindia.org/info/educationa-de7va7%3F", linkText: "BCI eligibility guidance" },
+  { title: "Prepare and apply", detail: "Prepare for CLAT UG for participating NLUs. Other universities may use their own admission process.", imagePosition: "50% 0%", link: "https://consortiumofnlus.ac.in/", linkText: "Official CLAT site" },
+  { title: "Complete your law degree", detail: "Choose a recognized law program. Build foundations in core subjects, research and legal writing.", imagePosition: "100% 0%" },
+  { title: "Build practical experience", detail: "Develop skills through internships, moot courts, drafting exercises and research projects.", imagePosition: "0% 100%" },
+  { title: "Complete enrolment steps", detail: "After graduation, review the current requirements with your State Bar Council.", imagePosition: "50% 100%" },
+  { title: "Meet practice requirements", detail: "Review current AIBE and Certificate of Practice requirements before legal practice.", imagePosition: "100% 100%", link: "https://www.allindiabarexamination.com/", linkText: "Official AIBE site" },
 ];
 
 const faqs = [
@@ -233,10 +233,10 @@ export default function LandingPage() {
               {lawyerRoadmap.map((step, index) => (
                 <li key={step.title} className="roadmap-step relative pt-1">
                   <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#c92835] bg-white text-sm font-bold text-[#c92835]">{String(index + 1).padStart(2, "0")}</span>
-                  <article className="mt-4 h-full rounded-2xl border border-[#eee8e8] bg-[#ffffff] p-5">
-                    <h3 className="text-lg font-bold leading-snug">{step.title}</h3>
-                    <p className="mt-3 text-[#686868]">{step.detail}</p>
-                    {step.link && <a href={step.link} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-semibold text-[#c92835] underline underline-offset-4">{step.linkText}</a>}
+                  <article className="roadmap-card mt-4 flex min-h-[360px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white shadow-lg" style={{ backgroundImage: `linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.84) 78%), url('/lawyer-roadmap-scenes.png')`, backgroundSize: `100% 100%, 300% 200%`, backgroundPosition: `center, ${step.imagePosition}`, backgroundRepeat: "no-repeat" }}>
+                    <h3 className="text-xl font-bold leading-snug text-white">{step.title}</h3>
+                    <p className="mt-3 text-white/90">{step.detail}</p>
+                    {step.link && <a href={step.link} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-semibold text-white underline underline-offset-4">{step.linkText}</a>}
                   </article>
                 </li>
               ))}

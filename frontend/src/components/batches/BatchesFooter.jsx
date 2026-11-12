@@ -13,7 +13,7 @@ export default function BatchesFooter({
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <img src="/logo.png" alt="Lawyer Factory logo" loading="lazy" className="h-12 w-12 rounded-full border border-white/30 bg-black object-contain" />
+              <img src="/lawyer-factory-logo.png" alt="The Lawyer’s Factory logo" loading="lazy" className="h-12 w-12 rounded-full border border-white/30 bg-black object-contain" />
               <span className="font-bold">{brandName}</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">

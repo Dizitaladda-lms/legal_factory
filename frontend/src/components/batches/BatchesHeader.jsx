@@ -17,7 +17,7 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
     <header className="sticky top-0 z-50 border-b border-[#a91f2b] bg-[#c92835] text-white">
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${brandName} home`}>
-          <img src="/logo.png" alt="Lawyer Factory logo" className="h-10 w-10 rounded-full border border-white/30 bg-black object-contain" />
+          <img src="/lawyer-factory-logo.png" alt="The Lawyer’s Factory logo" className="h-10 w-10 rounded-full border border-white/30 bg-black object-contain" />
           <span className="text-lg font-bold tracking-tight text-white sm:text-xl">{brandName}</span>
         </Link>
 

@@ -111,7 +111,7 @@ export default function Login({ defaultTab = "login" }) {
               <div>
                 <Link to="/" className="inline-block bg-white rounded-xl p-2.5 shadow-sm" aria-label="Lawyer Factory Home">
                   <img
-                    src="/logo.png"
+                    src="/lawyer-factory-logo.png"
                     alt="Lawyer Factory Logo"
                     className="h-12 sm:h-14 w-auto object-contain"
                     onError={(e) => {
