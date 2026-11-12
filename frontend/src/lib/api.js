@@ -40,7 +40,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      const isAuthPath = window.location.pathname.includes("/login");
+      const isSeoPortal = window.location.pathname === "/post/seo";
+      const isAuthPath = window.location.pathname.includes("/login") || isSeoPortal;
+      if (isSeoPortal && localStorage.getItem("token")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.reload();
+      }
       if (!isAuthPath) {
         // Clear stale credentials if invalid/expired
         const hadToken = Boolean(localStorage.getItem("token"));

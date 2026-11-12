@@ -29,8 +29,9 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
   const admin = JSON.parse(localStorage.getItem("user") || "{}");
 
   const handleLogout = () => {
+    const isSeoEditor = admin.role === "seo_admin";
     localStorage.clear();
-    navigate("/login");
+    navigate(isSeoEditor ? "/post/seo" : "/login");
   };
 
   const handleSyncDatabase = async () => {
@@ -90,6 +91,10 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
       icon: <FaCog className="inline mr-2" />,
     },
   ];
+  const isSeoEditor = admin.role === "seo_admin";
+  const visibleNavTabs = isSeoEditor
+    ? navTabs.filter((tab) => tab.path === "/admin/blogs").map((tab) => ({ ...tab, path: "/post/seo" }))
+    : navTabs;
 
   return (
     <div className="bg-[#f8fafc] min-h-screen text-slate-800 flex flex-col font-sans">
@@ -116,7 +121,7 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
           {/* ACTION BUTTONS & ADMIN PROFILE */}
           <div className="flex flex-wrap items-center justify-center md:justify-end gap-2.5">
             {/* 1-Click Database Sync */}
-            <button
+            {!isSeoEditor && <button
               onClick={handleSyncDatabase}
               disabled={isSyncing}
               className={
@@ -126,7 +131,7 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
             >
               <FaSyncAlt className={isSyncing ? "animate-spin" : ""} />
               <span>{isSyncing ? "Syncing..." : syncNotice || "Sync Live DB 🔄"}</span>
-            </button>
+            </button>}
 
             {/* Visit Public Site */}
             <Link
@@ -148,7 +153,7 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
                   {admin.name || "Administrator"}
                 </div>
                 <div className="text-[10px] text-[#D4A017] uppercase tracking-wider font-semibold">
-                  Super Admin
+                  {isSeoEditor ? "SEO Editor" : "Super Admin"}
                 </div>
               </div>
             </div>
@@ -172,8 +177,8 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
       <nav className="bg-[#0B1220] sticky top-0 z-40 border-b border-orange-400/20 shadow-md">
         <div className="max-w-7xl mx-auto">
           {/* DESKTOP 7-COLUMN GRID */}
-          <div className="hidden md:grid grid-cols-7 text-center">
-            {navTabs.map((tab) => {
+          <div className={`hidden md:grid ${isSeoEditor ? "grid-cols-1" : "grid-cols-7"} text-center`}>
+            {visibleNavTabs.map((tab) => {
               const isActive =
                 tab.path === "/admin"
                   ? location.pathname === "/admin"
@@ -200,7 +205,7 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
           {/* MOBILE NAVBAR TOGGLE */}
           <div className="md:hidden flex items-center justify-between px-4 py-3">
             <span className="text-xs font-bold uppercase tracking-widest text-[#D4A017]">
-              Admin Menu ({navTabs.find((t) => (t.path === "/admin" ? location.pathname === "/admin" : location.pathname.startsWith(t.path)))?.name || "Portal"})
+              Admin Menu ({visibleNavTabs.find((t) => (t.path === "/admin" ? location.pathname === "/admin" : location.pathname.startsWith(t.path)))?.name || "Portal"})
             </span>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -213,7 +218,7 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
           {/* MOBILE DROPDOWN */}
           {mobileOpen && (
             <div className="md:hidden bg-[#0B1220] border-t border-orange-400/20 flex flex-col">
-              {navTabs.map((tab) => {
+              {visibleNavTabs.map((tab) => {
                 const isActive =
                   tab.path === "/admin"
                     ? location.pathname === "/admin"

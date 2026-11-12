@@ -44,6 +44,7 @@ import VerifyCertificate from "./pages/VerifyCertificate";
 import BlogListing from "./pages/blog/BlogListing";
 import BlogDetail from "./pages/blog/BlogDetail";
 import FacultyPage from "./pages/FacultyPage";
+import SeoPortal from "./pages/admin/SeoPortal";
 import React, { Suspense, lazy } from "react";
 const AdminBlogs = lazy(() => import("./pages/admin/AdminBlogs"));
 
@@ -54,6 +55,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/faculty" element={<FacultyPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/post/seo" element={<SeoPortal />} />
       <Route path="/register" element={<Navigate to="/login" replace />} />
       <Route path="/about" element={<About />} />
       <Route path="/courses" element={<CourseListing />} />
