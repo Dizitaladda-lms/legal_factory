@@ -29,6 +29,7 @@ if (connectionString) {
       connectionString,
       ssl:
         connectionString.includes("sslmode=require") ||
+        connectionString.includes(".pooler.supabase.com") ||
         connectionString.includes("neon.tech") ||
         isProduction
           ? { rejectUnauthorized: false }
