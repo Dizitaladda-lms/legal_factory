@@ -1,7 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Scale } from "lucide-react";
-import { FaInstagram, FaYoutube, FaLinkedinIn } from "react-icons/fa6";
 
 // Shared footer for public law coaching pages. Replace contact/social placeholders before launch.
 export default function BatchesFooter({
@@ -15,18 +13,15 @@ export default function BatchesFooter({
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center gap-2.5">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#c92835]"><Scale size={21} /></span>
               <span className="font-bold">{brandName}</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">
               Online preparation for CLAT, Judiciary and CLAT PG. Course details and learning support are provided in Hindi + English.
             </p>
             <div className="mt-5 flex gap-2.5">
-              {[FaInstagram, FaYoutube, FaLinkedinIn].map((Icon, index) => (
-                <a key={index} href="#social" aria-label={["Instagram", "YouTube", "LinkedIn"][index]} className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-white/80 transition hover:border-[#c92835] hover:bg-[#c92835] hover:text-white">
-                  <Icon size={16} />
-                </a>
-              ))}
+              <a href="#social" className="text-sm text-white/75 underline-offset-4 hover:text-white hover:underline">Instagram</a>
+              <a href="#social" className="text-sm text-white/75 underline-offset-4 hover:text-white hover:underline">YouTube</a>
+              <a href="#social" className="text-sm text-white/75 underline-offset-4 hover:text-white hover:underline">LinkedIn</a>
             </div>
           </div>
 

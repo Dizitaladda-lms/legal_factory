@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  ArrowRight,
-  BookOpen,
-  Check,
-  Clock3,
-  FileText,
-  Languages,
-  MessageCircleQuestion,
-  PlayCircle,
-  Scale,
-  Target,
-} from "lucide-react";
 import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
@@ -31,15 +19,6 @@ function safeHref(value, fallback = "#contact") {
   if (!value) return fallback;
   return /^https:\/\//i.test(value) || value.startsWith("/") || value.startsWith("#") ? value : fallback;
 }
-
-const iconFor = (title = "") => {
-  const value = title.toLowerCase();
-  if (value.includes("live")) return PlayCircle;
-  if (value.includes("note") || value.includes("pdf")) return FileText;
-  if (value.includes("doubt")) return MessageCircleQuestion;
-  if (value.includes("test") || value.includes("mock")) return Target;
-  return Check;
-};
 
 export default function CourseDetails() {
   const { id, slug } = useParams();
@@ -83,10 +62,9 @@ export default function CourseDetails() {
         </main>
       ) : error || !course ? (
         <main className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
-          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><BookOpen size={26} /></span>
           <h1 className="mt-5 text-3xl font-bold">Course details are unavailable</h1>
           <p className="mt-3 text-sm leading-6 text-[#686868]">This course may not be published yet. Browse the current course catalog to see available programs.</p>
-          <Link to="/courses" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses <ArrowRight size={16} /></Link>
+          <Link to="/courses" className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses</Link>
         </main>
       ) : (
         <main>
@@ -96,16 +74,16 @@ export default function CourseDetails() {
               <nav className="mb-7 text-xs font-medium text-[#777]" aria-label="Breadcrumb"><Link to="/" className="hover:text-[#c92835]">Home</Link><span className="mx-2">/</span><Link to="/courses" className="hover:text-[#c92835]">Courses</Link><span className="mx-2">/</span><span className="text-[#555]">{course.name}</span></nav>
               <div className="grid items-start gap-9 lg:grid-cols-[1fr_350px] lg:gap-12">
                 <div>
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[#edc9cc] bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[#c92835]"><Scale size={14} />{course.slug?.includes("judiciary") ? "Judiciary preparation" : course.slug?.includes("pg") ? "Postgraduate law entrance" : "Law entrance preparation"}</span>
+                  <span className="inline-flex rounded-full border border-[#edc9cc] bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#c92835]">{course.slug?.includes("judiciary") ? "Judiciary preparation" : course.slug?.includes("pg") ? "Postgraduate law entrance" : "Law entrance preparation"}</span>
                   <h1 className="mt-4 max-w-4xl text-3xl font-bold leading-tight tracking-[-.035em] sm:text-4xl lg:text-5xl">{course.name}</h1>
                   <p className="mt-4 max-w-3xl text-base leading-7 text-[#666]">{course.description || "Course description will be added soon."}</p>
                   <div className="mt-6 flex flex-wrap gap-2">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-xs font-semibold text-[#555]"><Clock3 size={14} className="text-[#c92835]" />Starts: {formatDate(course.batch_start_date)}</span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-xs font-semibold text-[#555]"><Languages size={14} className="text-[#c92835]" />{course.language || "Hindi + English"}</span>
-                    <span className="inline-flex items-center gap-2 rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-xs font-semibold text-[#555]"><BookOpen size={14} className="text-[#c92835]" />{course.duration_label || "Duration to be announced"}</span>
+                    <span className="rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-sm font-semibold text-[#555]">Starts: {formatDate(course.batch_start_date)}</span>
+                    <span className="rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-sm font-semibold text-[#555]">Language: {course.language || "Hindi + English"}</span>
+                    <span className="rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-sm font-semibold text-[#555]">Duration: {course.duration_label || "To be announced"}</span>
                   </div>
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                    <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now <ArrowRight size={16} /></a>
+                    <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
                     <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] hover:bg-[#fff2f2]">Free Demo Class</a>
                   </div>
                 </div>
@@ -114,13 +92,13 @@ export default function CourseDetails() {
                   {course.hero_image_url ? (
                     <img src={course.hero_image_url} alt={course.name} className="mb-5 h-40 w-full rounded-2xl object-cover" />
                   ) : (
-                    <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><div className="text-center"><Scale size={34} className="mx-auto" /><span className="mt-2 block text-xs font-semibold">[Course image]</span></div></div>
+                    <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#fff1f2] text-sm font-semibold text-[#8a5559]">[Course image placeholder]</div>
                   )}
                   <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Course fee</p>
                   <p className="mt-1 text-3xl font-bold tracking-tight">{price}</p>
                   {course.discount_label && <p className="mt-2 text-sm font-semibold text-[#c92835]">{course.discount_label}</p>}
                   <p className="mt-3 text-xs leading-5 text-[#777]">{course.refund_policy_summary || "Review the refund terms before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Refund policy</a>}</p>
-                  <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now <ArrowRight size={16} /></a>
+                  <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
                   <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-[#fff5f5]">Book a Free Demo</a>
                 </aside>
               </div>
@@ -132,12 +110,11 @@ export default function CourseDetails() {
             <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">The learning experience</p><h2 className="mt-3 text-3xl font-bold tracking-tight">What you get in this course</h2><p className="mt-3 leading-7 text-[#686868]">Review the course support and learning materials included in this program.</p></div>
             {course.course_benefits?.length ? (
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {course.course_benefits.map((benefit) => { const Icon = iconFor(benefit.title); return (
+                {course.course_benefits.map((benefit) => (
                   <article key={`${benefit.position}-${benefit.title}`} className="rounded-2xl border border-[#eee8e8] p-5">
-                    <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#fff1f2] text-[#c92835]"><Icon size={21} /></span>
-                    <h3 className="mt-4 font-bold">{benefit.title}</h3><p className="mt-1.5 text-sm leading-6 text-[#686868]">{benefit.description}</p>
+                    <h3 className="font-bold">{benefit.title}</h3><p className="mt-1.5 text-sm leading-6 text-[#686868]">{benefit.description}</p>
                   </article>
-                ); })}
+                ))}
               </div>
             ) : <p className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Course inclusions will be added soon.</p>}
           </section>
@@ -150,12 +127,11 @@ export default function CourseDetails() {
                 {course.course_modules?.length ? course.course_modules.map((module) => (
                   <details key={`${module.position}-${module.title}`} className="group overflow-hidden rounded-2xl border border-[#eee3e4] bg-white">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-bold marker:hidden sm:px-6">
-                      <span className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff1f2] text-[#c92835]"><BookOpen size={17} /></span>{module.title}</span>
-                      <span className="text-xl font-normal text-[#c92835] transition group-open:rotate-45">+</span>
+                      <span>{module.title}</span>
                     </summary>
                     <div className="border-t border-[#f1ebeb] px-5 py-4 sm:px-6">
                       <p className="text-sm leading-6 text-[#686868]">{module.description}</p>
-                      {module.module_items?.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{module.module_items.map((item) => <li key={`${item.position}-${item.title}`} className="flex items-center gap-2 text-sm text-[#555]"><Check size={15} className="shrink-0 text-[#c92835]" />{item.title}</li>)}</ul> : <p className="mt-3 text-sm text-[#777]">Module resources will be added soon.</p>}
+                      {module.module_items?.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{module.module_items.map((item) => <li key={`${item.position}-${item.title}`} className="text-sm text-[#555]">{item.title}</li>)}</ul> : <p className="mt-3 text-sm text-[#777]">Module resources will be added soon.</p>}
                     </div>
                   </details>
                 )) : <div className="rounded-2xl border border-dashed border-[#dfb8bb] bg-white p-7 text-center text-sm text-[#686868]">Course modules will be added soon.</div>}
@@ -167,7 +143,7 @@ export default function CourseDetails() {
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
             <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Practice and review</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Test series</h2><p className="mt-3 max-w-2xl leading-7 text-[#686868]">See the practice tests and review methods included in this course.</p></div>
             {course.course_tests?.length ? (
-              <div className="mt-8 grid gap-4 md:grid-cols-3">{course.course_tests.map((test) => <article key={`${test.position}-${test.title}`} className="rounded-2xl border border-[#eee8e8] p-5"><span className="grid h-11 w-11 place-items-center rounded-xl bg-[#fff1f2] text-[#c92835]"><Target size={21} /></span><h3 className="mt-4 font-bold">{test.title}</h3><p className="mt-2 text-sm leading-6 text-[#686868]">{test.description}</p></article>)}</div>
+              <div className="mt-8 grid gap-4 md:grid-cols-3">{course.course_tests.map((test) => <article key={`${test.position}-${test.title}`} className="rounded-2xl border border-[#eee8e8] p-5"><h3 className="font-bold">{test.title}</h3><p className="mt-2 text-sm leading-6 text-[#686868]">{test.description}</p></article>)}</div>
             ) : <p className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Test series details will be added soon.</p>}
           </section>
 
@@ -200,11 +176,11 @@ export default function CourseDetails() {
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
               <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Course support</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Frequently asked questions</h2></div>
               <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
-                <details className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">What is the course fee?<span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 text-sm leading-6 text-[#686868]">{price}. Check this page for current pricing and enrollment details.</p></details>
-                <details className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">What is the refund policy?<span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.refund_policy_summary || "Please review the refund policy before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Read the full policy</a>}</p></details>
-                <details className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">Are class recordings available?<span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.learning_mode || "Recording availability will be confirmed for the selected batch."}</p></details>
-                <details className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">Which language is used for teaching?<span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.language || "Hindi + English"}</p></details>
-                <details className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold">How do I attend a free demo?<span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 text-sm leading-6 text-[#686868]">Use the Free Demo Class button and follow the current booking instructions.</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">What is the course fee?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{price}. Check this page for current pricing and enrollment details.</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">What is the refund policy?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.refund_policy_summary || "Please review the refund policy before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Read the full policy</a>}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">Are class recordings available?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.learning_mode || "Recording availability will be confirmed for the selected batch."}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">Which language is used for teaching?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.language || "Hindi + English"}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">How do I attend a free demo?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">Use the Free Demo Class button and follow the current booking instructions.</p></details>
               </div>
             </div>
           </section>
@@ -212,7 +188,7 @@ export default function CourseDetails() {
           {/* Mobile enrollment bar */}
           <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-[#eadcdd] bg-white px-4 py-3 shadow-[0_-8px_28px_rgba(35,25,25,.08)] lg:hidden">
             <div className="min-w-0"><span className="block truncate text-sm font-bold">{price}</span><span className="block truncate text-[11px] text-[#777]">{course.name}</span></div>
-            <a href={enrollHref} className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full bg-[#c92835] px-4 text-xs font-bold text-white">Enroll Now <ArrowRight size={14} /></a>
+            <a href={enrollHref} className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-[#c92835] px-4 text-sm font-bold text-white">Enroll Now</a>
           </div>
         </main>
       )}

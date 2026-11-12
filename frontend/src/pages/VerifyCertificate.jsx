@@ -62,7 +62,7 @@ export default function VerifyCertificate() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans">
+    <div className="law-site min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans">
       {/* 1. STICKY HEADER */}
       <BatchesHeader brandName="Legal Factory" />
 

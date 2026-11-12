@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, Clock3, Languages, Scale, Search } from "lucide-react";
 import api from "../lib/api";
 import BatchesHeader from "../components/batches/BatchesHeader";
 import BatchesFooter from "../components/batches/BatchesFooter";
@@ -67,7 +66,6 @@ export default function CourseListing() {
                 {filters.map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`rounded-full px-4 py-2.5 text-sm font-semibold transition ${filter === item ? "bg-[#c92835] text-white" : "border border-[#eadcdd] bg-white text-[#5f5f5f] hover:border-[#c92835] hover:text-[#c92835]"}`}>{item}</button>)}
               </div>
               <label className="flex min-h-11 w-full items-center gap-2 rounded-full border border-[#e9e1e1] bg-white px-4 sm:max-w-xs">
-                <Search size={17} className="text-[#9a7779]" />
                 <input value={search} onChange={(event) => setSearch(event.target.value)} className="w-full bg-transparent text-sm outline-none placeholder:text-[#969090]" placeholder="Search courses" aria-label="Search courses" />
               </label>
             </div>
@@ -93,19 +91,19 @@ export default function CourseListing() {
                   <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f9e9ea] p-5">
                     <div className="absolute -right-4 -top-12 h-40 w-40 rounded-full border border-[#e6c3c5]" />
                     <div className="absolute right-8 -top-6 h-28 w-28 rounded-full border border-[#e6c3c5]" />
-                    <span className="relative inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#c92835]"><Scale size={14} />{getType(course)}</span>
+                    <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#c92835]">{getType(course)}</span>
                   </div>
                   <div className="flex flex-1 flex-col p-5">
                     <h3 className="text-xl font-bold leading-snug">{course.name}</h3>
                     <p className="mt-2 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-[#686868]">{course.description || "Course overview will be added soon."}</p>
                     <div className="mt-4 space-y-2 border-t border-[#f0ebeb] pt-4 text-sm text-[#646464]">
-                      <p className="flex items-center gap-2"><Clock3 size={15} className="text-[#c92835]" /><span>Starts: {formatDate(course.batch_start_date)}</span></p>
-                      <p className="flex items-center gap-2"><Languages size={15} className="text-[#c92835]" /><span>{course.language || "Hindi + English"}</span></p>
-                      <p className="flex items-center gap-2"><BookOpen size={15} className="text-[#c92835]" /><span>{course.duration_label || "Duration to be announced"}</span></p>
+                      <p>Starts: {formatDate(course.batch_start_date)}</p>
+                      <p>Language: {course.language || "Hindi + English"}</p>
+                      <p>Duration: {course.duration_label || "To be announced"}</p>
                     </div>
                     <div className="mt-5 flex items-center justify-between gap-3">
                       <span className="text-sm font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
-                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#c92835] px-4 text-xs font-bold text-white hover:bg-[#a91f2b]">View Details <ArrowRight size={14} /></Link>
+                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="inline-flex min-h-10 items-center rounded-full bg-[#c92835] px-4 text-sm font-bold text-white hover:bg-[#a91f2b]">View Details</Link>
                     </div>
                   </div>
                 </article>
@@ -113,7 +111,6 @@ export default function CourseListing() {
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-[#dfb8bb] bg-[#fffafa] p-10 text-center">
-              <BookOpen className="mx-auto text-[#c92835]" size={28} />
               <h3 className="mt-4 text-lg font-bold">No matching courses</h3>
               <p className="mt-2 text-sm text-[#686868]">Try another filter or search term.</p>
               <button onClick={() => { setFilter("All courses"); setSearch(""); }} className="mt-4 text-sm font-bold text-[#c92835] hover:underline">Clear filters</button>
@@ -124,7 +121,7 @@ export default function CourseListing() {
         <section className="bg-[#fffafa]">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <div><h2 className="text-xl font-bold">Need help choosing a course?</h2><p className="mt-1 text-sm text-[#686868]">Ask about course details or the next free demo.</p></div>
-            <Link to="/#contact" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-white">Contact the team <ArrowRight size={15} /></Link>
+            <Link to="/#contact" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-white">Contact the team</Link>
           </div>
         </section>
       </main>

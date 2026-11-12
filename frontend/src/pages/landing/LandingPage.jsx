@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BookOpen,
-  CheckCircle2,
-  Clock3,
-  FileQuestion,
-  Gavel,
-  GraduationCap,
-  Languages,
-  Scale,
-  Target,
-} from "lucide-react";
 import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
@@ -43,17 +30,14 @@ const courseType = (course) => {
 
 const learningPillars = [
   {
-    icon: BookOpen,
     title: "Learn with structure",
     copy: "Follow a planned course path across your selected law exam subjects.",
   },
   {
-    icon: Target,
     title: "Practice with purpose",
     copy: "Build consistency with questions, sectional practice and mock tests.",
   },
   {
-    icon: FileQuestion,
     title: "Get learning support",
     copy: "Use classes and doubt support to clarify concepts as you prepare.",
   },
@@ -114,25 +98,25 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
             <div className="relative z-10">
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#edc9cc] bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#bd2531]">
-                <Scale size={15} /> Law entrance and judiciary preparation
+                Law entrance and judiciary preparation
               </p>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-.045em] text-[#252525] sm:text-5xl lg:text-[3.7rem]">
-                Prepare for your <span className="text-[#c92835]">future in law.</span>
+                Young Age, Big Legal Career <span className="text-[#c92835]">future in law.</span>
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-[#666] sm:text-lg sm:leading-8">
-                Explore structured online coaching for CLAT UG, Judiciary and CLAT PG, with course information and learning support in Hindi + English.
+               Crack CLAT UG, Judiciary or CLAT PG with clear concepts, live classes, regular mock tests and mentors who guide you at every step. Learn in Hindi + English.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#a91f2b]">
-                  Explore Courses <ArrowRight size={17} />
+                  Explore Courses
                 </a>
                 <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] transition hover:bg-[#fff3f3]">
                   Book a Free Demo
                 </a>
               </div>
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#676767]">
-                <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-[#c92835]" />Hindi + English support</span>
-                <span className="inline-flex items-center gap-2"><CheckCircle2 size={16} className="text-[#c92835]" />Online learning</span>
+                <span>Hindi + English support</span>
+                <span>Online learning + Offline learning</span>
               </div>
             </div>
 
@@ -145,16 +129,12 @@ export default function LandingPage() {
                       <span className="text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Your legal learning path</span>
                       <h2 className="mt-3 max-w-xs text-2xl font-bold leading-tight tracking-tight sm:text-3xl">Choose the exam you are preparing for</h2>
                     </div>
-                    <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-[#c92835] text-white"><Gavel size={27} /></div>
                   </div>
                   <div className="mt-8 grid gap-3 sm:grid-cols-3">
                     {["CLAT UG", "Judiciary", "CLAT PG"].map((label, index) => (
                       <a key={label} href="#courses" className="group rounded-2xl border border-[#eedcdd] bg-white p-4 transition hover:-translate-y-1 hover:border-[#c92835] hover:shadow-md">
-                        <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#fff0f1] text-[#c92835]">
-                          {index === 0 ? <GraduationCap size={19} /> : index === 1 ? <Scale size={19} /> : <BookOpen size={19} />}
-                        </span>
                         <span className="mt-3 block text-sm font-bold">{label}</span>
-                        <span className="mt-1 inline-flex items-center text-xs text-[#777] group-hover:text-[#c92835]">View course <ArrowUpRight size={13} className="ml-1" /></span>
+                        <span className="mt-1 inline-flex items-center text-xs text-[#777] group-hover:text-[#c92835]">View course</span>
                       </a>
                     ))}
                   </div>
@@ -184,9 +164,8 @@ export default function LandingPage() {
             <p className="mt-3 leading-7 text-[#686868]">Review the program structure, practice regularly and find support as your preparation progresses.</p>
           </div>
           <div className="mt-9 grid gap-4 md:grid-cols-3">
-            {learningPillars.map(({ icon: Icon, title, copy }, index) => (
+            {learningPillars.map(({ title, copy }, index) => (
               <article key={title} className="rounded-2xl border border-[#eee8e8] bg-white p-6 transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(35,25,25,.07)]">
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><Icon size={23} /></span>
                 <p className="mt-5 text-xs font-bold uppercase tracking-widest text-[#c92835]">0{index + 1}</p>
                 <h3 className="mt-2 text-lg font-bold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#6b6b6b]">{copy}</p>
@@ -204,7 +183,7 @@ export default function LandingPage() {
                 <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Courses for your next step in law</h2>
                 <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Current batch dates, language and pricing are shown from the course catalog.</p>
               </div>
-              <Link to="/courses" className="inline-flex items-center gap-2 self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all courses <ArrowRight size={16} /></Link>
+              <Link to="/courses" className="inline-flex items-center self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all courses</Link>
             </div>
 
             {loading ? (
@@ -220,18 +199,18 @@ export default function LandingPage() {
                     <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f9e9ea] p-5">
                       <div className="absolute -right-7 -top-14 h-44 w-44 rounded-full border border-[#e9c1c4]" />
                       <div className="absolute -right-1 -top-8 h-32 w-32 rounded-full border border-[#e9c1c4]" />
-                      <span className="relative inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[11px] font-bold tracking-wide text-[#c92835]"><Scale size={14} />{courseType(course)}</span>
+                      <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#c92835]">{courseType(course)}</span>
                     </div>
                     <div className="flex flex-1 flex-col p-5">
                       <h3 className="text-xl font-bold leading-snug">{course.name}</h3>
                       <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#696969]">{course.description}</p>
                       <div className="mt-4 grid grid-cols-2 gap-y-2 border-t border-[#f0ebeb] pt-4 text-xs text-[#646464]">
-                        <span className="inline-flex items-center gap-1.5"><Clock3 size={14} className="text-[#c92835]" />{formatDate(course.batch_start_date)}</span>
-                        <span className="inline-flex items-center gap-1.5"><Languages size={14} className="text-[#c92835]" />{course.language || "Hindi + English"}</span>
+                        <span>Starts: {formatDate(course.batch_start_date)}</span>
+                        <span>Language: {course.language || "Hindi + English"}</span>
                         <span className="col-span-2 font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
                       </div>
                       <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#c92835] px-4 text-sm font-bold text-[#c92835] transition hover:bg-[#c92835] hover:text-white">
-                        View Course Details <ArrowRight size={16} />
+                        View Course Details
                       </Link>
                     </div>
                   </article>
@@ -246,14 +225,12 @@ export default function LandingPage() {
         {/* Test preparation and resource pathways */}
         <section id="test-series" className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
           <article className="rounded-[26px] bg-[#c92835] p-7 text-white sm:p-9">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/15"><CheckCircle2 size={24} /></span>
             <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-white/75">Practice pathway</p>
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Test series and performance review</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-white/85">Course pages show the tests, previous-paper practice and analysis included in each program as details are added.</p>
-            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 text-sm font-bold text-[#b3212d] hover:bg-[#fff2f2]">See course details <ArrowRight size={16} /></Link>
+            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-bold text-[#b3212d] hover:bg-[#fff2f2]">See course details</Link>
           </article>
           <article id="resources" className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><BookOpen size={24} /></span>
             <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Free preparation resources</p>
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Start with helpful study material</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-[#686868]">Resource links and downloadable practice material can be added here as they are ready.</p>
@@ -270,7 +247,7 @@ export default function LandingPage() {
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Faculty and guidance</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learn with experienced law educators</h2>
               <p className="mt-4 leading-7 text-[#686868]">Verified faculty profiles, subject expertise and teaching information will be added here.</p>
-              <Link to="/faculty" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#c92835]">Meet the faculty <ArrowRight size={16} /></Link>
+              <Link to="/faculty" className="mt-6 inline-flex items-center text-sm font-bold text-[#c92835]">Meet the faculty</Link>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
               {["Faculty photo", "Faculty photo", "Faculty photo"].map((label, index) => (
@@ -283,7 +260,6 @@ export default function LandingPage() {
         <section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
             <div className="flex items-start gap-4">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#fff1f2] text-[#c92835]"><GraduationCap size={24} /></span>
               <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Student experiences</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Stories from learners</h2><p className="mt-2 text-sm leading-6 text-[#686868]">Genuine student feedback and outcomes will be added here after approval.</p></div>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -296,7 +272,7 @@ export default function LandingPage() {
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Need help choosing?</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Frequently asked questions</h2></div>
             <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
-              {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-bold"><span>{faq.q}</span><span className="text-xl font-normal text-[#c92835] group-open:rotate-45">+</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
+              {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]"><span>{faq.q}</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
             </div>
           </div>
         </section>
@@ -304,7 +280,7 @@ export default function LandingPage() {
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-5 rounded-[26px] bg-[#292929] p-7 text-white sm:flex-row sm:items-center sm:p-9">
             <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#ffb8bd]">Take the next step</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Find the right law preparation course</h2><p className="mt-2 text-sm text-white/70">Explore course details or get in touch about a free demo.</p></div>
-            <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses <ArrowRight size={16} /></Link>
+            <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses</Link>
           </div>
         </section>
       </main>

@@ -88,7 +88,7 @@ export default function VerifyEmail() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between">
+    <div className="law-site min-h-screen bg-[#F8FAFC] flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
       <BatchesHeader brandName="Legal Factory" />
 

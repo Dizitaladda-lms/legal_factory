@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Scale, Menu, X } from "lucide-react";
 
 // Shared responsive navigation for the public law coaching pages.
 export default function BatchesHeader({ brandName = "Legal Factory" }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [coursesOpen, setCoursesOpen] = useState(false);
 
   const navItems = [
     { label: "Courses", href: "/courses" },
@@ -19,8 +17,7 @@ export default function BatchesHeader({ brandName = "Legal Factory" }) {
     <header className="sticky top-0 z-50 border-b border-[#eee7e7] bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${brandName} home`}>
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#c92835] text-white"><Scale size={21} strokeWidth={2.2} /></span>
-          <span className="text-base font-bold tracking-tight text-[#242424] sm:text-lg">{brandName}</span>
+          <span className="text-lg font-bold tracking-tight text-[#242424] sm:text-xl">{brandName}</span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
@@ -34,7 +31,7 @@ export default function BatchesHeader({ brandName = "Legal Factory" }) {
         <div className="hidden items-center gap-4 lg:flex">
           <Link to="/login" className="text-sm font-semibold text-[#3d3d3d] hover:text-[#c92835]">Login</Link>
           <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white transition hover:bg-[#a91f2b]">
-            Explore Courses <span className="ml-2" aria-hidden="true">→</span>
+            Explore Courses
           </Link>
         </div>
 
@@ -45,7 +42,7 @@ export default function BatchesHeader({ brandName = "Legal Factory" }) {
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((open) => !open)}
         >
-          {mobileOpen ? <X size={21} /> : <Menu size={21} />}
+          <span className="text-xs font-bold tracking-widest">{mobileOpen ? "CLOSE" : "MENU"}</span>
         </button>
       </div>
 

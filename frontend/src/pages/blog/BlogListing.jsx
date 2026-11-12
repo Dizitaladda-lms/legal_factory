@@ -88,7 +88,7 @@ export default function BlogListing() {
   const remainingPosts = blogs.length > 1 ? blogs.slice(1) : [];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-between">
+    <div className="law-site min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
       <BatchesHeader brandName="Legal Factory" />
 

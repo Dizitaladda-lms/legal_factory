@@ -400,7 +400,7 @@ const Checkout = () => {
   // ========================================================
   if (paymentSuccess && credentials) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="law-site min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           {/* Top Success Badge */}
           <div className="bg-white rounded-3xl shadow-2xl border-2 border-emerald-500 overflow-hidden">
@@ -626,7 +626,7 @@ const Checkout = () => {
   const discount = Math.max(0, originalPrice - currentPrice);
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen text-slate-800 flex flex-col justify-between">
+    <div className="law-site bg-[#F8FAFC] min-h-screen text-slate-800 flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
       <BatchesHeader brandName="Legal Factory" />
 

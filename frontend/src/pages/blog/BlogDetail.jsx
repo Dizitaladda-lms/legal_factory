@@ -180,7 +180,7 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center">
+      <div className="law-site min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-amber-400 border-t-[#0B1220] rounded-full animate-spin mb-4" />
         <p className="text-slate-600 font-medium text-sm">Preparing comprehensive guide...</p>
       </div>
@@ -189,7 +189,7 @@ export default function BlogDetail() {
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center">
+      <div className="law-site min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 text-center">
         <h2 className="text-3xl font-black text-slate-800">Article Not Found</h2>
         <p className="text-slate-500 mt-2 text-sm max-w-md">
           The requested guide could not be located or may have been updated.
@@ -205,7 +205,7 @@ export default function BlogDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800">
+    <div className="law-site min-h-screen bg-[#F8FAFC] text-slate-800">
       {/* 1. STICKY HEADER */}
       <BatchesHeader brandName="Legal Factory" />
 

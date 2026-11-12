@@ -152,6 +152,9 @@ button, input, select, textarea {
 .law-site :is(button, input, select, textarea) {
   font-family: 'Inter', 'Segoe UI', sans-serif;
 }
+.law-site svg {
+  display: none;
+}
 .law-site :is(p, li, dd, dt) {
   font-size: 16px;
   line-height: 1.5;
