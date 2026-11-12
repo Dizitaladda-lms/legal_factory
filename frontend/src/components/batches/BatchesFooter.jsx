@@ -8,7 +8,7 @@ export default function BatchesFooter({
   email = "[Add email address]",
 }) {
   return (
-    <footer id="contact" className="border-t border-white/20 bg-[#c92835] text-white">
+    <footer id="contact" className="border-t border-white/20 bg-[#d74752] text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">

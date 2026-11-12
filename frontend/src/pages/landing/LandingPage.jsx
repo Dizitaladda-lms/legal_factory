@@ -84,6 +84,7 @@ export default function LandingPage() {
   const [loadError, setLoadError] = useState(false);
   const [currentAffairs, setCurrentAffairs] = useState([]);
   const [latestBlogs, setLatestBlogs] = useState([]);
+  const [newsPeriod, setNewsPeriod] = useState("current");
   const [newsLoading, setNewsLoading] = useState(true);
 
   useEffect(() => {
@@ -108,16 +109,21 @@ export default function LandingPage() {
 
   useEffect(() => {
     let active = true;
-    api.get("/api/blogs", { params: { limit: 50 } })
-      .then(({ data }) => {
+    Promise.all([
+      api.get("/api/blogs", { params: { page: 1, limit: 50 } }),
+      api.get("/api/blogs", { params: { page: 2, limit: 50 } }),
+    ])
+      .then(([latestResponse, archiveResponse]) => {
         if (!active) return;
         const legalTopics = /\b(clat|judiciary|legal|law|supreme court|high court|constitution|current affairs|case law|court|criminal|civil|ipc|bns|parliament|judgment|bill|act)\b/i;
-        const posts = Array.isArray(data?.blogs) ? data.blogs : [];
-        setLatestBlogs(posts.slice(0, 3));
+        const firstPage = Array.isArray(latestResponse.data?.blogs) ? latestResponse.data.blogs : [];
+        const secondPage = Array.isArray(archiveResponse.data?.blogs) ? archiveResponse.data.blogs : [];
+        const posts = [...firstPage, ...secondPage].filter((post, index, all) => all.findIndex((item) => item.slug === post.slug) === index);
+        setLatestBlogs(firstPage.slice(0, 3));
         setCurrentAffairs(posts.filter((post) => {
           const tags = Array.isArray(post.tags) ? post.tags.join(" ") : post.tags || "";
           return legalTopics.test([post.title, post.category, post.summary, post.keywords, tags].filter(Boolean).join(" "));
-        }).slice(0, 3));
+        }).sort((a, b) => new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0)));
       })
       .catch(() => {
         if (!active) return;
@@ -134,6 +140,14 @@ export default function LandingPage() {
     return Number.isNaN(date.getTime()) ? "Recently published" : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   };
 
+  const archiveBoundary = new Date();
+  archiveBoundary.setFullYear(archiveBoundary.getFullYear() - 1);
+  const visibleNews = currentAffairs.filter((post) => {
+    const date = new Date(post.published_at || post.created_at || "");
+    const isRecent = !Number.isNaN(date.getTime()) && date >= archiveBoundary;
+    return newsPeriod === "current" ? isRecent : !isRecent;
+  }).slice(0, 3);
+
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
       <BatchesHeader brandName="Lawyer Factory" />
@@ -148,16 +162,16 @@ export default function LandingPage() {
                 Law entrance and judiciary preparation
               </p>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.08] tracking-[-.045em] text-[#252525] sm:text-5xl lg:text-[3.7rem]">
-                Young Age, Big Legal Career <span className="text-[#c92835]">future in law.</span>
+                Young Age, Big <span className="text-[#d74752]">Legal Career</span>.
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-[#666] sm:text-lg sm:leading-8">
                Crack CLAT UG, Judiciary or CLAT PG with clear concepts, live classes, regular mock tests and mentors who guide you at every step. Learn in Hindi + English.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#a91f2b]">
+                <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#d74752] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#b73540]">
                   Explore Courses
                 </a>
-                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] transition hover:bg-[#f5f5f5]">
+                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] transition hover:bg-[#f5f5f5]">
                   Book a Free Demo
                 </a>
               </div>
@@ -167,26 +181,35 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-xl">
-              <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#efd5d7] bg-white p-5 shadow-[0_22px_70px_rgba(96,28,34,.09)] sm:min-h-[400px] sm:p-7">
-                <div className="absolute inset-x-0 top-0 h-2 bg-[#c92835]" />
-                <div className="flex h-full min-h-[290px] flex-col justify-between rounded-[22px] bg-[#ffffff] p-6 sm:min-h-[350px] sm:p-8">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Your legal learning path</span>
-                      <h2 className="mt-3 max-w-xs text-2xl font-bold leading-tight tracking-tight sm:text-3xl">Choose the exam you are preparing for</h2>
-                    </div>
-                  </div>
-                  <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                    {["CLAT UG", "Judiciary", "CLAT PG"].map((label, index) => (
-                      <a key={label} href="#courses" className="group rounded-2xl border border-[#eedcdd] bg-white p-4 transition hover:-translate-y-1 hover:border-[#c92835] hover:shadow-md">
-                        <span className="mt-3 block text-sm font-bold">{label}</span>
-                        <span className="mt-1 inline-flex items-center text-xs text-[#777] group-hover:text-[#c92835]">View course</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="hero-visual mx-auto w-full max-w-[520px]" aria-label="Law education at Lawyer Factory">
+              <div className="hero-visual__blob" aria-hidden="true" />
+
+              <svg className="hero-visual__scales" viewBox="0 0 400 400" role="img" aria-labelledby="hero-scales-title">
+                <title id="hero-scales-title">Animated Scales of Justice</title>
+                <path d="M200 91v196M151 287h98M166 309h68" fill="none" stroke="#333333" strokeWidth="12" strokeLinecap="round" />
+
+                <g className="hero-visual__beam">
+                  <path d="M100 108h200" fill="none" stroke="#c8202f" strokeWidth="12" strokeLinecap="round" />
+                  <circle cx="100" cy="108" r="9" fill="#c8202f" />
+                  <circle cx="300" cy="108" r="9" fill="#c8202f" />
+
+                  <g className="hero-visual__pan hero-visual__pan--left">
+                    <path d="M100 116v91M66 207h68" fill="none" stroke="#333333" strokeWidth="6" strokeLinecap="round" />
+                    <path d="M55 211q5 34 45 34t45-34" fill="#c8202f" />
+                  </g>
+                  <g className="hero-visual__pan hero-visual__pan--right">
+                    <path d="M300 116v91M266 207h68" fill="none" stroke="#333333" strokeWidth="6" strokeLinecap="round" />
+                    <path d="M255 211q5 34 45 34t45-34" fill="#c8202f" />
+                  </g>
+                </g>
+              </svg>
+
+              {/* Edit tag text or section links here. */}
+              <a className="hero-visual__tag hero-visual__tag--clat" href="#courses">CLAT UG</a>
+              <a className="hero-visual__tag hero-visual__tag--judiciary" href="#courses">Judiciary</a>
+              <a className="hero-visual__tag hero-visual__tag--pg" href="#courses">CLAT PG</a>
+              <a className="hero-visual__tag hero-visual__tag--live" href="#courses">Live Classes</a>
+              <a className="hero-visual__tag hero-visual__tag--mocks" href="#test-series">Mock Tests</a>
             </div>
           </div>
         </section>
@@ -196,7 +219,7 @@ export default function LandingPage() {
           <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2.5 px-4 py-5 sm:px-6 lg:px-8">
             <span className="mr-2 text-sm font-bold text-[#555]">Explore by goal</span>
             {["CLAT UG", "Judiciary", "CLAT PG", "Test Series", "Free Resources"].map((label) => (
-              <a key={label} href={label.includes("Resource") ? "#resources" : label.includes("Test") ? "#test-series" : "#courses"} className="rounded-full border border-[#ece3e4] px-4 py-2 text-xs font-semibold text-[#5d5d5d] transition hover:border-[#c92835] hover:text-[#c92835] sm:text-sm">
+              <a key={label} href={label.includes("Resource") ? "#resources" : label.includes("Test") ? "#test-series" : "#courses"} className="rounded-full border border-[#ece3e4] px-4 py-2 text-xs font-semibold text-[#5d5d5d] transition hover:border-[#d74752] hover:text-[#d74752] sm:text-sm">
                 {label}
               </a>
             ))}
@@ -206,14 +229,14 @@ export default function LandingPage() {
         {/* Learning pillars */}
         <section id="approach" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">A considered way to prepare</p>
+            <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">A considered way to prepare</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learning built around your law exam goals</h2>
             <p className="mt-3 leading-7 text-[#686868]">Review the program structure, practice regularly and find support as your preparation progresses.</p>
           </div>
           <div className="mt-9 grid gap-4 md:grid-cols-3">
             {learningPillars.map(({ title, copy }, index) => (
               <article key={title} className="rounded-2xl border border-[#eee8e8] bg-white p-6 transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(35,25,25,.07)]">
-                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-[#c92835]">0{index + 1}</p>
+                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-[#d74752]">0{index + 1}</p>
                 <h3 className="mt-2 text-lg font-bold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#6b6b6b]">{copy}</p>
               </article>
@@ -225,14 +248,14 @@ export default function LandingPage() {
         <section id="lawyer-roadmap" className="lawyer-roadmap overflow-hidden border-y border-[#eee8e8] bg-white py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Your legal career path</p>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Your legal career path</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Zero to Lawyer: the roadmap</h2>
               <p className="mt-4 leading-7 text-[#686868]">A high-level guide from choosing a law degree to preparing for legal practice in India. Your route depends on your education, university and current bar requirements.</p>
             </div>
             <ol className="roadmap-track mt-10 grid gap-5 md:grid-cols-3 xl:grid-cols-6">
               {lawyerRoadmap.map((step, index) => (
                 <li key={step.title} className="roadmap-step relative pt-1">
-                  <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#c92835] bg-white text-sm font-bold text-[#c92835]">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#d74752] bg-white text-sm font-bold text-[#d74752]">{String(index + 1).padStart(2, "0")}</span>
                   <article className="roadmap-card mt-4 flex min-h-[360px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white shadow-lg" style={{ backgroundImage: `linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.84) 78%), url('/lawyer-roadmap-scenes.png')`, backgroundSize: `100% 100%, 300% 200%`, backgroundPosition: `center, ${step.imagePosition}`, backgroundRepeat: "no-repeat" }}>
                     <h3 className="text-xl font-bold leading-snug text-white">{step.title}</h3>
                     <p className="mt-3 text-white/90">{step.detail}</p>
@@ -250,11 +273,11 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Find your program</p>
+                <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Find your program</p>
                 <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Courses for your next step in law</h2>
                 <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Current batch dates, language and pricing are shown from the course catalog.</p>
               </div>
-              <Link to="/courses" className="inline-flex items-center self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all courses</Link>
+              <Link to="/courses" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all courses</Link>
             </div>
 
             {loading ? (
@@ -270,7 +293,7 @@ export default function LandingPage() {
                     <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f5f5f5] p-5">
                       <div className="absolute -right-7 -top-14 h-44 w-44 rounded-full border border-[#e9c1c4]" />
                       <div className="absolute -right-1 -top-8 h-32 w-32 rounded-full border border-[#e9c1c4]" />
-                      <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#c92835]">{courseType(course)}</span>
+                      <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#d74752]">{courseType(course)}</span>
                     </div>
                     <div className="flex flex-1 flex-col p-5">
                       <h3 className="text-xl font-bold leading-snug">{course.name}</h3>
@@ -280,7 +303,7 @@ export default function LandingPage() {
                         <span>Language: {course.language || "Hindi + English"}</span>
                         <span className="col-span-2 font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
                       </div>
-                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#c92835] px-4 text-sm font-bold text-[#c92835] transition hover:bg-[#c92835] hover:text-white">
+                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#d74752] px-4 text-sm font-bold text-[#d74752] transition hover:bg-[#d74752] hover:text-white">
                         View Course Details
                       </Link>
                     </div>
@@ -297,32 +320,39 @@ export default function LandingPage() {
         <section id="current-affairs" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Stay informed</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT current affairs and legal news</h2>
-              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Read published updates relevant to CLAT, Judiciary and important legal developments.</p>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Stay informed</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT and law related news</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Browse recent legal developments and older law-related updates for your preparation.</p>
             </div>
-            <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#c92835] hover:underline sm:self-auto">View all articles</Link>
+            <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all articles</Link>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Filter legal news by date">
+            {[{ id: "current", label: "Current news" }, { id: "archive", label: "Past legal news" }].map((tab) => (
+              <button key={tab.id} type="button" role="tab" aria-selected={newsPeriod === tab.id} onClick={() => setNewsPeriod(tab.id)} className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition ${newsPeriod === tab.id ? "border-[#d74752] bg-[#d74752] text-white" : "border-[#e6d8d9] bg-white text-[#575757] hover:border-[#d74752] hover:text-[#d74752]"}`}>
+                {tab.label}
+              </button>
+            ))}
           </div>
           {newsLoading ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
               {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
             </div>
-          ) : currentAffairs.length ? (
+          ) : visibleNews.length ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {currentAffairs.map((post) => (
+              {visibleNews.map((post) => (
                 <article key={post.id || post.slug} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
-                  <p className="text-sm font-semibold text-[#c92835]">{post.category || "Law and current affairs"}</p>
+                  <p className="text-sm font-semibold text-[#d74752]">{post.category || "Law and current affairs"}</p>
                   <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
                   <p className="mt-3 flex-1 text-[#686868]">{post.summary || post.meta_description || "Open this article to read the full update."}</p>
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
                     <time dateTime={post.published_at || post.created_at || undefined}>{formatNewsDate(post.published_at || post.created_at)}</time>
-                    <Link to={`/blog/${post.slug}`} className="font-semibold text-[#c92835] hover:underline">Read article</Link>
+                    <Link to={`/blog/${post.slug}`} className="font-semibold text-[#d74752] hover:underline">Read article</Link>
                   </div>
                 </article>
               ))}
             </div>
           ) : (
-            <p className="mt-8 rounded-2xl border border-dashed border-[#dfb8bb] bg-[#ffffff] p-7 text-[#686868]">New CLAT and legal affairs articles will appear here when published.</p>
+            <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] bg-white p-7 text-[#686868]">{newsPeriod === "current" ? "New CLAT and legal news updates will appear here when published." : "Earlier law-related articles will appear here when available."}</p>
           )}
         </section>
 
@@ -332,10 +362,10 @@ export default function LandingPage() {
             <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-white/75">Practice pathway</p>
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Test series and performance review</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-white/85">Course pages show the tests, previous-paper practice and analysis included in each program as details are added.</p>
-            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">See course details</Link>
+            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">See course details</Link>
           </article>
           <article id="resources" className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
-            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Free preparation resources</p>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#d74752]">Free preparation resources</p>
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Start with helpful study material</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-[#686868]">Resource links and downloadable practice material can be added here as they are ready.</p>
             <div className="mt-6 flex flex-wrap gap-2">
@@ -348,7 +378,7 @@ export default function LandingPage() {
         <section id="faculty" className="border-y border-[#eee8e8] bg-[#ffffff] py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Meet the team</p>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Meet the team</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learn from our expert trainers</h2>
               <p className="mt-4 leading-7 text-[#686868]">Meet the educators guiding students through CLAT UG, Judiciary and CLAT PG preparation.</p>
             </div>
@@ -357,7 +387,7 @@ export default function LandingPage() {
                 <article key={`${trainer.subject}-${index}`} className="overflow-hidden rounded-2xl border border-[#eee8e8] bg-white">
                   <div className="grid aspect-[4/3] place-items-center bg-[#f7f3f3] text-sm font-medium text-[#686868]">[Add trainer photo]</div>
                   <div className="p-5">
-                    <p className="text-sm font-semibold text-[#c92835]">{trainer.subject}</p>
+                    <p className="text-sm font-semibold text-[#d74752]">{trainer.subject}</p>
                     <h3 className="mt-2 text-xl font-bold text-[#292929]">{trainer.name}</h3>
                     <p className="mt-2 text-[#555]">{trainer.qualification}</p>
                     <p className="mt-2 text-[#686868]">{trainer.experience}</p>
@@ -371,7 +401,7 @@ export default function LandingPage() {
         <section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
             <div className="flex items-start gap-4">
-              <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Student experiences</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Stories from learners</h2><p className="mt-2 text-sm leading-6 text-[#686868]">Genuine student feedback and outcomes will be added here after approval.</p></div>
+              <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Student experiences</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Stories from learners</h2><p className="mt-2 text-sm leading-6 text-[#686868]">Genuine student feedback and outcomes will be added here after approval.</p></div>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               {[0, 1, 2].map((item) => <div key={item} className="rounded-2xl bg-[#ffffff] p-5"><p className="text-sm text-[#686868]">[Add an approved student experience]</p><p className="mt-4 text-xs font-semibold text-[#a96065]">[Student name · course]</p></div>)}
@@ -381,9 +411,9 @@ export default function LandingPage() {
 
         <section className="bg-[#ffffff] py-16 sm:py-20">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Need help choosing?</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Frequently asked questions</h2></div>
+            <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Need help choosing?</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Frequently asked questions</h2></div>
             <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
-              {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]"><span>{faq.q}</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
+              {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]"><span>{faq.q}</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
             </div>
           </div>
         </section>
@@ -392,7 +422,7 @@ export default function LandingPage() {
         <section id="latest-blogs" className="border-t border-[#eee8e8] bg-white py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">From the blog</p>
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">From the blog</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Latest blogs</h2>
               <p className="mx-auto mt-3 max-w-2xl leading-7 text-[#686868]">Read recent articles and updates from Lawyer Factory.</p>
             </div>
@@ -404,12 +434,12 @@ export default function LandingPage() {
               <div className="mt-8 grid gap-5 md:grid-cols-3">
                 {latestBlogs.map((post) => (
                   <article key={post.id || post.slug} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
-                    <p className="text-sm font-semibold text-[#c92835]">{post.category || "Article"}</p>
+                    <p className="text-sm font-semibold text-[#d74752]">{post.category || "Article"}</p>
                     <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
                     <p className="mt-3 flex-1 text-[#686868]">{post.summary || post.meta_description || "Read the full article for details."}</p>
                     <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
                       <time dateTime={post.published_at || post.created_at || undefined}>{formatNewsDate(post.published_at || post.created_at)}</time>
-                      <Link to={`/blog/${post.slug}`} className="font-semibold text-[#c92835] hover:underline">Read blog</Link>
+                      <Link to={`/blog/${post.slug}`} className="font-semibold text-[#d74752] hover:underline">Read blog</Link>
                     </div>
                   </article>
                 ))}
@@ -418,7 +448,7 @@ export default function LandingPage() {
               <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] p-7 text-center text-[#686868]">New blog posts will appear here when published.</p>
             )}
             <div className="mt-8 text-center">
-              <Link to="/blogs" className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#c92835] px-7 text-sm font-bold text-white transition hover:bg-[#a91f2b]">More Blogs</Link>
+              <Link to="/blogs" className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d74752] px-7 text-sm font-bold text-white transition hover:bg-[#b73540]">More Blogs</Link>
             </div>
           </div>
         </section>
@@ -426,7 +456,7 @@ export default function LandingPage() {
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="flex flex-col justify-between gap-5 rounded-[26px] bg-[#292929] p-7 text-white sm:flex-row sm:items-center sm:p-9">
             <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#ffb8bd]">Take the next step</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Find the right law preparation course</h2><p className="mt-2 text-sm text-white/70">Explore course details or get in touch about a free demo.</p></div>
-            <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses</Link>
+            <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#d74752] px-6 text-sm font-bold text-white hover:bg-[#b73540]">Browse courses</Link>
           </div>
         </section>
       </main>

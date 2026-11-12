@@ -64,17 +64,17 @@ export default function CourseDetails() {
         <main className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
           <h1 className="mt-5 text-3xl font-bold">Course details are unavailable</h1>
           <p className="mt-3 text-sm leading-6 text-[#686868]">This course may not be published yet. Browse the current course catalog to see available programs.</p>
-          <Link to="/courses" className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Browse courses</Link>
+          <Link to="/courses" className="mt-7 inline-flex min-h-11 items-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">Browse courses</Link>
         </main>
       ) : (
         <main>
           {/* Course overview and primary actions */}
           <section className="border-b border-[#eee8e8] bg-[#ffffff]">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
-              <nav className="mb-7 text-xs font-medium text-[#777]" aria-label="Breadcrumb"><Link to="/" className="hover:text-[#c92835]">Home</Link><span className="mx-2">/</span><Link to="/courses" className="hover:text-[#c92835]">Courses</Link><span className="mx-2">/</span><span className="text-[#555]">{course.name}</span></nav>
+              <nav className="mb-7 text-xs font-medium text-[#777]" aria-label="Breadcrumb"><Link to="/" className="hover:text-[#d74752]">Home</Link><span className="mx-2">/</span><Link to="/courses" className="hover:text-[#d74752]">Courses</Link><span className="mx-2">/</span><span className="text-[#555]">{course.name}</span></nav>
               <div className="grid items-start gap-9 lg:grid-cols-[1fr_350px] lg:gap-12">
                 <div>
-                  <span className="inline-flex rounded-full border border-[#edc9cc] bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#c92835]">{course.slug?.includes("judiciary") ? "Judiciary preparation" : course.slug?.includes("pg") ? "Postgraduate law entrance" : "Law entrance preparation"}</span>
+                  <span className="inline-flex rounded-full border border-[#edc9cc] bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-[#d74752]">{course.slug?.includes("judiciary") ? "Judiciary preparation" : course.slug?.includes("pg") ? "Postgraduate law entrance" : "Law entrance preparation"}</span>
                   <h1 className="mt-4 max-w-4xl text-3xl font-bold leading-tight tracking-[-.035em] sm:text-4xl lg:text-5xl">{course.name}</h1>
                   <p className="mt-4 max-w-3xl text-base leading-7 text-[#666]">{course.description || "Course description will be added soon."}</p>
                   <div className="mt-6 flex flex-wrap gap-2">
@@ -83,8 +83,8 @@ export default function CourseDetails() {
                     <span className="rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-sm font-semibold text-[#555]">Duration: {course.duration_label || "To be announced"}</span>
                   </div>
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                    <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
-                    <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] hover:bg-[#f5f5f5]">Free Demo Class</a>
+                    <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d74752] px-6 text-sm font-bold text-white hover:bg-[#b73540]">Enroll Now</a>
+                    <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] hover:bg-[#f5f5f5]">Free Demo Class</a>
                   </div>
                 </div>
 
@@ -96,10 +96,10 @@ export default function CourseDetails() {
                   )}
                   <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Course fee</p>
                   <p className="mt-1 text-3xl font-bold tracking-tight">{price}</p>
-                  {course.discount_label && <p className="mt-2 text-sm font-semibold text-[#c92835]">{course.discount_label}</p>}
-                  <p className="mt-3 text-xs leading-5 text-[#777]">{course.refund_policy_summary || "Review the refund terms before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Refund policy</a>}</p>
-                  <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
-                  <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-[#f5f5f5]">Book a Free Demo</a>
+                  {course.discount_label && <p className="mt-2 text-sm font-semibold text-[#d74752]">{course.discount_label}</p>}
+                  <p className="mt-3 text-xs leading-5 text-[#777]">{course.refund_policy_summary || "Review the refund terms before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#d74752] underline">Refund policy</a>}</p>
+                  <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">Enroll Now</a>
+                  <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d74752] px-5 text-sm font-bold text-[#d74752] hover:bg-[#f5f5f5]">Book a Free Demo</a>
                 </aside>
               </div>
             </div>
@@ -107,7 +107,7 @@ export default function CourseDetails() {
 
           {/* Course inclusions */}
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
-            <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">The learning experience</p><h2 className="mt-3 text-3xl font-bold tracking-tight">What you get in this course</h2><p className="mt-3 leading-7 text-[#686868]">Review the course support and learning materials included in this program.</p></div>
+            <div className="max-w-2xl"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">The learning experience</p><h2 className="mt-3 text-3xl font-bold tracking-tight">What you get in this course</h2><p className="mt-3 leading-7 text-[#686868]">Review the course support and learning materials included in this program.</p></div>
             {course.course_benefits?.length ? (
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {course.course_benefits.map((benefit) => (
@@ -122,7 +122,7 @@ export default function CourseDetails() {
           {/* Expandable course modules */}
           <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Course curriculum</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Modules and subjects</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#686868]">Expand a module to see its lesson and practice components.</p></div>
+              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Course curriculum</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Modules and subjects</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#686868]">Expand a module to see its lesson and practice components.</p></div>
               <div className="mt-8 space-y-3">
                 {course.course_modules?.length ? course.course_modules.map((module) => (
                   <details key={`${module.position}-${module.title}`} className="group overflow-hidden rounded-2xl border border-[#eee3e4] bg-white">
@@ -141,7 +141,7 @@ export default function CourseDetails() {
 
           {/* Test series cards */}
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
-            <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Practice and review</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Test series</h2><p className="mt-3 max-w-2xl leading-7 text-[#686868]">See the practice tests and review methods included in this course.</p></div>
+            <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Practice and review</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Test series</h2><p className="mt-3 max-w-2xl leading-7 text-[#686868]">See the practice tests and review methods included in this course.</p></div>
             {course.course_tests?.length ? (
               <div className="mt-8 grid gap-4 md:grid-cols-3">{course.course_tests.map((test) => <article key={`${test.position}-${test.title}`} className="rounded-2xl border border-[#eee8e8] p-5"><h3 className="font-bold">{test.title}</h3><p className="mt-2 text-sm leading-6 text-[#686868]">{test.description}</p></article>)}</div>
             ) : <p className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Test series details will be added soon.</p>}
@@ -150,7 +150,7 @@ export default function CourseDetails() {
           {/* Batch information */}
           <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Plan your preparation</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Batch details</h2></div>
+              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Plan your preparation</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Batch details</h2></div>
               <dl className="mt-8 overflow-hidden rounded-2xl border border-[#eee3e4] bg-white">
                 {[
                   ["Batch start", formatDate(course.batch_start_date)],
@@ -165,7 +165,7 @@ export default function CourseDetails() {
 
           {/* Verified faculty only */}
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
-            <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Meet your mentors</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Faculty</h2><p className="mt-3 text-sm text-[#686868]">Faculty profiles and verified qualifications.</p></div>
+            <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Meet your mentors</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Faculty</h2><p className="mt-3 text-sm text-[#686868]">Faculty profiles and verified qualifications.</p></div>
             {course.course_faculty?.length ? (
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{course.course_faculty.map((member, index) => <article key={`${member.name}-${index}`} className="rounded-2xl border border-[#eee8e8] p-5">{member.photo_url ? <img src={member.photo_url} alt={member.name} loading="lazy" className="h-44 w-full rounded-xl object-cover" /> : <div className="grid h-44 place-items-center rounded-xl bg-[#f5f5f5] text-sm font-semibold text-[#b15d63]">[Faculty photo]</div>}<h3 className="mt-4 font-bold">{member.name}</h3><p className="mt-1 text-sm text-[#686868]">{member.qualification}</p></article>)}</div>
             ) : <div className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Verified faculty profiles will be added here.</div>}
@@ -174,13 +174,13 @@ export default function CourseDetails() {
           {/* Questions */}
           <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Course support</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Frequently asked questions</h2></div>
+              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Course support</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Frequently asked questions</h2></div>
               <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">What is the course fee?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{price}. Check this page for current pricing and enrollment details.</p></details>
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">What is the refund policy?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.refund_policy_summary || "Please review the refund policy before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Read the full policy</a>}</p></details>
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">Are class recordings available?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.learning_mode || "Recording availability will be confirmed for the selected batch."}</p></details>
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">Which language is used for teaching?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.language || "Hindi + English"}</p></details>
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]">How do I attend a free demo?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">Use the Free Demo Class button and follow the current booking instructions.</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">What is the course fee?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{price}. Check this page for current pricing and enrollment details.</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">What is the refund policy?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.refund_policy_summary || "Please review the refund policy before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#d74752] underline">Read the full policy</a>}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">Are class recordings available?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.learning_mode || "Recording availability will be confirmed for the selected batch."}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">Which language is used for teaching?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.language || "Hindi + English"}</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">How do I attend a free demo?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">Use the Free Demo Class button and follow the current booking instructions.</p></details>
               </div>
             </div>
           </section>
@@ -188,7 +188,7 @@ export default function CourseDetails() {
           {/* Mobile enrollment bar */}
           <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-[#eadcdd] bg-white px-4 py-3 shadow-[0_-8px_28px_rgba(35,25,25,.08)] lg:hidden">
             <div className="min-w-0"><span className="block truncate text-sm font-bold">{price}</span><span className="block truncate text-[11px] text-[#777]">{course.name}</span></div>
-            <a href={enrollHref} className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-[#c92835] px-4 text-sm font-bold text-white">Enroll Now</a>
+            <a href={enrollHref} className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-[#d74752] px-4 text-sm font-bold text-white">Enroll Now</a>
           </div>
         </main>
       )}

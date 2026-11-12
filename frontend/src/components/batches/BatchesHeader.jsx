@@ -14,7 +14,7 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#a91f2b] bg-[#c92835] text-white">
+    <header className="sticky top-0 z-50 border-b border-[#b73540] bg-[#d74752] text-white">
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${brandName} home`}>
           <img src="/lawyer-factory-logo.png" alt="The Lawyer’s Factory logo" className="h-10 w-10 rounded-full border border-white/30 bg-black object-contain" />
@@ -31,7 +31,7 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
 
         <div className="hidden items-center gap-4 lg:flex">
           <Link to="/login" className="text-sm font-semibold text-white hover:text-white/80">Login</Link>
-          <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#a91f2b] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">
+          <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#b73540] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">
             Explore Courses
           </Link>
         </div>
@@ -48,15 +48,15 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
       </div>
 
       {mobileOpen && (
-        <nav className="border-t border-[#a91f2b] bg-white px-4 py-3 text-[#292929] shadow-lg lg:hidden" aria-label="Mobile navigation">
+        <nav className="border-t border-[#b73540] bg-white px-4 py-3 text-[#292929] shadow-lg lg:hidden" aria-label="Mobile navigation">
           {navItems.map((item) => (
-            <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#f5f5f5] hover:text-[#c92835]">
+            <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#f5f5f5] hover:text-[#d74752]">
               {item.label}
             </Link>
           ))}
           <div className="mt-2 grid grid-cols-2 gap-2 border-t border-[#f0eaea] pt-3">
-            <Link to="/login" onClick={() => setMobileOpen(false)} className="rounded-full border border-[#c92835] px-4 py-2.5 text-center text-sm font-semibold text-[#c92835]">Login</Link>
-            <Link to="/courses" onClick={() => setMobileOpen(false)} className="rounded-full bg-[#c92835] px-4 py-2.5 text-center text-sm font-bold text-white">Explore Courses</Link>
+            <Link to="/login" onClick={() => setMobileOpen(false)} className="rounded-full border border-[#d74752] px-4 py-2.5 text-center text-sm font-semibold text-[#d74752]">Login</Link>
+            <Link to="/courses" onClick={() => setMobileOpen(false)} className="rounded-full bg-[#d74752] px-4 py-2.5 text-center text-sm font-bold text-white">Explore Courses</Link>
           </div>
         </nav>
       )}
