@@ -190,25 +190,12 @@ export default function LandingPage() {
             <div className="hero-visual mx-auto w-full max-w-[520px]" aria-label="Law education at Lawyer Factory">
               <div className="hero-visual__blob" aria-hidden="true" />
 
-              <svg className="hero-visual__scales" viewBox="0 0 400 400" role="img" aria-labelledby="hero-scales-title">
-                <title id="hero-scales-title">Animated Scales of Justice</title>
-                <path d="M200 91v196M151 287h98M166 309h68" fill="none" stroke="#333333" strokeWidth="12" strokeLinecap="round" />
-
-                <g className="hero-visual__beam">
-                  <path d="M100 108h200" fill="none" stroke="#c8202f" strokeWidth="12" strokeLinecap="round" />
-                  <circle cx="100" cy="108" r="9" fill="#c8202f" />
-                  <circle cx="300" cy="108" r="9" fill="#c8202f" />
-
-                  <g className="hero-visual__pan hero-visual__pan--left">
-                    <path d="M100 116v91M66 207h68" fill="none" stroke="#333333" strokeWidth="6" strokeLinecap="round" />
-                    <path d="M55 211q5 34 45 34t45-34" fill="#c8202f" />
-                  </g>
-                  <g className="hero-visual__pan hero-visual__pan--right">
-                    <path d="M300 116v91M266 207h68" fill="none" stroke="#333333" strokeWidth="6" strokeLinecap="round" />
-                    <path d="M255 211q5 34 45 34t45-34" fill="#c8202f" />
-                  </g>
-                </g>
-              </svg>
+              <img
+                className="hero-visual__statue"
+                src="/lady-justice.png"
+                alt="Lady Justice holding the scales of justice"
+                loading="lazy"
+              />
 
               {/* Edit tag text or section links here. */}
               <a className="hero-visual__tag hero-visual__tag--clat" href="#courses">CLAT UG</a>
