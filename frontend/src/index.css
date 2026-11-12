@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Fredoka', 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', 'Segoe UI', sans-serif;
   --color-page-bg: #FFFFFF;
   --color-heading: #3D3D3D;
   --color-strong: #1B2124;
@@ -10,9 +10,9 @@
   --color-icon-grey: #7B7F86;
   --color-border-edtech: #EFEFEF;
   --color-table-header: #c2e0f4;
-  --color-primary: #5A4BFF;
-  --color-primary-10: rgba(90, 75, 255, 0.1);
-  --color-accent: #F59E0B;
+  --color-primary: #C92835;
+  --color-primary-10: rgba(201, 40, 53, 0.1);
+  --color-accent: #C92835;
 }
 
 :root {
@@ -26,9 +26,9 @@
   --dot-active: #414347;
   --table-header: #c2e0f4;
   --table-border: #000000;
-  --primary: #5A4BFF;
-  --primary-10: rgba(90, 75, 255, 0.1);
-  --accent: #F59E0B;
+  --primary: #C92835;
+  --primary-10: rgba(201, 40, 53, 0.1);
+  --accent: #C92835;
   --card-shadow: 0 0 5px rgba(163, 163, 163, 0.54);
 }
 
@@ -52,13 +52,17 @@
 
 /* Global Uniform Typography */
 html, body, #root {
-  font-family: 'Fredoka', 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 *, *::before, *::after {
   font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', 'Inter', sans-serif;
 }
 
 button, input, select, textarea {

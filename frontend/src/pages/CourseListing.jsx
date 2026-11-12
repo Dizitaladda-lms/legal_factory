@@ -53,7 +53,7 @@ export default function CourseListing() {
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
-      <BatchesHeader brandName="[WEBSITE NAME]" />
+      <BatchesHeader brandName="Legal Factory" />
       <main>
         <section className="border-b border-[#eee8e8] bg-[#fffafa]">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
@@ -128,7 +128,7 @@ export default function CourseListing() {
           </div>
         </section>
       </main>
-      <BatchesFooter brandName="[WEBSITE NAME]" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 }

@@ -73,7 +73,7 @@ export default function CourseDetails() {
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
-      <BatchesHeader brandName="[WEBSITE NAME]" />
+      <BatchesHeader brandName="Legal Factory" />
       {loading ? (
         <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" aria-live="polite">
           <div className="h-8 w-40 animate-pulse rounded bg-[#f7e8e9]" />
@@ -216,7 +216,7 @@ export default function CourseDetails() {
           </div>
         </main>
       )}
-      <BatchesFooter brandName="[WEBSITE NAME]" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 }

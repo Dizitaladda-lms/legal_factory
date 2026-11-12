@@ -64,7 +64,7 @@ export default function VerifyCertificate() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col font-sans">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="CS Factory" />
+      <BatchesHeader brandName="Legal Factory" />
 
       {/* MAIN CONTAINER */}
       <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full flex flex-col items-center">
@@ -194,7 +194,7 @@ export default function VerifyCertificate() {
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-slate-500 font-medium">Issuing Authority:</span>
                   <span className="font-semibold text-slate-700">
-                    {certificate.issued_by || "TGS & CS Factory Administration"}
+                    {certificate.issued_by || "Legal Factory Administration"}
                   </span>
                 </div>
               </div>
@@ -206,14 +206,14 @@ export default function VerifyCertificate() {
                     href={certificate.pdf_url}
                     target="_blank"
                     rel="noreferrer"
-                    download={`TGS_Certificate_${certificate.student_name}.pdf`}
+                    download={`Legal_Factory_Certificate_${certificate.student_name}.pdf`}
                     className="inline-flex items-center gap-2 bg-[#0B1220] hover:bg-[#5A4BFF] text-white border-2 border-amber-400 px-8 py-3.5 rounded-2xl font-black text-sm shadow-xl transition cursor-pointer"
                   >
                     <FaFilePdf className="text-red-400 text-base" />
                     <span>Download Official Certificate PDF</span>
                   </a>
                   <p className="text-[11px] text-slate-400 mt-2">
-                    Verified digital copy certified by TGS & CS Factory Administration.
+                    Verified digital copy certified by Legal Factory Administration.
                   </p>
                 </div>
               ) : (
@@ -227,7 +227,7 @@ export default function VerifyCertificate() {
       </main>
 
       {/* FOOTER */}
-      <BatchesFooter brandName="CS Factory" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import PopularCourses from "./components/PopularCourses";
 import About from "./pages/About";
 import LandingPage from "./pages/landing/LandingPage";
 import Login from "./pages/auth/Login";
@@ -30,12 +29,6 @@ import MyCourses from "./pages/teacher/MyCourses";
 import UploadLecture from "./pages/teacher/UploadLecture";
 import CourseDetails from "./pages/course/CourseDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-import GovernmentPartners from "./pages/GovernmentPartners";
-import Academic from "./pages/Academic";
-import Entrance from "./pages/Entrance";
-import Competition from "./pages/Competition";
-import Skilling from "./pages/Skilling";
-import Placement from "./pages/Placement";
 import AddStudent from "./pages/admin/AddStudent";
 import CourseListing from "./pages/CourseListing";
 import Checkout from "./pages/Checkout";
@@ -66,13 +59,13 @@ function App() {
       <Route path="/ca/batches/:slug" element={<CourseDetails />} />
       <Route path="/cs/:level/batches/:slug" element={<CourseDetails />} />
       <Route path="/cs/batches/:slug" element={<CourseDetails />} />
-      <Route path="/popular" element={<PopularCourses />} />
-      <Route path="/government-partners" element={<GovernmentPartners />} />
-      <Route path="/academic" element={<Academic />} />
-      <Route path="/entrance" element={<Entrance />} />
-      <Route path="/competition" element={<Competition />} />
-      <Route path="/skilling" element={<Skilling />} />
-      <Route path="/placement" element={<Placement />} />
+      <Route path="/popular" element={<Navigate to="/courses" replace />} />
+      <Route path="/government-partners" element={<Navigate to="/courses" replace />} />
+      <Route path="/academic" element={<Navigate to="/courses" replace />} />
+      <Route path="/entrance" element={<Navigate to="/courses" replace />} />
+      <Route path="/competition" element={<Navigate to="/courses" replace />} />
+      <Route path="/skilling" element={<Navigate to="/courses" replace />} />
+      <Route path="/placement" element={<Navigate to="/courses" replace />} />
       <Route path="/verify-certificate" element={<VerifyCertificate />} />
       <Route path="/verify-certificate/:code" element={<VerifyCertificate />} />
       <Route path="/verify-email" element={<Navigate to="/checkout" replace />} />

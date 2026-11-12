@@ -10,7 +10,7 @@ export default function Login({ defaultTab = "login" }) {
   const location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const BRAND_NAME = "CS Factory";
+  const BRAND_NAME = "Legal Factory";
 
   // Login Form States (ID + Password, No OTP)
   const [loginId, setLoginId] = useState("");
@@ -109,10 +109,10 @@ export default function Login({ defaultTab = "login" }) {
             <div className="space-y-6">
               {/* Brand Logo */}
               <div>
-                <Link to="/" className="inline-block bg-white rounded-xl p-2.5 shadow-sm" aria-label="CS Factory Home">
+                <Link to="/" className="inline-block bg-white rounded-xl p-2.5 shadow-sm" aria-label="Legal Factory Home">
                   <img
                     src="/logo.png"
-                    alt="CS Factory Logo"
+                    alt="Legal Factory Logo"
                     className="h-12 sm:h-14 w-auto object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
@@ -127,27 +127,27 @@ export default function Login({ defaultTab = "login" }) {
                   Selection Hoga Yahi Se!!
                 </span>
                 <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
-                  Welcome to CS Factory
+                  Welcome to Legal Factory
                 </h1>
                 <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                  The Guidance Sanctuary (TGS)
+                  Law Entrance Coaching
                 </p>
               </div>
 
               {/* Short Description */}
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                India's premier digital learning platform dedicated to Company Secretary (CS) and Chartered Accountancy (CA) aspirants. Master concepts with All-India Rankers, comprehensive ICAI & ICSI module coverage, and structured answer templates.
+                Sign in to access your Legal Factory courses, class resources, practice materials and learning support.
               </p>
 
               {/* Key Highlights (Clean editorial bullets, zero decorative AI icons) */}
               <div className="space-y-3 pt-3 border-t border-slate-800">
                 <div className="flex items-start gap-2.5 text-xs text-slate-200">
                   <span className="text-emerald-400 font-bold shrink-0">✓</span>
-                  <span>AIR 1, 3, 7 Mentors & Ex-Big 4 Senior Advisory Faculty</span>
+                  <span>Online coaching for CLAT, Judiciary and CLAT PG</span>
                 </div>
                 <div className="flex items-start gap-2.5 text-xs text-slate-200">
                   <span className="text-emerald-400 font-bold shrink-0">✓</span>
-                  <span>100% ICAI & ICSI Module & Case-Law Coverage</span>
+                  <span>Course access and learning resources in one place</span>
                 </div>
                 <div className="flex items-start gap-2.5 text-xs text-slate-200">
                   <span className="text-emerald-400 font-bold shrink-0">✓</span>

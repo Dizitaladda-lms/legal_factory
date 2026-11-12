@@ -419,7 +419,7 @@ const Checkout = () => {
               </h1>
 
               <p className="text-emerald-100 text-base sm:text-lg mt-3 max-w-xl mx-auto">
-                Welcome to CS Factory! Your admission has been recorded in our student registry and your course access has been activated.
+                Welcome to Legal Factory! Your admission has been recorded and your course access has been activated.
               </p>
 
               <div className="mt-4 inline-flex items-center gap-2 bg-emerald-900/40 text-emerald-200 text-xs sm:text-sm px-4 py-1.5 rounded-xl border border-emerald-400/20">
@@ -628,7 +628,7 @@ const Checkout = () => {
   return (
     <div className="bg-[#F8FAFC] min-h-screen text-slate-800 flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="CS Factory" />
+      <BatchesHeader brandName="Legal Factory" />
 
       {/* Header Banner */}
       <section className="bg-[#0F172A] text-white py-10 border-b border-slate-800">
@@ -1020,7 +1020,7 @@ const Checkout = () => {
         </main>
 
       {/* FOOTER */}
-      <BatchesFooter brandName="CS Factory" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 };

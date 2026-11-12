@@ -5,7 +5,7 @@ import { FaInstagram, FaYoutube, FaLinkedinIn } from "react-icons/fa6";
 
 // Shared footer for public law coaching pages. Replace contact/social placeholders before launch.
 export default function BatchesFooter({
-  brandName = "[WEBSITE NAME]",
+  brandName = "Legal Factory",
   phone = "[Add phone number]",
   email = "[Add email address]",
 }) {

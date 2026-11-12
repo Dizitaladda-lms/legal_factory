@@ -106,11 +106,11 @@ export default function AdminLayout({ children, title, subtitle, onSyncComplete 
           {/* LOGO & BRAND TITLE */}
           <div className="flex items-center gap-4 text-center md:text-left">
             <div className="h-14 rounded-lg border border-slate-700 overflow-hidden bg-white px-2 py-1 shrink-0 shadow-md flex items-center justify-center">
-              <img src={logo} alt="CS Factory" className="h-12 w-auto object-contain" />
+              <img src={logo} alt="Legal Factory" className="h-12 w-auto object-contain" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-wide">
-                CS FACTORY LMS
+                LEGAL FACTORY LMS
               </h1>
               <p className="text-xs sm:text-sm font-bold text-[#D4A017] tracking-wider uppercase mt-0.5">
                 The Guidance Sanctuary • Admin Console

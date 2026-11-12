@@ -105,7 +105,7 @@ export default function LandingPage() {
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
-      <BatchesHeader brandName="[WEBSITE NAME]" />
+      <BatchesHeader brandName="Legal Factory" />
       <main>
         {/* Hero and primary course discovery */}
         <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#fffafa]">
@@ -308,7 +308,7 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-      <BatchesFooter brandName="[WEBSITE NAME]" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 }

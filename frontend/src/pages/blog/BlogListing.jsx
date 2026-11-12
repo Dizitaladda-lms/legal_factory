@@ -90,7 +90,7 @@ export default function BlogListing() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col justify-between">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="CS Factory" />
+      <BatchesHeader brandName="Legal Factory" />
 
       {/* ========================================================= */}
       {/* 1. HERO HEADER */}
@@ -100,7 +100,7 @@ export default function BlogListing() {
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-amber-300 border border-amber-400/30 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
             <FaBookOpen className="text-amber-400" />
-            <span>CS & CA Factory Knowledge Hub</span>
+            <span>Legal Factory Learning Resources</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight">
@@ -370,7 +370,7 @@ export default function BlogListing() {
       </main>
 
       {/* FOOTER */}
-      <BatchesFooter brandName="CS Factory" />
+      <BatchesFooter brandName="Legal Factory" />
     </div>
   );
 }

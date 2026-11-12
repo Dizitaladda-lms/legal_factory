@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Scale, Menu, X } from "lucide-react";
 
 // Shared responsive navigation for the public law coaching pages.
-export default function BatchesHeader({ brandName = "[WEBSITE NAME]" }) {
+export default function BatchesHeader({ brandName = "Legal Factory" }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
 

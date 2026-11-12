@@ -207,7 +207,7 @@ export default function BlogDetail() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800">
       {/* 1. STICKY HEADER */}
-      <BatchesHeader brandName="CS Factory" />
+      <BatchesHeader brandName="Legal Factory" />
 
       {/* ========================================================= */}
       {/* 1. TOP BREADCRUMB STRIP */}
@@ -607,7 +607,7 @@ export default function BlogDetail() {
         <Link to="/ca/batches" onClick={() => trackBlogEvent("cta_click")} className="flex-1 text-center rounded-lg bg-amber-400 text-slate-950 py-3 text-xs font-extrabold">Explore CA Courses</Link>
         <Link to="/cs/batches" onClick={() => trackBlogEvent("cta_click")} className="flex-1 text-center rounded-lg border border-white/30 text-white py-3 text-xs font-extrabold">Explore CS Courses</Link>
       </div>
-      <BatchesFooter brandName="CS Factory" />
+      <BatchesFooter brandName="Legal Factory" />
 
       {/* INJECTED BLOG STYLES FOR RICH PROSE & TABLES */}
       <style>{`
