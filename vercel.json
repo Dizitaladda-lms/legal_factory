@@ -1,4 +1,5 @@
 {
+  "installCommand": "npm ci",
   "services": {
     "frontend": {
       "root": "frontend",
