@@ -454,7 +454,7 @@ button, input, select, textarea {
 .law-site .hero-copy a[href="#contact"] { border-color: var(--lf-white); background: transparent; color: var(--lf-white) !important; }
 .law-site .hero-visual__blob { background: rgba(255, 255, 255, 0.82); }
 .law-site .hero-visual__blob { width: 90%; }
-.law-site .hero-visual__statue { position: relative; z-index: 1; width: 92%; height: 92%; object-fit: contain; }
+.law-site .hero-visual__statue { position: relative; z-index: 1; width: 82%; height: 82%; object-fit: contain; }
 @media (max-width: 639px) {
   .law-site .hero-section__overlay { background: linear-gradient(180deg, rgba(20, 22, 28, 0.86), rgba(20, 22, 28, 0.72)); }
   .law-site .hero-section__background { object-position: 52% center; }
