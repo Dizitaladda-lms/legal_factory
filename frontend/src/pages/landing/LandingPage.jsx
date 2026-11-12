@@ -151,11 +151,19 @@ export default function LandingPage() {
       <BatchesHeader brandName="Lawyer Factory" />
       <main>
         {/* Hero and primary course discovery */}
-        <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#ffffff]">
+        <section className="hero-section relative overflow-hidden border-b border-[#eee8e8] bg-[#ffffff]">
+          <img
+            className="hero-section__background"
+            src="https://akm-img-a-in.tosshub.com/indiatoday/images/story/202305/sc_clear_with_1bird-sixteen_nine.jpg?VersionId=IVPCmYoTLq6B.E_JCWaZKBbrcOYnjJaS"
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+          />
+          <div className="hero-section__overlay" aria-hidden="true" />
           <div className="pointer-events-none absolute -right-32 -top-40 h-[430px] w-[430px] rounded-full border border-[#f1dfe0]" />
           <div className="pointer-events-none absolute -right-16 -top-24 h-[300px] w-[300px] rounded-full border border-[#f1dfe0]" />
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
-            <div className="relative z-10">
+            <div className="hero-copy relative z-10">
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#edc9cc] bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-[.13em] text-[#bd2531]">
                 Law entrance and judiciary preparation
               </p>
@@ -250,11 +258,11 @@ export default function LandingPage() {
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Zero to Lawyer: the roadmap</h2>
               <p className="mt-4 leading-7 text-[#686868]">A high-level guide from choosing a law degree to preparing for legal practice in India. Your route depends on your education, university and current bar requirements.</p>
             </div>
-            <ol className="roadmap-track mt-10 grid gap-5 md:grid-cols-3 xl:grid-cols-6">
+            <ol className="roadmap-track mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {lawyerRoadmap.map((step, index) => (
                 <li key={step.title} className="roadmap-step relative pt-1">
                   <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#d74752] bg-white text-sm font-bold text-[#d74752]">{String(index + 1).padStart(2, "0")}</span>
-                  <article className="roadmap-card mt-4 flex min-h-[360px] flex-col justify-end overflow-hidden rounded-2xl p-5 text-white shadow-lg" style={{ backgroundImage: `linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.84) 78%), url('/lawyer-roadmap-scenes.png')`, backgroundSize: `100% 100%, 300% 200%`, backgroundPosition: `center, ${step.imagePosition}`, backgroundRepeat: "no-repeat" }}>
+                  <article className="roadmap-card mt-4 flex min-h-0 flex-col justify-end overflow-hidden rounded-2xl p-5 text-white shadow-lg" style={{ backgroundImage: `linear-gradient(180deg, rgba(10,10,10,.12) 0%, rgba(10,10,10,.84) 78%), url('/lawyer-roadmap-scenes.png')`, backgroundSize: `100% 100%, 300% 200%`, backgroundPosition: `center, ${step.imagePosition}`, backgroundRepeat: "no-repeat" }}>
                     <h3 className="text-xl font-bold leading-snug text-white">{step.title}</h3>
                     <p className="mt-3 text-white/90">{step.detail}</p>
                     {step.link && <a href={step.link} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-semibold text-white underline underline-offset-4">{step.linkText}</a>}

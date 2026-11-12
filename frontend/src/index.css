@@ -24,6 +24,7 @@
   --lf-section-soft: rgba(155, 28, 46, 0.06);
   --lf-border: rgba(155, 28, 46, 0.18);
   --lf-shadow: 0 8px 24px rgba(20, 22, 28, 0.08);
+  --lf-hero-overlay: linear-gradient(90deg, rgba(20, 22, 28, 0.84), rgba(20, 22, 28, 0.5));
   --bg: var(--lf-white);
   --heading: var(--lf-heading);
   --text-strong: var(--lf-heading);
@@ -428,10 +429,43 @@ button, input, select, textarea {
 .law-site header.sticky [class*="bg-[#b73540]"] { background-color: var(--lf-crimson) !important; }
 .law-site footer { background-color: var(--lf-crimson) !important; color: var(--lf-white) !important; }
 .law-site footer h2 { color: var(--lf-white) !important; }
+.law-site footer [class*="text-white/"] { color: var(--lf-white) !important; }
+.law-site footer p,
+.law-site footer li,
+.law-site footer a,
+.law-site footer span { font-weight: 500; }
 .law-site #current-affairs,
 .law-site #roadmap,
 .law-site #latest-blogs { background-color: var(--lf-section-soft); }
 .law-site h1 { font-size: clamp(2.5rem, 4.2vw, 3.5rem); }
+
+/* Supreme Court hero photo with the existing copy layered above it. */
+.law-site .hero-section { isolation: isolate; background-color: var(--lf-heading); }
+.law-site .hero-section__background,
+.law-site .hero-section__overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.law-site .hero-section__background { z-index: -2; object-fit: cover; object-position: center 48%; }
+.law-site .hero-section__overlay { z-index: -1; background: var(--lf-hero-overlay); }
+.law-site .hero-section > .pointer-events-none { display: none; }
+.law-site .hero-copy h1,
+.law-site .hero-copy h1 span { color: var(--lf-white) !important; }
+.law-site .hero-copy > p,
+.law-site .hero-copy > div:last-child span { color: rgba(255, 255, 255, 0.92) !important; }
+.law-site .hero-copy > p:first-child { border-color: rgba(255, 255, 255, 0.45); background: rgba(20, 22, 28, 0.32); }
+.law-site .hero-copy a[href="#contact"] { border-color: var(--lf-white); background: transparent; color: var(--lf-white) !important; }
+.law-site .hero-visual__blob { background: rgba(255, 255, 255, 0.82); }
+@media (max-width: 639px) {
+  .law-site .hero-section__overlay { background: linear-gradient(180deg, rgba(20, 22, 28, 0.78), rgba(20, 22, 28, 0.62)); }
+  .law-site .hero-section__background { object-position: 52% center; }
+}
+
+/* Square roadmap cards; keep enough height for their copy on narrow phones. */
+.roadmap-step { display: flex; flex-direction: column; align-items: stretch; }
+.roadmap-step article { grid-column: auto; margin-top: 1rem; }
+.roadmap-card { width: 100%; aspect-ratio: 1 / 1; min-height: 0; }
+.roadmap-track::before { display: none !important; }
+@media (max-width: 767px) {
+  .roadmap-card { aspect-ratio: auto; min-height: 360px; }
+}
 .blog-editor-canvas th, .blog-editor-canvas td {
   border: 1px solid #CBD5E1;
   padding: 0.5rem 0.75rem;
