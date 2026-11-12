@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -53,6 +53,7 @@
 /* Global Uniform Typography */
 html, body, #root {
   font-family: 'Inter', 'Segoe UI', sans-serif;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -150,6 +151,10 @@ button, input, select, textarea {
 }
 .law-site :is(button, input, select, textarea) {
   font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+.law-site :is(p, li, dd, dt) {
+  font-size: 16px;
+  line-height: 1.5;
 }
 .blog-editor-canvas th, .blog-editor-canvas td {
   border: 1px solid #CBD5E1;
