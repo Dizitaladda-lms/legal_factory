@@ -54,7 +54,7 @@ export default function CourseListing() {
     <div className="law-site min-h-screen bg-white text-[#292929]">
       <BatchesHeader brandName="Lawyer Factory" />
       <main>
-        <section className="border-b border-[#eee8e8] bg-[#fffafa]">
+        <section className="border-b border-[#eee8e8] bg-[#ffffff]">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
             <div className="max-w-3xl">
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Online law coaching</p>
@@ -79,16 +79,16 @@ export default function CourseListing() {
           </div>
 
           {loading ? (
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-80 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#fffafa]" />)}</div>
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-80 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}</div>
           ) : error ? (
-            <div className="rounded-2xl border border-[#edc9cc] bg-[#fffafa] p-8 text-center">
+            <div className="rounded-2xl border border-[#edc9cc] bg-[#ffffff] p-8 text-center">
               <p className="font-semibold">Course catalog couldn’t be loaded.</p><p className="mt-2 text-sm text-[#686868]">Please refresh the page in a moment.</p>
             </div>
           ) : visibleCourses.length ? (
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {visibleCourses.map((course) => (
                 <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
-                  <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f9e9ea] p-5">
+                  <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f5f5f5] p-5">
                     <div className="absolute -right-4 -top-12 h-40 w-40 rounded-full border border-[#e6c3c5]" />
                     <div className="absolute right-8 -top-6 h-28 w-28 rounded-full border border-[#e6c3c5]" />
                     <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#c92835]">{getType(course)}</span>
@@ -110,7 +110,7 @@ export default function CourseListing() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-[#dfb8bb] bg-[#fffafa] p-10 text-center">
+            <div className="rounded-2xl border border-dashed border-[#dfb8bb] bg-[#ffffff] p-10 text-center">
               <h3 className="mt-4 text-lg font-bold">No matching courses</h3>
               <p className="mt-2 text-sm text-[#686868]">Try another filter or search term.</p>
               <button onClick={() => { setFilter("All courses"); setSearch(""); }} className="mt-4 text-sm font-bold text-[#c92835] hover:underline">Clear filters</button>
@@ -118,7 +118,7 @@ export default function CourseListing() {
           )}
         </section>
 
-        <section className="bg-[#fffafa]">
+        <section className="bg-[#ffffff]">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <div><h2 className="text-xl font-bold">Need help choosing a course?</h2><p className="mt-1 text-sm text-[#686868]">Ask about course details or the next free demo.</p></div>
             <Link to="/#contact" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-white">Contact the team</Link>

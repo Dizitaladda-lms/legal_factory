@@ -14,30 +14,31 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#eee7e7] bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[#a91f2b] bg-[#c92835] text-white">
       <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label={`${brandName} home`}>
-          <span className="text-lg font-bold tracking-tight text-[#242424] sm:text-xl">{brandName}</span>
+          <img src="/logo.png" alt="Lawyer Factory logo" className="h-10 w-10 rounded-full border border-white/30 bg-black object-contain" />
+          <span className="text-lg font-bold tracking-tight text-white sm:text-xl">{brandName}</span>
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
           {navItems.map((item) => (
-            <Link key={item.label} to={item.href} className="text-sm font-medium text-[#525252] transition hover:text-[#c92835]">
+            <Link key={item.label} to={item.href} className="text-sm font-medium text-white/90 transition hover:text-white">
               {item.label}
             </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Link to="/login" className="text-sm font-semibold text-[#3d3d3d] hover:text-[#c92835]">Login</Link>
-          <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white transition hover:bg-[#a91f2b]">
+          <Link to="/login" className="text-sm font-semibold text-white hover:text-white/80">Login</Link>
+          <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#a91f2b] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">
             Explore Courses
           </Link>
         </div>
 
         <button
           type="button"
-          className="grid h-10 w-10 place-items-center rounded-xl border border-[#eadcdd] text-[#c92835] lg:hidden"
+          className="grid h-10 min-w-14 place-items-center rounded-xl border border-white/60 px-2 text-white lg:hidden"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((open) => !open)}
@@ -47,9 +48,9 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
       </div>
 
       {mobileOpen && (
-        <nav className="border-t border-[#f0eaea] bg-white px-4 py-3 shadow-lg lg:hidden" aria-label="Mobile navigation">
+        <nav className="border-t border-[#a91f2b] bg-white px-4 py-3 text-[#292929] shadow-lg lg:hidden" aria-label="Mobile navigation">
           {navItems.map((item) => (
-            <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#fff7f7] hover:text-[#c92835]">
+            <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#f5f5f5] hover:text-[#c92835]">
               {item.label}
             </Link>
           ))}

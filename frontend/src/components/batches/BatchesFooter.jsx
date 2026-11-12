@@ -8,11 +8,12 @@ export default function BatchesFooter({
   email = "[Add email address]",
 }) {
   return (
-    <footer id="contact" className="border-t-4 border-[#c92835] bg-[#292929] text-white">
+    <footer id="contact" className="border-t border-white/20 bg-[#c92835] text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center gap-2.5">
+              <img src="/logo.png" alt="Lawyer Factory logo" loading="lazy" className="h-12 w-12 rounded-full border border-white/30 bg-black object-contain" />
               <span className="font-bold">{brandName}</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-white/70">

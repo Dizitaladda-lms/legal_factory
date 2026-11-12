@@ -83,6 +83,7 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [currentAffairs, setCurrentAffairs] = useState([]);
+  const [latestBlogs, setLatestBlogs] = useState([]);
   const [newsLoading, setNewsLoading] = useState(true);
 
   useEffect(() => {
@@ -112,12 +113,17 @@ export default function LandingPage() {
         if (!active) return;
         const legalTopics = /\b(clat|judiciary|legal|law|supreme court|high court|constitution|current affairs|case law|court|criminal|civil|ipc|bns|parliament|judgment|bill|act)\b/i;
         const posts = Array.isArray(data?.blogs) ? data.blogs : [];
+        setLatestBlogs(posts.slice(0, 3));
         setCurrentAffairs(posts.filter((post) => {
           const tags = Array.isArray(post.tags) ? post.tags.join(" ") : post.tags || "";
           return legalTopics.test([post.title, post.category, post.summary, post.keywords, tags].filter(Boolean).join(" "));
         }).slice(0, 3));
       })
-      .catch(() => { if (active) setCurrentAffairs([]); })
+      .catch(() => {
+        if (!active) return;
+        setCurrentAffairs([]);
+        setLatestBlogs([]);
+      })
       .finally(() => { if (active) setNewsLoading(false); });
     return () => { active = false; };
   }, []);
@@ -133,7 +139,7 @@ export default function LandingPage() {
       <BatchesHeader brandName="Lawyer Factory" />
       <main>
         {/* Hero and primary course discovery */}
-        <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#fffafa]">
+        <section className="relative overflow-hidden border-b border-[#eee8e8] bg-[#ffffff]">
           <div className="pointer-events-none absolute -right-32 -top-40 h-[430px] w-[430px] rounded-full border border-[#f1dfe0]" />
           <div className="pointer-events-none absolute -right-16 -top-24 h-[300px] w-[300px] rounded-full border border-[#f1dfe0]" />
           <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
@@ -151,7 +157,7 @@ export default function LandingPage() {
                 <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#c92835] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#a91f2b]">
                   Explore Courses
                 </a>
-                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] transition hover:bg-[#fff3f3]">
+                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] transition hover:bg-[#f5f5f5]">
                   Book a Free Demo
                 </a>
               </div>
@@ -164,7 +170,7 @@ export default function LandingPage() {
             <div className="relative mx-auto w-full max-w-xl">
               <div className="relative min-h-[330px] overflow-hidden rounded-[30px] border border-[#efd5d7] bg-white p-5 shadow-[0_22px_70px_rgba(96,28,34,.09)] sm:min-h-[400px] sm:p-7">
                 <div className="absolute inset-x-0 top-0 h-2 bg-[#c92835]" />
-                <div className="flex h-full min-h-[290px] flex-col justify-between rounded-[22px] bg-[#fff8f8] p-6 sm:min-h-[350px] sm:p-8">
+                <div className="flex h-full min-h-[290px] flex-col justify-between rounded-[22px] bg-[#ffffff] p-6 sm:min-h-[350px] sm:p-8">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <span className="text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Your legal learning path</span>
@@ -227,7 +233,7 @@ export default function LandingPage() {
               {lawyerRoadmap.map((step, index) => (
                 <li key={step.title} className="roadmap-step relative pt-1">
                   <span className="roadmap-number relative z-10 grid h-11 w-11 place-items-center rounded-full border-2 border-[#c92835] bg-white text-sm font-bold text-[#c92835]">{String(index + 1).padStart(2, "0")}</span>
-                  <article className="mt-4 h-full rounded-2xl border border-[#eee8e8] bg-[#fffafa] p-5">
+                  <article className="mt-4 h-full rounded-2xl border border-[#eee8e8] bg-[#ffffff] p-5">
                     <h3 className="text-lg font-bold leading-snug">{step.title}</h3>
                     <p className="mt-3 text-[#686868]">{step.detail}</p>
                     {step.link && <a href={step.link} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-semibold text-[#c92835] underline underline-offset-4">{step.linkText}</a>}
@@ -240,7 +246,7 @@ export default function LandingPage() {
         </section>
 
         {/* Course cards are loaded from the law-course catalog API. */}
-        <section id="courses" className="bg-[#fffafa] py-16 sm:py-20">
+        <section id="courses" className="bg-[#ffffff] py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
@@ -261,7 +267,7 @@ export default function LandingPage() {
               <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {courses.map((course) => (
                   <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
-                    <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f9e9ea] p-5">
+                    <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f5f5f5] p-5">
                       <div className="absolute -right-7 -top-14 h-44 w-44 rounded-full border border-[#e9c1c4]" />
                       <div className="absolute -right-1 -top-8 h-32 w-32 rounded-full border border-[#e9c1c4]" />
                       <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#c92835]">{courseType(course)}</span>
@@ -299,7 +305,7 @@ export default function LandingPage() {
           </div>
           {newsLoading ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
-              {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#fffafa]" />)}
+              {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
             </div>
           ) : currentAffairs.length ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -316,17 +322,17 @@ export default function LandingPage() {
               ))}
             </div>
           ) : (
-            <p className="mt-8 rounded-2xl border border-dashed border-[#dfb8bb] bg-[#fffafa] p-7 text-[#686868]">New CLAT and legal affairs articles will appear here when published.</p>
+            <p className="mt-8 rounded-2xl border border-dashed border-[#dfb8bb] bg-[#ffffff] p-7 text-[#686868]">New CLAT and legal affairs articles will appear here when published.</p>
           )}
         </section>
 
         {/* Test preparation and resource pathways */}
         <section id="test-series" className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
-          <article className="rounded-[26px] bg-[#c92835] p-7 text-white sm:p-9">
+          <article className="rounded-[26px] bg-[#292929] p-7 text-white sm:p-9">
             <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-white/75">Practice pathway</p>
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Test series and performance review</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-white/85">Course pages show the tests, previous-paper practice and analysis included in each program as details are added.</p>
-            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-white px-5 text-sm font-bold text-[#b3212d] hover:bg-[#fff2f2]">See course details</Link>
+            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">See course details</Link>
           </article>
           <article id="resources" className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
             <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#c92835]">Free preparation resources</p>
@@ -339,7 +345,7 @@ export default function LandingPage() {
         </section>
 
         {/* Trainer profiles: replace photo and details with verified information. */}
-        <section id="faculty" className="border-y border-[#eee8e8] bg-[#fffafa] py-16 sm:py-20">
+        <section id="faculty" className="border-y border-[#eee8e8] bg-[#ffffff] py-16 sm:py-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Meet the team</p>
@@ -368,16 +374,51 @@ export default function LandingPage() {
               <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Student experiences</p><h2 className="mt-2 text-2xl font-bold sm:text-3xl">Stories from learners</h2><p className="mt-2 text-sm leading-6 text-[#686868]">Genuine student feedback and outcomes will be added here after approval.</p></div>
             </div>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {[0, 1, 2].map((item) => <div key={item} className="rounded-2xl bg-[#fffafa] p-5"><p className="text-sm text-[#686868]">[Add an approved student experience]</p><p className="mt-4 text-xs font-semibold text-[#a96065]">[Student name · course]</p></div>)}
+              {[0, 1, 2].map((item) => <div key={item} className="rounded-2xl bg-[#ffffff] p-5"><p className="text-sm text-[#686868]">[Add an approved student experience]</p><p className="mt-4 text-xs font-semibold text-[#a96065]">[Student name · course]</p></div>)}
             </div>
           </div>
         </section>
 
-        <section className="bg-[#fffafa] py-16 sm:py-20">
+        <section className="bg-[#ffffff] py-16 sm:py-20">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Need help choosing?</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Frequently asked questions</h2></div>
             <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
               {faqs.map((faq) => <details key={faq.q} className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#c92835]"><span>{faq.q}</span></summary><p className="mt-3 max-w-3xl text-sm leading-6 text-[#686868]">{faq.a}</p></details>)}
+            </div>
+          </div>
+        </section>
+
+        {/* Show the newest three published blog posts; archive stays on /blogs. */}
+        <section id="latest-blogs" className="border-t border-[#eee8e8] bg-white py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">From the blog</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Latest blogs</h2>
+              <p className="mx-auto mt-3 max-w-2xl leading-7 text-[#686868]">Read recent articles and updates from Lawyer Factory.</p>
+            </div>
+            {newsLoading ? (
+              <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading latest blogs">
+                {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#f5f5f5]" />)}
+              </div>
+            ) : latestBlogs.length ? (
+              <div className="mt-8 grid gap-5 md:grid-cols-3">
+                {latestBlogs.map((post) => (
+                  <article key={post.id || post.slug} className="flex flex-col rounded-2xl border border-[#eee8e8] bg-white p-6">
+                    <p className="text-sm font-semibold text-[#c92835]">{post.category || "Article"}</p>
+                    <h3 className="mt-3 text-xl font-bold leading-snug text-[#292929]">{post.title}</h3>
+                    <p className="mt-3 flex-1 text-[#686868]">{post.summary || post.meta_description || "Read the full article for details."}</p>
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#f0ebeb] pt-4 text-sm text-[#686868]">
+                      <time dateTime={post.published_at || post.created_at || undefined}>{formatNewsDate(post.published_at || post.created_at)}</time>
+                      <Link to={`/blog/${post.slug}`} className="font-semibold text-[#c92835] hover:underline">Read blog</Link>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] p-7 text-center text-[#686868]">New blog posts will appear here when published.</p>
+            )}
+            <div className="mt-8 text-center">
+              <Link to="/blogs" className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#c92835] px-7 text-sm font-bold text-white transition hover:bg-[#a91f2b]">More Blogs</Link>
             </div>
           </div>
         </section>

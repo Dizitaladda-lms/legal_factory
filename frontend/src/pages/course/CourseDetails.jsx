@@ -58,7 +58,7 @@ export default function CourseDetails() {
           <div className="h-8 w-40 animate-pulse rounded bg-[#f7e8e9]" />
           <div className="mt-6 h-14 max-w-2xl animate-pulse rounded bg-[#f7e8e9]" />
           <div className="mt-4 h-5 max-w-xl animate-pulse rounded bg-[#f7e8e9]" />
-          <div className="mt-10 grid gap-5 md:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl bg-[#fff5f5]" />)}</div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">{[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl bg-[#f5f5f5]" />)}</div>
         </main>
       ) : error || !course ? (
         <main className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6">
@@ -69,7 +69,7 @@ export default function CourseDetails() {
       ) : (
         <main>
           {/* Course overview and primary actions */}
-          <section className="border-b border-[#eee8e8] bg-[#fffafa]">
+          <section className="border-b border-[#eee8e8] bg-[#ffffff]">
             <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-12 lg:px-8">
               <nav className="mb-7 text-xs font-medium text-[#777]" aria-label="Breadcrumb"><Link to="/" className="hover:text-[#c92835]">Home</Link><span className="mx-2">/</span><Link to="/courses" className="hover:text-[#c92835]">Courses</Link><span className="mx-2">/</span><span className="text-[#555]">{course.name}</span></nav>
               <div className="grid items-start gap-9 lg:grid-cols-[1fr_350px] lg:gap-12">
@@ -84,7 +84,7 @@ export default function CourseDetails() {
                   </div>
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                     <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#c92835] px-6 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
-                    <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] hover:bg-[#fff2f2]">Free Demo Class</a>
+                    <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#c92835] bg-white px-6 text-sm font-bold text-[#c92835] hover:bg-[#f5f5f5]">Free Demo Class</a>
                   </div>
                 </div>
 
@@ -92,14 +92,14 @@ export default function CourseDetails() {
                   {course.hero_image_url ? (
                     <img src={course.hero_image_url} alt={course.name} className="mb-5 h-40 w-full rounded-2xl object-cover" />
                   ) : (
-                    <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#fff1f2] text-sm font-semibold text-[#8a5559]">[Course image placeholder]</div>
+                    <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#f5f5f5] text-sm font-semibold text-[#8a5559]">[Course image placeholder]</div>
                   )}
                   <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Course fee</p>
                   <p className="mt-1 text-3xl font-bold tracking-tight">{price}</p>
                   {course.discount_label && <p className="mt-2 text-sm font-semibold text-[#c92835]">{course.discount_label}</p>}
                   <p className="mt-3 text-xs leading-5 text-[#777]">{course.refund_policy_summary || "Review the refund terms before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#c92835] underline">Refund policy</a>}</p>
                   <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#c92835] px-5 text-sm font-bold text-white hover:bg-[#a91f2b]">Enroll Now</a>
-                  <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-[#fff5f5]">Book a Free Demo</a>
+                  <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#c92835] px-5 text-sm font-bold text-[#c92835] hover:bg-[#f5f5f5]">Book a Free Demo</a>
                 </aside>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function CourseDetails() {
           </section>
 
           {/* Expandable course modules */}
-          <section className="bg-[#fffafa] py-14 sm:py-16">
+          <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
               <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Course curriculum</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Modules and subjects</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#686868]">Expand a module to see its lesson and practice components.</p></div>
               <div className="mt-8 space-y-3">
@@ -148,7 +148,7 @@ export default function CourseDetails() {
           </section>
 
           {/* Batch information */}
-          <section className="bg-[#fffafa] py-14 sm:py-16">
+          <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
               <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Plan your preparation</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Batch details</h2></div>
               <dl className="mt-8 overflow-hidden rounded-2xl border border-[#eee3e4] bg-white">
@@ -167,12 +167,12 @@ export default function CourseDetails() {
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
             <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Meet your mentors</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Faculty</h2><p className="mt-3 text-sm text-[#686868]">Faculty profiles and verified qualifications.</p></div>
             {course.course_faculty?.length ? (
-              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{course.course_faculty.map((member, index) => <article key={`${member.name}-${index}`} className="rounded-2xl border border-[#eee8e8] p-5">{member.photo_url ? <img src={member.photo_url} alt={member.name} loading="lazy" className="h-44 w-full rounded-xl object-cover" /> : <div className="grid h-44 place-items-center rounded-xl bg-[#fff1f2] text-sm font-semibold text-[#b15d63]">[Faculty photo]</div>}<h3 className="mt-4 font-bold">{member.name}</h3><p className="mt-1 text-sm text-[#686868]">{member.qualification}</p></article>)}</div>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{course.course_faculty.map((member, index) => <article key={`${member.name}-${index}`} className="rounded-2xl border border-[#eee8e8] p-5">{member.photo_url ? <img src={member.photo_url} alt={member.name} loading="lazy" className="h-44 w-full rounded-xl object-cover" /> : <div className="grid h-44 place-items-center rounded-xl bg-[#f5f5f5] text-sm font-semibold text-[#b15d63]">[Faculty photo]</div>}<h3 className="mt-4 font-bold">{member.name}</h3><p className="mt-1 text-sm text-[#686868]">{member.qualification}</p></article>)}</div>
             ) : <div className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Verified faculty profiles will be added here.</div>}
           </section>
 
           {/* Questions */}
-          <section className="bg-[#fffafa] py-14 sm:py-16">
+          <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
               <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#c92835]">Course support</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Frequently asked questions</h2></div>
               <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
