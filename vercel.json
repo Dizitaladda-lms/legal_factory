@@ -1,9 +1,9 @@
 {
-  "installCommand": "npm ci",
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "vite"
+      "framework": "vite",
+      "installCommand": "npm ci"
     },
     "backend": {
       "root": "backend",
