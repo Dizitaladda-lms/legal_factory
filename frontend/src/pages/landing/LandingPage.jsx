@@ -173,6 +173,10 @@ export default function LandingPage() {
     { id: "exams", title: "Exam notifications & forms", description: "Application, registration, admit card and recruitment updates.", items: [...lawUpdates.exams, ...lawUpdates.vacancies].filter((item, index, all) => all.findIndex((entry) => entry.url === item.url) === index).sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0)) },
     { id: "results", title: "Results & answer keys", description: "Result declarations and answer-key updates for law exams.", items: lawUpdates.results },
   ];
+  const prioritizedCourses = ["CLAT UG", "CLAT PG", "JUDICIARY"]
+    .map((type) => courses.find((course) => courseType(course) === type))
+    .filter(Boolean);
+  const featuredCourses = [...prioritizedCourses, ...courses.filter((course) => !prioritizedCourses.includes(course))].slice(0, 3);
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
@@ -324,9 +328,9 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Find your program</p>
-                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Courses for your next step in law</h2>
-                <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Choose online learning or attend classes at our Delhi campus. Enquire for admission and our counsellor will share the course details.</p>
+                <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Popular courses</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Popular courses for your next step in law</h2>
+                <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Explore three featured programs, or browse the full course catalog to find the right fit.</p>
               </div>
               <Link to="/courses" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all courses</Link>
             </div>
@@ -339,7 +343,7 @@ export default function LandingPage() {
               <div className="mt-9 rounded-2xl border border-[#edc9cc] bg-white p-7 text-sm text-[#686868]">Course information is temporarily unavailable. Please try again shortly.</div>
             ) : courses.length ? (
               <div className="mt-9 grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {courses.map((course) => {
+                {featuredCourses.map((course) => {
                   const type = courseType(course);
                   const detailHref = `/course/${encodeURIComponent(course.slug)}`;
                   return (
