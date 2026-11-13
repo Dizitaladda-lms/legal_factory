@@ -161,12 +161,16 @@ const loadNews = async () => {
   const date = (value) => value.toISOString().slice(0, 10);
 
   const vacancyQuery = `(judiciary recruitment OR High Court vacancy OR law officer vacancy OR court recruitment) India ${now.getFullYear()}`;
-  const [clat, judiciary, courts, archive, vacancyFeed] = await Promise.all([
+  const examQuery = `(CLAT OR AILET OR CUET law OR judiciary exam) (application form OR registration OR notification OR admit card) India ${now.getFullYear()}`;
+  const resultQuery = `(CLAT OR AILET OR judiciary OR law entrance) (result declared OR results announced OR answer key) India ${now.getFullYear()}`;
+  const [clat, judiciary, courts, archive, vacancyFeed, examFeed, resultFeed] = await Promise.all([
     fetchFeed('(CLAT OR law entrance) India news', "CLAT and legal education"),
     fetchFeed('(Indian judiciary OR legal news OR law) India', "Law and judiciary"),
     fetchFeed('(Supreme Court OR High Court) India legal news', "Court updates"),
     fetchFeed(`(Indian law OR Supreme Court OR judiciary) after:${date(threeYearsAgo)} before:${date(oneYearAgo)}`, "Past legal news"),
     fetchFeed(vacancyQuery, "Government vacancies"),
+    fetchFeed(examQuery, "Law exam applications and notifications"),
+    fetchFeed(resultQuery, "Law exam results and answer keys"),
   ]);
 
   const unique = (items) => [...new Map(items
@@ -181,17 +185,14 @@ const loadNews = async () => {
     return timestamp >= archiveCutoff && timestamp < currentCutoff;
   });
 
-  const vacancies = unique(vacancyFeed).slice(0, 3);
-  const [currentNews, pastNews, vacancyNews] = await Promise.all([
-    storeThumbnails(allCurrent.slice(0, 3)),
-    storeThumbnails(allArchive.slice(0, 3)),
-    storeThumbnails(vacancies),
-  ]);
+  const updates = (items) => unique(items);
 
   return {
-    current: currentNews,
-    archive: pastNews,
-    vacancies: vacancyNews,
+    current: updates(allCurrent),
+    archive: updates(allArchive),
+    vacancies: updates(vacancyFeed),
+    exams: updates(examFeed),
+    results: updates(resultFeed),
     updated_at: new Date().toISOString(),
     refresh_interval_minutes: CACHE_TTL_MS / 60000,
     thumbnail_storage: process.env.CLOUD_NAME && process.env.CLOUD_NAME !== "Root" && process.env.CLOUD_API_KEY && process.env.CLOUD_API_SECRET ? "cloudinary" : "source",

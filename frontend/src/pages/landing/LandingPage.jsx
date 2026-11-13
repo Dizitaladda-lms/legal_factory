@@ -44,8 +44,6 @@ const learningPillars = [
   },
 ];
 
-const fallbackNewsThumbnail = "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202305/sc_clear_with_1bird-sixteen_nine.jpg?VersionId=IVPCmYoTLq6B.E_JCWaZKBbrcOYnjJaS";
-
 // Replace the profile text and photo placeholders with verified trainer details.
 const trainers = [
   { subject: "CLAT UG", name: "[Trainer name]", qualification: "[Verified qualification]", experience: "[Add relevant teaching experience]" },
@@ -85,9 +83,8 @@ export default function LandingPage() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const [currentAffairs, setCurrentAffairs] = useState([]);
+  const [lawUpdates, setLawUpdates] = useState({ current: [], exams: [], vacancies: [], results: [] });
   const [latestBlogs, setLatestBlogs] = useState([]);
-  const [newsPeriod, setNewsPeriod] = useState("current");
   const [newsLoading, setNewsLoading] = useState(true);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const inquiryDialogRef = useRef(null);
@@ -143,11 +140,12 @@ export default function LandingPage() {
 
       if (newsResult.status === "fulfilled") {
         const feedNews = newsResult.value.data || {};
-        setCurrentAffairs([
-          ...(Array.isArray(feedNews.current) ? feedNews.current.map((item) => ({ ...item, newsPeriod: "current" })) : []),
-          ...(Array.isArray(feedNews.archive) ? feedNews.archive.map((item) => ({ ...item, newsPeriod: "archive" })) : []),
-          ...(Array.isArray(feedNews.vacancies) ? feedNews.vacancies.map((item) => ({ ...item, newsPeriod: "vacancies" })) : []),
-        ]);
+        setLawUpdates({
+          current: Array.isArray(feedNews.current) ? feedNews.current : [],
+          exams: Array.isArray(feedNews.exams) ? feedNews.exams : [],
+          vacancies: Array.isArray(feedNews.vacancies) ? feedNews.vacancies : [],
+          results: Array.isArray(feedNews.results) ? feedNews.results : [],
+        });
       }
       if (blogResult.status === "fulfilled") {
         const firstPage = Array.isArray(blogResult.value.data?.blogs) ? blogResult.value.data.blogs : [];
@@ -170,7 +168,11 @@ export default function LandingPage() {
     return Number.isNaN(date.getTime()) ? "Recently published" : date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   };
 
-  const visibleNews = currentAffairs.filter((post) => post.newsPeriod === newsPeriod).slice(0, 3);
+  const updateGroups = [
+    { id: "news", title: "Latest law news", description: "Recent legal, judiciary and CLAT headlines.", items: lawUpdates.current },
+    { id: "exams", title: "Exam notifications & forms", description: "Application, registration, admit card and recruitment updates.", items: [...lawUpdates.exams, ...lawUpdates.vacancies].filter((item, index, all) => all.findIndex((entry) => entry.url === item.url) === index).sort((a, b) => new Date(b.published_at || 0) - new Date(a.published_at || 0)) },
+    { id: "results", title: "Results & answer keys", description: "Result declarations and answer-key updates for law exams.", items: lawUpdates.results },
+  ];
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
@@ -376,68 +378,30 @@ export default function LandingPage() {
 
         <ExamsWeCover />
 
-        {/* Live legal headlines are refreshed by the server-side news feed. */}
+        {/* Law news, exam notices, and result updates */}
         <section id="current-affairs" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Stay informed</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT and law related news</h2>
-              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Legal, judiciary and CLAT headlines refresh automatically. Select a headline to read it from its publisher.</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">CLAT and law related updates</h2>
+              <p className="mt-3 max-w-2xl leading-7 text-[#686868]">News, exam notifications, application links and result announcements in one place. Updates refresh automatically, and each headline opens its source.</p>
             </div>
-            <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all articles</Link>
+            <Link to="/law-updates" className="inline-flex min-h-11 items-center self-start rounded-full border border-[#8f1d2c] px-5 text-sm font-bold text-[#8f1d2c] transition hover:bg-[#8f1d2c] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c] sm:self-auto">View all updates</Link>
           </div>
-          <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Filter legal news by date">
-            {[{ id: "current", label: "Current news" }, { id: "archive", label: "Past legal news" }, { id: "vacancies", label: "Government vacancies" }].map((tab) => (
-              <button key={tab.id} type="button" role="tab" aria-selected={newsPeriod === tab.id} onClick={() => setNewsPeriod(tab.id)} className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition ${newsPeriod === tab.id ? "border-[#d74752] bg-[#d74752] text-white" : "border-[#e6d8d9] bg-white text-[#575757] hover:border-[#d74752] hover:text-[#d74752]"}`}>
-                {tab.label}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 text-sm text-[#777]">
-            {newsPeriod === "vacancies"
-              ? "Vacancy updates link to their publisher. Confirm eligibility and application dates in the official notification."
-              : "Headlines are collected from Google News and link to the original publishers."}
-          </p>
           {newsLoading ? (
-            <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
-              {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
-            </div>
-          ) : visibleNews.length ? (
-            <div className="mt-8 grid gap-5 md:grid-cols-3">
-              {visibleNews.map((post) => (
-                <article key={post.id || post.url} className="news-card relative flex min-h-[320px] flex-col justify-end overflow-hidden rounded-2xl border border-[#eee8e8] bg-[#292929]">
-                  <img
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500"
-                    src={post.thumbnail || fallbackNewsThumbnail}
-                    alt=""
-                    aria-hidden="true"
-                    loading="lazy"
-                    decoding="async"
-                    onError={(event) => {
-                      if (event.currentTarget.src !== fallbackNewsThumbnail) event.currentTarget.src = fallbackNewsThumbnail;
-                    }}
-                  />
-                  <div className="news-card__shade absolute inset-0" aria-hidden="true" />
-                  <div className="relative z-10 p-6 text-white">
-                    <p className="text-sm font-semibold text-white">{post.source || post.category || "Law and current affairs"}</p>
-                    <h3 className="mt-3 text-xl font-bold leading-snug text-white">{post.title}</h3>
-                    {post.newsPeriod === "vacancies" && (
-                      <p className="mt-3 font-semibold text-white">
-                        {post.application_deadline ? `Application deadline: ${post.application_deadline}` : "Application deadline: check official notice"}
-                      </p>
-                    )}
-                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/30 pt-4 text-sm text-white">
-                      <time dateTime={post.published_at || undefined}>
-                        {post.newsPeriod === "vacancies" ? `Published ${formatNewsDate(post.published_at)}` : formatNewsDate(post.published_at)}
-                      </time>
-                      <a href={post.url} target="_blank" rel="noreferrer" className="font-semibold text-white underline underline-offset-4">Read</a>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            <div className="mt-8 grid gap-4" aria-label="Loading law updates">
+              {[0, 1, 2].map((item) => <div key={item} className="h-44 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
             </div>
           ) : (
-            <p className="mt-8 rounded-2xl border border-dashed border-[#d8d8d8] bg-white p-7 text-[#686868]">{newsLoading ? "Loading legal news…" : "The news feed is temporarily unavailable. Please check again shortly."}</p>
+            <div className="mt-8 space-y-5">
+              {updateGroups.map((group) => (
+                <section key={group.id} className="rounded-2xl border border-[#eee3e4] bg-white p-5 shadow-[0_10px_30px_rgba(55,25,30,.04)] sm:p-6" aria-labelledby={`updates-${group.id}`}>
+                  <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#f0e8e9] pb-4"><div><h3 id={`updates-${group.id}`} className="font-serif text-xl font-bold text-[#202027] sm:text-2xl">{group.title}</h3><p className="mt-1 text-sm text-[#686868]">{group.description}</p></div><span className="rounded-full bg-[#fbf1f2] px-3 py-1 text-xs font-semibold text-[#8f1d2c]">Latest 5</span></div>
+                  {group.items.length ? <ol className="divide-y divide-[#f1ebeb]">{group.items.slice(0, 5).map((post, index) => <li key={post.id || post.url} className="flex items-start gap-3 py-4 last:pb-1"><span className="mt-0.5 w-7 shrink-0 font-serif text-sm font-bold text-[#a23a46]">{String(index + 1).padStart(2, "0")}</span><div className="min-w-0 flex-1"><a href={post.url} target="_blank" rel="noopener noreferrer" className="font-semibold leading-6 text-[#27242a] decoration-[#a23a46] underline-offset-4 hover:text-[#8f1d2c] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c]">{post.title}</a><p className="mt-1 text-xs text-[#62616a]">{post.source || post.category || "Publisher source"} <span aria-hidden="true">·</span> <time dateTime={post.published_at || undefined}>{formatNewsDate(post.published_at)}</time>{post.application_deadline ? <span> <span aria-hidden="true">·</span> Apply by {post.application_deadline}</span> : null}</p></div><a href={post.url} target="_blank" rel="noopener noreferrer" aria-label={`Open source for ${post.title}`} className="shrink-0 pt-1 text-xs font-semibold text-[#8f1d2c] hover:underline">Open source ↗</a></li>)}</ol> : <p className="py-5 text-sm text-[#62616a]">No updates are available in this category right now.</p>}
+                </section>
+              ))}
+              <p className="text-xs leading-5 text-[#62616a]">Exam dates, eligibility and application steps can change. Open the linked notice or exam body source for the official details.</p>
+            </div>
           )}
         </section>
 

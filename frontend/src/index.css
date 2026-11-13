@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', 'Noto Sans Devanagari', sans-serif;
-  --font-serif: 'Playfair Display', 'Noto Serif Devanagari', serif;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
   --color-page-bg: var(--lf-white);
   --color-heading: var(--lf-heading);
   --color-strong: var(--lf-heading);
@@ -16,11 +16,13 @@
 }
 
 :root {
+  --font-heading: 'Source Serif 4', 'Noto Serif Devanagari', Georgia, serif;
+  --font-body: 'Inter', 'Noto Sans Devanagari', Arial, sans-serif;
   --lf-crimson: #9B1C2E;
   --lf-crimson-dark: #7A1424;
   --lf-white: #FFFFFF;
   --lf-heading: #14161C;
-  --lf-body: #4A4F5A;
+  --lf-body: #4b5563;
   --lf-section-soft: rgba(155, 28, 46, 0.06);
   --lf-border: rgba(155, 28, 46, 0.18);
   --lf-shadow: 0 8px 24px rgba(20, 22, 28, 0.08);
@@ -61,8 +63,10 @@
 
 /* Global Uniform Typography */
 html, body, #root {
-  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
-  line-height: 1.65;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: #4b5563;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -72,10 +76,16 @@ html, body, #root {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', 'Noto Serif Devanagari', serif;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.25;
+  font-variant-numeric: lining-nums;
 }
+
+h1 { font-size: clamp(2.5rem, 4vw, 3.5rem); }
+h2 { font-size: clamp(2rem, 3vw, 2.5rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); }
 
 button, input, select, textarea {
   font-family: inherit;
@@ -155,19 +165,34 @@ button, input, select, textarea {
 
 /* Scoped public law-coaching design system; dashboard screens keep their existing theme. */
 .law-site {
-  color: var(--lf-body);
-  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  color: #4b5563;
+  font-family: var(--font-body);
 }
 .law-site :is(h1, h2, h3, h4) {
   color: var(--lf-heading);
-  font-family: 'Playfair Display', 'Noto Serif Devanagari', serif;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.25;
+  font-variant-numeric: lining-nums;
 }
+.law-site h1 { font-size: clamp(2.5rem, 4vw, 3.5rem); }
+.law-site h2 { font-size: clamp(2rem, 3vw, 2.5rem); }
+.law-site h3 { font-size: clamp(1.25rem, 2vw, 1.5rem); }
 .law-site :is(button, input, select, textarea) {
-  font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 600;
 }
+.law-site :is(p, li, dd, dt) { font-size: 16px; line-height: 1.7; }
+.law-site :is(small, label, dt) { color: #374151; font-size: 14px; font-weight: 500; }
+.law-site [class*="uppercase"][class*="tracking-"]:not([class*="text-white"]) { color: var(--lf-crimson); font-size: 12px; font-weight: 600; letter-spacing: .12em; }
+.law-site [class*="text-[#686868]"],
+.law-site [class*="text-[#666]"],
+.law-site [class*="text-[#646464]"],
+.law-site [class*="text-[#575757]"],
+.law-site [class*="text-[#5f5f5f]"],
+.law-site [class*="text-[#555]"] { color: #4b5563 !important; }
 .law-site svg {
   display: none;
 }
@@ -392,7 +417,6 @@ button, input, select, textarea {
 .law-site [class*="text-[#575757]"],
 .law-site [class*="text-[#5f5f5f]"],
 .law-site [class*="text-[#555]"] { color: var(--lf-body) !important; }
-.law-site [class*="text-slate-"] { color: var(--lf-body); }
 .law-site [class*="text-[#d74752]"],
 .law-site [class*="text-[#bd2531]"],
 .law-site [class*="text-[#a96065]"] { color: var(--lf-crimson) !important; }

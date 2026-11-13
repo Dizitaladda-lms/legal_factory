@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import About from "./pages/About";
 import LandingPage from "./pages/landing/LandingPage";
+import LawUpdates from "./pages/LawUpdates";
 import Login from "./pages/auth/Login";
 import Courses from "./pages/Courses";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -46,6 +47,7 @@ function App() {
     <Routes>
       {/* ================= PUBLIC ROUTES ================= */}
       <Route path="/" element={<LandingPage />} />
+      <Route path="/law-updates" element={<LawUpdates />} />
       <Route path="/faculty" element={<FacultyPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/post/seo" element={<SeoPortal />} />
