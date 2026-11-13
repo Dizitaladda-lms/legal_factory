@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../lib/api";
 import BatchesHeader from "../components/batches/BatchesHeader";
 import BatchesFooter from "../components/batches/BatchesFooter";
+import ExamsWeCover from "../components/landing/ExamsWeCover";
 import { getLawCourseImage } from "../utils/lawCourseImage";
 
 const filters = ["All courses", "CLAT UG", "Judiciary", "CLAT PG"];
@@ -113,6 +114,8 @@ export default function CourseListing() {
             </div>
           )}
         </section>
+
+        <ExamsWeCover showAll />
 
         <section className="bg-[#ffffff]">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">

@@ -37,10 +37,13 @@ const fallbackImageFor = (exam) => {
   return "/course-clat-pg.jpg";
 };
 
-export default function ExamsWeCover() {
+export default function ExamsWeCover({ showAll = false } = {}) {
   const [activeCategory, setActiveCategory] = useState("all");
   const tabRefs = useRef({});
-  const visibleExams = activeCategory === "all" ? exams : exams.filter((exam) => exam.category === activeCategory);
+  const featuredExams = ["clat-ug", "clat-pg", "judiciary-exams"].map((slug) => exams.find((exam) => exam.slug === slug)).filter(Boolean);
+  const visibleExams = showAll
+    ? (activeCategory === "all" ? exams : exams.filter((exam) => exam.category === activeCategory))
+    : featuredExams;
 
   const handleTabKeyDown = (event, index) => {
     let nextIndex = index;
@@ -56,7 +59,7 @@ export default function ExamsWeCover() {
   };
 
   return (
-    <section id="exams-we-cover" className="border-y border-[#eee8e8] bg-[#fbf9f9] py-16 sm:py-20">
+    <section id={showAll ? "all-exams" : "exams-we-cover"} className="border-y border-[#eee8e8] bg-[#fbf9f9] py-16 sm:py-20">
       <style>{`
         @keyframes exams-grid-fade-in { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .exams-grid-enter { animation: exams-grid-fade-in 260ms ease both; }
@@ -69,7 +72,7 @@ export default function ExamsWeCover() {
           <p className="mt-4 leading-7 text-[#686868]">From law entrance exams to judiciary and bar examinations, find the right program for your goal.</p>
         </div>
 
-        <div className="mt-7 flex flex-wrap gap-2" role="tablist" aria-label="Filter exams by education stage" aria-orientation="horizontal">
+        {showAll && <div className="mt-7 flex flex-wrap gap-2" role="tablist" aria-label="Filter exams by education stage" aria-orientation="horizontal">
           {categories.map((category, index) => {
             const active = activeCategory === category.id;
             return (
@@ -90,9 +93,9 @@ export default function ExamsWeCover() {
               </button>
             );
           })}
-        </div>
+        </div>}
 
-        <div id="exams-panel" role="tabpanel" aria-labelledby={`exams-tab-${activeCategory}`} tabIndex={0} className="mt-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8f1d2c]">
+        <div id={showAll ? "exams-panel" : undefined} role={showAll ? "tabpanel" : undefined} aria-labelledby={showAll ? `exams-tab-${activeCategory}` : undefined} tabIndex={showAll ? 0 : undefined} className="mt-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8f1d2c]">
           <div key={activeCategory} className="exams-grid-enter grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {visibleExams.map((exam) => (
               <article key={exam.slug} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#eee5e6] bg-white transition duration-[400ms] ease-out hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(65,27,30,.12)] motion-reduce:transition-none">
@@ -128,6 +131,7 @@ export default function ExamsWeCover() {
             ))}
           </div>
         </div>
+        {!showAll && <div className="mt-7 text-center"><p className="text-sm text-[#686868]">Explore all 19 exam pathways on the courses page.</p><Link to="/courses#all-exams" className="mt-3 inline-flex min-h-11 items-center justify-center rounded-full bg-[#8f1d2c] px-5 text-sm font-semibold text-white transition hover:bg-[#741622] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c]">View all exams</Link></div>}
       </div>
     </section>
   );
