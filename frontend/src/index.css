@@ -458,7 +458,7 @@ button, input, select, textarea {
 .law-site .hero-copy > div:last-child span { color: rgba(255, 255, 255, 0.92) !important; }
 .law-site .hero-copy > p:first-child { border-color: rgba(255, 255, 255, 0.45); background: rgba(20, 22, 28, 0.32); }
 .law-site .hero-copy a[href="#contact"] { border-color: var(--lf-white); background: transparent; color: var(--lf-white) !important; }
-.law-site .hero-visual__blob { background: rgba(255, 255, 255, 0.82); }
+.law-site .hero-visual__blob { background: rgba(255, 255, 255, 0.45); }
 .law-site .hero-visual__blob { width: 90%; }
 .law-site .hero-visual__statue { position: relative; z-index: 1; width: 82%; height: 82%; object-fit: contain; }
 @media (max-width: 639px) {

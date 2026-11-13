@@ -13,11 +13,6 @@ function getType(course) {
   return "CLAT UG";
 }
 
-function formatPrice(amount, currency = "INR") {
-  if (amount == null || amount === "") return "Contact for price";
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: currency || "INR", maximumFractionDigits: 0 }).format(Number(amount));
-}
-
 function formatDate(value) {
   if (!value) return "To be announced";
   const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
@@ -59,7 +54,7 @@ export default function CourseListing() {
             <div className="max-w-3xl">
               <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Online law coaching</p>
               <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">Explore law courses</h1>
-              <p className="mt-4 text-base leading-7 text-[#686868]">Compare CLAT UG, Judiciary and CLAT PG programs. Batch dates, language and prices come from the published course catalog.</p>
+              <p className="mt-4 text-base leading-7 text-[#686868]">Compare CLAT UG, Judiciary and CLAT PG programs, available online and at our Delhi campus. Enquire and our counsellor will contact you with course details.</p>
             </div>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by course type">
@@ -102,7 +97,7 @@ export default function CourseListing() {
                       <p>Duration: {course.duration_label || "To be announced"}</p>
                     </div>
                     <div className="mt-5 flex items-center justify-between gap-3">
-                      <span className="text-sm font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
+                      <span className="text-sm font-bold text-[#292929]">Online + Delhi campus</span>
                       <Link to={`/course/${encodeURIComponent(course.slug)}`} className="inline-flex min-h-10 items-center rounded-full bg-[#d74752] px-4 text-sm font-bold text-white hover:bg-[#b73540]">View Details</Link>
                     </div>
                   </div>

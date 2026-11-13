@@ -4,11 +4,6 @@ import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
 
-function formatPrice(amount, currency = "INR") {
-  if (amount == null || amount === "") return "Contact for price";
-  return new Intl.NumberFormat("en-IN", { style: "currency", currency: currency || "INR", maximumFractionDigits: 0 }).format(Number(amount));
-}
-
 function formatDate(value) {
   if (!value) return "To be announced";
   const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
@@ -46,9 +41,7 @@ export default function CourseDetails() {
     return () => { active = false; };
   }, [courseSlug]);
 
-  const price = course ? formatPrice(course.price_amount, course.price_currency) : "Contact for price";
-  const enrollHref = safeHref(course?.enrollment_url);
-  const demoHref = safeHref(course?.demo_url);
+  const enquiryHref = "/#contact";
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
@@ -83,8 +76,8 @@ export default function CourseDetails() {
                     <span className="rounded-full border border-[#eee2e3] bg-white px-3.5 py-2 text-sm font-semibold text-[#555]">Duration: {course.duration_label || "To be announced"}</span>
                   </div>
                   <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                    <a href={enrollHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d74752] px-6 text-sm font-bold text-white hover:bg-[#b73540]">Enroll Now</a>
-                    <a href={demoHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] hover:bg-[#f5f5f5]">Free Demo Class</a>
+                    <a href={enquiryHref} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d74752] px-6 text-sm font-bold text-white hover:bg-[#b73540]">Enquire for Admission</a>
+                    <a href={enquiryHref} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] hover:bg-[#f5f5f5]">Ask a Counsellor</a>
                   </div>
                 </div>
 
@@ -94,12 +87,10 @@ export default function CourseDetails() {
                   ) : (
                     <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#f5f5f5] text-sm font-semibold text-[#8a5559]">[Course image placeholder]</div>
                   )}
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Course fee</p>
-                  <p className="mt-1 text-3xl font-bold tracking-tight">{price}</p>
-                  {course.discount_label && <p className="mt-2 text-sm font-semibold text-[#d74752]">{course.discount_label}</p>}
-                  <p className="mt-3 text-xs leading-5 text-[#777]">{course.refund_policy_summary || "Review the refund terms before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#d74752] underline">Refund policy</a>}</p>
-                  <a href={enrollHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">Enroll Now</a>
-                  <a href={demoHref} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-full border border-[#d74752] px-5 text-sm font-bold text-[#d74752] hover:bg-[#f5f5f5]">Book a Free Demo</a>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Study modes</p>
+                  <p className="mt-1 text-xl font-bold tracking-tight">Online or Delhi campus</p>
+                  <p className="mt-3 text-sm leading-5 text-[#777]">Enquire for admission and our counsellor will contact you with course and fee details.</p>
+                  <a href={enquiryHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">Enquire for Admission</a>
                 </aside>
               </div>
             </div>
@@ -176,7 +167,7 @@ export default function CourseDetails() {
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
               <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Course support</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Frequently asked questions</h2></div>
               <div className="mt-8 divide-y divide-[#eee4e5] border-y border-[#eee4e5]">
-                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">What is the course fee?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{price}. Check this page for current pricing and enrollment details.</p></details>
+                <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">How can I get course and fee details?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">Send an admission enquiry and our counsellor will contact you with the details.</p></details>
                 <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">What is the refund policy?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.refund_policy_summary || "Please review the refund policy before enrolling."} {course.refund_policy_url && <a href={safeHref(course.refund_policy_url)} className="font-semibold text-[#d74752] underline">Read the full policy</a>}</p></details>
                 <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">Are class recordings available?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.learning_mode || "Recording availability will be confirmed for the selected batch."}</p></details>
                 <details className="group py-5"><summary className="cursor-pointer list-none font-bold hover:text-[#d74752]">Which language is used for teaching?</summary><p className="mt-3 text-sm leading-6 text-[#686868]">{course.language || "Hindi + English"}</p></details>
@@ -187,8 +178,8 @@ export default function CourseDetails() {
 
           {/* Mobile enrollment bar */}
           <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-[#eadcdd] bg-white px-4 py-3 shadow-[0_-8px_28px_rgba(35,25,25,.08)] lg:hidden">
-            <div className="min-w-0"><span className="block truncate text-sm font-bold">{price}</span><span className="block truncate text-[11px] text-[#777]">{course.name}</span></div>
-            <a href={enrollHref} className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-[#d74752] px-4 text-sm font-bold text-white">Enroll Now</a>
+            <div className="min-w-0"><span className="block truncate text-sm font-bold">Online or Delhi campus</span><span className="block truncate text-[11px] text-[#777]">{course.name}</span></div>
+            <a href={enquiryHref} className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-[#d74752] px-4 text-sm font-bold text-white">Enquire</a>
           </div>
         </main>
       )}

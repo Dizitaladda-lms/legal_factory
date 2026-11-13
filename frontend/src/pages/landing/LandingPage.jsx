@@ -4,15 +4,6 @@ import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
 
-const formatPrice = (amount, currency = "INR") => {
-  if (amount == null || amount === "") return "Contact for price";
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: currency || "INR",
-    maximumFractionDigits: 0,
-  }).format(Number(amount));
-};
-
 const formatDate = (value) => {
   if (!value) return "To be announced";
   const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
@@ -72,7 +63,7 @@ const faqs = [
   },
   {
     q: "How can I see the latest batch date and fee?",
-    a: "Open a course card for the current database details. If a date or fee has not been announced yet, the page will say so clearly.",
+    a: "Share your details through the admission enquiry form. A counsellor will contact you with course and fee information.",
   },
   {
     q: "Can I attend a demo class?",
@@ -123,6 +114,7 @@ export default function LandingPage() {
         setCurrentAffairs([
           ...(Array.isArray(feedNews.current) ? feedNews.current.map((item) => ({ ...item, newsPeriod: "current" })) : []),
           ...(Array.isArray(feedNews.archive) ? feedNews.archive.map((item) => ({ ...item, newsPeriod: "archive" })) : []),
+          ...(Array.isArray(feedNews.vacancies) ? feedNews.vacancies.map((item) => ({ ...item, newsPeriod: "vacancies" })) : []),
         ]);
       }
       if (blogResult.status === "fulfilled") {
@@ -173,7 +165,7 @@ export default function LandingPage() {
                 Young Age, Big <span className="text-[#d74752]">Legal Career</span>.
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-[#666] sm:text-lg sm:leading-8">
-               Crack CLAT UG, Judiciary or CLAT PG with clear concepts, live classes, regular mock tests and mentors who guide you at every step. Learn in Hindi + English.
+                Prepare for CLAT UG, Judiciary or CLAT PG through live online classes or in-person classes at our Delhi campus. Share an admission enquiry and our counsellor will contact you with course details. Learn in Hindi + English.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#d74752] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#b73540]">
@@ -185,7 +177,8 @@ export default function LandingPage() {
               </div>
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#676767]">
                 <span>Hindi + English support</span>
-                <span>Online learning + Offline learning</span>
+                <span>Online classes</span>
+                <span>Offline classes at our Delhi campus</span>
               </div>
             </div>
 
@@ -270,7 +263,7 @@ export default function LandingPage() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Find your program</p>
                 <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Courses for your next step in law</h2>
-                <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Current batch dates, language and pricing are shown from the course catalog.</p>
+                <p className="mt-3 max-w-2xl leading-7 text-[#686868]">Choose online learning or attend classes at our Delhi campus. Enquire for admission and our counsellor will share the course details.</p>
               </div>
               <Link to="/courses" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all courses</Link>
             </div>
@@ -296,10 +289,10 @@ export default function LandingPage() {
                       <div className="mt-4 grid grid-cols-2 gap-y-2 border-t border-[#f0ebeb] pt-4 text-xs text-[#646464]">
                         <span>Starts: {formatDate(course.batch_start_date)}</span>
                         <span>Language: {course.language || "Hindi + English"}</span>
-                        <span className="col-span-2 font-bold text-[#292929]">{formatPrice(course.price_amount, course.price_currency)}</span>
+                        <span className="col-span-2 font-bold text-[#292929]">Online and Delhi campus options</span>
                       </div>
                       <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#d74752] px-4 text-sm font-bold text-[#d74752] transition hover:bg-[#d74752] hover:text-white">
-                        View Course Details
+                        Enquire for Admission
                       </Link>
                     </div>
                   </article>
@@ -322,13 +315,17 @@ export default function LandingPage() {
             <Link to="/blogs" className="inline-flex items-center self-start text-sm font-bold text-[#d74752] hover:underline sm:self-auto">View all articles</Link>
           </div>
           <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Filter legal news by date">
-            {[{ id: "current", label: "Current news" }, { id: "archive", label: "Past legal news" }].map((tab) => (
+            {[{ id: "current", label: "Current news" }, { id: "archive", label: "Past legal news" }, { id: "vacancies", label: "Government vacancies" }].map((tab) => (
               <button key={tab.id} type="button" role="tab" aria-selected={newsPeriod === tab.id} onClick={() => setNewsPeriod(tab.id)} className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition ${newsPeriod === tab.id ? "border-[#d74752] bg-[#d74752] text-white" : "border-[#e6d8d9] bg-white text-[#575757] hover:border-[#d74752] hover:text-[#d74752]"}`}>
                 {tab.label}
               </button>
             ))}
           </div>
-          <p className="mt-3 text-sm text-[#777]">Headlines are collected from Google News and link to the original publishers.</p>
+          <p className="mt-3 text-sm text-[#777]">
+            {newsPeriod === "vacancies"
+              ? "Vacancy updates link to their publisher. Confirm eligibility and application dates in the official notification."
+              : "Headlines are collected from Google News and link to the original publishers."}
+          </p>
           {newsLoading ? (
             <div className="mt-8 grid gap-5 md:grid-cols-3" aria-label="Loading current affairs">
               {[0, 1, 2].map((item) => <div key={item} className="h-56 animate-pulse rounded-2xl border border-[#eee8e8] bg-[#ffffff]" />)}
@@ -344,13 +341,23 @@ export default function LandingPage() {
                     aria-hidden="true"
                     loading="lazy"
                     decoding="async"
+                    onError={(event) => {
+                      if (event.currentTarget.src !== fallbackNewsThumbnail) event.currentTarget.src = fallbackNewsThumbnail;
+                    }}
                   />
                   <div className="news-card__shade absolute inset-0" aria-hidden="true" />
                   <div className="relative z-10 p-6 text-white">
                     <p className="text-sm font-semibold text-white">{post.source || post.category || "Law and current affairs"}</p>
                     <h3 className="mt-3 text-xl font-bold leading-snug text-white">{post.title}</h3>
+                    {post.newsPeriod === "vacancies" && (
+                      <p className="mt-3 font-semibold text-white">
+                        {post.application_deadline ? `Application deadline: ${post.application_deadline}` : "Application deadline: check official notice"}
+                      </p>
+                    )}
                     <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/30 pt-4 text-sm text-white">
-                      <time dateTime={post.published_at || undefined}>{formatNewsDate(post.published_at)}</time>
+                      <time dateTime={post.published_at || undefined}>
+                        {post.newsPeriod === "vacancies" ? `Published ${formatNewsDate(post.published_at)}` : formatNewsDate(post.published_at)}
+                      </time>
                       <a href={post.url} target="_blank" rel="noreferrer" className="font-semibold text-white underline underline-offset-4">Read</a>
                     </div>
                   </div>
