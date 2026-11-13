@@ -4,6 +4,7 @@ import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
 import CourseInquiryForm from "../../components/landing/CourseInquiryForm";
+import ExamsWeCover from "../../components/landing/ExamsWeCover";
 import { getLawCourseImage } from "../../utils/lawCourseImage";
 import { CalendarDays, Languages, Monitor } from "lucide-react";
 
@@ -372,6 +373,8 @@ export default function LandingPage() {
             )}
           </div>
         </section>
+
+        <ExamsWeCover />
 
         {/* Live legal headlines are refreshed by the server-side news feed. */}
         <section id="current-affairs" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
