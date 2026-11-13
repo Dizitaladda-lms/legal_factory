@@ -214,19 +214,48 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Learning pillars */}
-        <section id="approach" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">A considered way to prepare</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Learning built around your law exam goals</h2>
-            <p className="mt-3 leading-7 text-[#686868]">Review the program structure, practice regularly and find support as your preparation progresses.</p>
+        {/* Law exam preparation */}
+        <section id="approach" className="law-preparation mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+          <style>{`
+            .law-preparation__card { isolation: isolate; transition: transform .4s ease, box-shadow .4s ease, border-color .4s ease; }
+            .law-preparation__image { transition: opacity .4s ease; }
+            .law-preparation__card::before { content: ""; position: absolute; inset: 0; z-index: 10; border-radius: inherit; background: rgba(89, 18, 29, .78); opacity: 0; transition: opacity .4s ease; }
+            .law-preparation__card:hover, .law-preparation__card:focus-visible { transform: translateY(-4px); border-color: #7b1e2b; box-shadow: 0 18px 44px rgba(45, 15, 20, .18); }
+            .law-preparation__card:hover::before, .law-preparation__card:focus-visible::before { opacity: 1; }
+            .law-preparation__card:hover .law-preparation__image, .law-preparation__card:focus-visible .law-preparation__image { opacity: 1; }
+            .law-preparation__card:hover .law-preparation__number, .law-preparation__card:hover .law-preparation__title, .law-preparation__card:hover .law-preparation__copy,
+            .law-preparation__card:focus-visible .law-preparation__number, .law-preparation__card:focus-visible .law-preparation__title, .law-preparation__card:focus-visible .law-preparation__copy { color: #fff; }
+            .law-preparation__card:focus-visible { outline: 3px solid #7b1e2b; outline-offset: 4px; }
+            @media (hover: none), (pointer: coarse) {
+              .law-preparation__image { opacity: .15; }
+              .law-preparation__card:hover, .law-preparation__card:focus-visible { transform: none; }
+              .law-preparation__card:hover::before, .law-preparation__card:focus-visible::before { opacity: 0; }
+              .law-preparation__card:hover .law-preparation__number, .law-preparation__card:hover .law-preparation__title, .law-preparation__card:hover .law-preparation__copy,
+              .law-preparation__card:focus-visible .law-preparation__number, .law-preparation__card:focus-visible .law-preparation__title, .law-preparation__card:focus-visible .law-preparation__copy { color: inherit; }
+              .law-preparation__card:focus-visible { outline-color: #7b1e2b; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+              .law-preparation__card, .law-preparation__image, .law-preparation__card::before { transition: none; }
+            }
+          `}</style>
+          <div className="max-w-[700px]">
+            <p className="text-xs font-bold uppercase tracking-[.16em] text-[#8f1d2c]">A rigorous approach to law entrance preparation</p>
+            <h2 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-[#292929] sm:text-4xl">A disciplined, outcome-driven program for serious law aspirants</h2>
+            <p className="mt-4 leading-7 text-[#686868]">Our program combines a syllabus-aligned curriculum, rigorous assessment and continuous academic mentoring, designed to build the conceptual depth, speed and accuracy that top law entrance exams demand.</p>
           </div>
-          <div className="mt-9 grid gap-4 md:grid-cols-3">
-            {learningPillars.map(({ title, copy }, index) => (
-              <article key={title} className="rounded-2xl border border-[#eee8e8] bg-white p-6 transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(35,25,25,.07)]">
-                <p className="mt-5 text-xs font-bold uppercase tracking-widest text-[#d74752]">0{index + 1}</p>
-                <h3 className="mt-2 text-lg font-bold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#6b6b6b]">{copy}</p>
+          <div className="mt-9 grid gap-5 md:grid-cols-3">
+            {[
+              { number: "01", title: "Structured Curriculum", image: "/images/library.webp", copy: "A comprehensive, subject-wise roadmap covering Legal Aptitude, Logical Reasoning, English, Current Affairs and Quantitative Techniques. Every module is sequenced to match the latest exam pattern, with concept building, revision cycles and clear milestones so no topic is left to chance." },
+              { number: "02", title: "Practice and Assessment", image: "/images/exam.webp", copy: "Daily practice sets, sectional tests and full-length mock exams modelled on the real exam interface. Each test comes with detailed performance analytics, question-wise solutions and percentile benchmarking, so you can identify weak areas and improve with precision." },
+              { number: "03", title: "Academic Support", image: "/images/classroom.webp", copy: "Live classes by experienced faculty, dedicated doubt-resolution sessions and personalised mentoring. Regular progress reviews keep your preparation on track, and expert guidance helps you refine strategy, time management and exam temperament." },
+            ].map(({ number, title, image, copy }) => (
+              <article key={number} tabIndex={0} className="law-preparation__card relative overflow-hidden rounded-[20px] border border-[#eee3e4] bg-white p-6 sm:p-7">
+                <img className="law-preparation__image absolute inset-0 z-0 h-full w-full object-cover opacity-0" src={image} alt="" loading="lazy" decoding="async" />
+                <div className="relative z-20">
+                  <p className="law-preparation__number text-sm font-bold tracking-[.14em] text-[#8f1d2c]">{number}</p>
+                  <h3 className="law-preparation__title mt-5 text-xl font-bold leading-snug text-[#292929]">{title}</h3>
+                  <p className="law-preparation__copy mt-3 text-sm leading-6 text-[#626262]">{copy}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -370,19 +399,19 @@ export default function LandingPage() {
         </section>
 
         {/* Test preparation and resource pathways */}
-        <section id="test-series" className="mx-auto grid max-w-7xl gap-8 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
-          <article className="rounded-[26px] bg-[#292929] p-7 text-white sm:p-9">
-            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-white/75">Practice pathway</p>
-            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Test series and performance review</h2>
+        <section id="test-series" className="mx-auto grid max-w-7xl gap-6 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
+          <article className="flex min-h-[330px] flex-col items-start rounded-[26px] bg-[#292929] p-7 text-white shadow-[0_18px_45px_-28px_rgba(41,41,41,.55)] sm:p-9">
+            <p className="text-xs font-bold uppercase tracking-[.16em] text-[#f0b6ba]">Practice pathway</p>
+            <h2 className="mt-4 max-w-md text-3xl font-bold leading-tight text-white">Test series and performance review</h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-white/85">Course pages show the tests, previous-paper practice and analysis included in each program as details are added.</p>
-            <Link to="/courses" className="mt-6 inline-flex min-h-11 items-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">See course details</Link>
+            <Link to="/courses" className="mt-auto inline-flex min-h-11 items-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white transition-colors hover:bg-[#b73540] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">See course details</Link>
           </article>
-          <article id="resources" className="rounded-[26px] border border-[#eee8e8] bg-white p-7 sm:p-9">
-            <p className="mt-6 text-xs font-bold uppercase tracking-[.16em] text-[#d74752]">Free preparation resources</p>
-            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Start with helpful study material</h2>
-            <p className="mt-3 max-w-md text-sm leading-6 text-[#686868]">Resource links and downloadable practice material can be added here as they are ready.</p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {["CLAT practice", "Judiciary guides", "CLAT PG revision"].map((label) => <span key={label} className="rounded-full border border-[#eee3e4] px-3 py-1.5 text-xs font-semibold text-[#5f5f5f]">{label}</span>)}
+          <article id="resources" className="flex min-h-[330px] flex-col items-start rounded-[26px] border border-[#f0d9db] bg-[#fffdfd] p-7 shadow-[0_18px_45px_-34px_rgba(110,38,44,.35)] sm:p-9">
+            <p className="text-xs font-bold uppercase tracking-[.16em] text-[#b42332]">Free preparation resources</p>
+            <h2 className="mt-4 max-w-md text-3xl font-bold leading-tight text-[#292929]">Start with helpful study material</h2>
+            <p className="mt-3 max-w-md text-sm leading-6 text-[#5f5f5f]">Resource links and downloadable practice material can be added here as they are ready.</p>
+            <div className="mt-auto flex flex-wrap gap-2 pt-6">
+              {["CLAT practice", "Judiciary guides", "CLAT PG revision"].map((label) => <span key={label} className="rounded-full border border-[#ead5d7] bg-white px-3.5 py-2 text-xs font-semibold text-[#494949]">{label}</span>)}
             </div>
           </article>
         </section>
