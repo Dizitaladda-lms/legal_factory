@@ -5,6 +5,7 @@ import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
 import CourseInquiryForm from "../../components/landing/CourseInquiryForm";
 import { getLawCourseImage } from "../../utils/lawCourseImage";
+import { CalendarDays, Languages, Monitor } from "lucide-react";
 
 const formatDate = (value) => {
   if (!value) return "To be announced";
@@ -19,6 +20,12 @@ const courseType = (course) => {
   if (slug.includes("judiciary")) return "JUDICIARY";
   if (slug.includes("pg")) return "CLAT PG";
   return "CLAT UG";
+};
+
+const courseDescriptions = {
+  "CLAT UG": "One-year structured coaching covering all five CLAT UG sections, with guided lessons, practice and revision.",
+  "CLAT PG": "Postgraduate law entrance preparation with subject revision and passage-based comprehension practice.",
+  JUDICIARY: "Core legal subjects, legal writing practice and structured preparation for judiciary exams.",
 };
 
 const learningPillars = [
@@ -328,28 +335,37 @@ export default function LandingPage() {
             ) : loadError ? (
               <div className="mt-9 rounded-2xl border border-[#edc9cc] bg-white p-7 text-sm text-[#686868]">Course information is temporarily unavailable. Please try again shortly.</div>
             ) : courses.length ? (
-              <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {courses.map((course) => (
-                  <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
-                    <div className="relative flex h-44 items-end overflow-hidden bg-[#f5f5f5] p-5 sm:h-48">
-                      <img src={getLawCourseImage(course)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
-                      <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#d74752]">{courseType(course)}</span>
-                    </div>
-                    <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-xl font-bold leading-snug">{course.name}</h3>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#696969]">{course.description}</p>
-                      <div className="mt-4 grid grid-cols-2 gap-y-2 border-t border-[#f0ebeb] pt-4 text-xs text-[#646464]">
-                        <span>Starts: {formatDate(course.batch_start_date)}</span>
-                        <span>Language: {course.language || "Hindi + English"}</span>
-                        <span className="col-span-2 font-bold text-[#292929]">Online and Delhi campus options</span>
+              <div className="mt-9 grid items-stretch gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {courses.map((course) => {
+                  const type = courseType(course);
+                  const detailHref = `/course/${encodeURIComponent(course.slug)}`;
+                  return (
+                    <article key={course.slug} className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#eee5e6] bg-white transition duration-[400ms] ease-out hover:-translate-y-1 hover:shadow-[0_18px_48px_rgba(65,27,30,.12)]">
+                      <div className="relative h-[200px] shrink-0 overflow-hidden bg-[#f5f2f2]">
+                        <img src={getLawCourseImage(course)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-[400ms] ease-out group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" aria-hidden="true" />
+                        <span className="absolute bottom-4 left-6 inline-flex rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[.1em] text-[#8f1d2c]">{type}</span>
                       </div>
-                      <Link to={`/course/${encodeURIComponent(course.slug)}`} className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[#d74752] px-4 text-sm font-bold text-[#d74752] transition hover:bg-[#d74752] hover:text-white">
-                        Enquire for Admission
-                      </Link>
-                    </div>
-                  </article>
-                ))}
+                      <div className="flex flex-1 flex-col p-6">
+                        <h3 className="font-serif text-xl font-semibold leading-snug text-[#292929]">{course.name}</h3>
+                        <p className="mt-2 min-h-10 text-xs leading-5 text-[#686868]">{courseDescriptions[type] || courseDescriptions["CLAT UG"]}</p>
+
+                        <div className="mt-5 border-t border-[#eee8e8] pt-4">
+                          <div className="grid gap-3 text-xs text-[#5f5f5f]">
+                            <div className="flex items-center gap-2.5"><Languages size={16} strokeWidth={1.7} aria-hidden="true" className="shrink-0 text-[#9b666b]" /><span><span className="text-[#898282]">Language:</span> Hindi + English</span></div>
+                            <div className="flex items-center gap-2.5"><Monitor size={16} strokeWidth={1.7} aria-hidden="true" className="shrink-0 text-[#9b666b]" /><span><span className="text-[#898282]">Mode:</span> Online and Delhi campus</span></div>
+                            <div className="flex items-center gap-2.5"><CalendarDays size={16} strokeWidth={1.7} aria-hidden="true" className="shrink-0 text-[#9b666b]" /><span><span className="text-[#898282]">Batch:</span> Admissions open</span></div>
+                          </div>
+                        </div>
+
+                        <div className="mt-auto grid grid-cols-2 gap-3 pt-6">
+                          <Link to={detailHref} className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#8f1d2c] px-3 text-center text-xs font-bold text-white transition hover:bg-[#741622] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c] sm:text-sm">View Details</Link>
+                          <Link to="/#admission-inquiry" className="inline-flex min-h-11 items-center justify-center rounded-full border border-[#8f1d2c] bg-white px-3 text-center text-xs font-bold text-[#8f1d2c] transition hover:bg-[#8f1d2c] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c] sm:text-sm">Enquire Now</Link>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             ) : (
               <div className="mt-9 rounded-2xl border border-dashed border-[#dfb8bb] bg-white p-8 text-center text-sm text-[#686868]">Course information will appear here when a program is published.</div>
