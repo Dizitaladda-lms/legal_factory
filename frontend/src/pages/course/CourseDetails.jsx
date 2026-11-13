@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { BookOpenCheck, CheckCircle2, ChevronDown, ClipboardCheck, FileText, PlayCircle, Target } from "lucide-react";
 import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
+import { getLawCourseImage } from "../../utils/lawCourseImage";
 
 function formatDate(value) {
   if (!value) return "To be announced";
@@ -41,7 +43,14 @@ export default function CourseDetails() {
     return () => { active = false; };
   }, [courseSlug]);
 
-  const enquiryHref = "/#contact";
+  const enquiryHref = "/#admission-inquiry";
+  const courseModules = Array.isArray(course?.course_modules) ? course.course_modules : [];
+  const courseTests = Array.isArray(course?.course_tests) ? course.course_tests : [];
+  const moduleResources = courseModules.flatMap((module) => module.module_items || []);
+  const videoModuleCount = courseModules.filter((module) => (module.module_items || []).some((item) => /video/i.test(item.title))).length;
+  const practiceResources = ["Practice questions", "Sectional test", "Doubt session"]
+    .map((title) => ({ title, moduleCount: courseModules.filter((module) => (module.module_items || []).some((item) => item.title === title)).length }))
+    .filter((item) => item.moduleCount > 0);
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
@@ -81,18 +90,32 @@ export default function CourseDetails() {
                   </div>
                 </div>
 
-                <aside className="rounded-[24px] border border-[#ecd4d6] bg-white p-6 shadow-[0_18px_50px_rgba(65,27,30,.08)] lg:sticky lg:top-24">
-                  {course.hero_image_url ? (
-                    <img src={course.hero_image_url} alt={course.name} className="mb-5 h-40 w-full rounded-2xl object-cover" />
-                  ) : (
-                    <div className="mb-5 grid h-40 place-items-center rounded-2xl bg-[#f5f5f5] text-sm font-semibold text-[#8a5559]">[Course image placeholder]</div>
-                  )}
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Study modes</p>
-                  <p className="mt-1 text-xl font-bold tracking-tight">Online or Delhi campus</p>
-                  <p className="mt-3 text-sm leading-5 text-[#777]">Enquire for admission and our counsellor will contact you with course and fee details.</p>
-                  <a href={enquiryHref} className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-[#d74752] px-5 text-sm font-bold text-white hover:bg-[#b73540]">Enquire for Admission</a>
+                <aside className="overflow-hidden rounded-[24px] border border-[#ecd4d6] bg-white shadow-[0_20px_55px_rgba(65,27,30,.12)] lg:sticky lg:top-24">
+                  <div className="relative h-56 overflow-hidden bg-[#f3eeee] sm:h-64">
+                    <img src={course.hero_image_url || getLawCourseImage(course)} alt="" aria-hidden="true" fetchPriority="high" className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#321319]/65 via-transparent to-transparent" aria-hidden="true" />
+                    <span className="absolute bottom-4 left-5 rounded-full border border-white/70 bg-white/95 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[.12em] text-[#8f1d2c]">Course overview</span>
+                  </div>
+                  <div className="p-6">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#8a7778]">Study modes</p>
+                    <p className="mt-1 text-xl font-bold tracking-tight">Online or Delhi campus</p>
+                    <p className="mt-3 text-sm leading-6 text-[#686868]">Enquire for admission and our counsellor will contact you with course and fee details.</p>
+                    <a href={enquiryHref} className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#8f1d2c] px-5 text-sm font-bold text-white transition hover:bg-[#741622] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f1d2c]">Enquire for Admission</a>
+                  </div>
                 </aside>
               </div>
+            </div>
+          </section>
+
+          {/* Course roadmap snapshot */}
+          <section className="mx-auto -mt-2 max-w-7xl px-4 pb-8 sm:px-6 lg:px-8" aria-label="Course roadmap summary">
+            <div className="grid overflow-hidden rounded-2xl border border-[#eee3e4] bg-white shadow-[0_16px_45px_rgba(68,24,29,.06)] sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { icon: BookOpenCheck, value: courseModules.length, label: "Step-by-step modules" },
+                { icon: PlayCircle, value: videoModuleCount, label: "Modules with concept videos" },
+                { icon: ClipboardCheck, value: courseTests.length, label: "Assessment formats" },
+                { icon: FileText, value: moduleResources.length, label: "Learning resources listed" },
+              ].map(({ icon: Icon, value, label }, index) => <div key={label} className={`flex items-center gap-4 px-5 py-5 ${index ? "border-t border-[#f0e8e9] sm:border-l sm:border-t-0" : ""}`}><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#fbf1f2] text-[#941d2d]"><Icon size={20} aria-hidden="true" /></span><div><p className="text-2xl font-bold leading-none text-[#202027]">{value}</p><p className="mt-1.5 text-xs font-medium text-[#747078]">{label}</p></div></div>)}
             </div>
           </section>
 
@@ -113,28 +136,31 @@ export default function CourseDetails() {
           {/* Expandable course modules */}
           <section className="bg-[#ffffff] py-14 sm:py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Course curriculum</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Modules and subjects</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#686868]">Expand a module to see its lesson and practice components.</p></div>
-              <div className="mt-8 space-y-3">
-                {course.course_modules?.length ? course.course_modules.map((module) => (
-                  <details key={`${module.position}-${module.title}`} className="group overflow-hidden rounded-2xl border border-[#eee3e4] bg-white">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 font-bold marker:hidden sm:px-6">
-                      <span>{module.title}</span>
+              <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Your preparation, mapped</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Modules and subjects</h2><p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#686868]">Follow the course in sequence. Open each module to review its teaching and practice components.</p></div>
+              <div className="relative mt-10 space-y-4 before:absolute before:bottom-8 before:left-[27px] before:top-8 before:w-px before:bg-[#ead6d8] sm:before:left-[31px]">
+                {courseModules.length ? courseModules.map((module, index) => (
+                  <details key={`${module.position}-${module.title}`} open={index === 0} className="group relative overflow-hidden rounded-2xl border border-[#eee3e4] bg-white shadow-[0_8px_26px_rgba(35,25,25,.035)] transition-shadow open:shadow-[0_14px_34px_rgba(35,25,25,.07)]">
+                    <summary className="flex cursor-pointer list-none items-center gap-4 px-4 py-5 marker:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#941d2d] sm:gap-5 sm:px-6">
+                      <span className="z-10 grid h-14 w-14 shrink-0 place-items-center rounded-full border-4 border-white bg-[#941d2d] text-sm font-bold text-white shadow-sm sm:h-16 sm:w-16">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="min-w-0 flex-1"><span className="block text-[10px] font-bold uppercase tracking-[.16em] text-[#a13a46]">Module {String(index + 1).padStart(2, "0")}</span><span className="mt-1 block font-serif text-xl font-bold text-[#202027] sm:text-2xl">{module.title}</span><span className="mt-1 block text-xs text-[#777]">{module.module_items?.length || 0} learning components</span></span>
+                      <ChevronDown size={20} aria-hidden="true" className="shrink-0 text-[#941d2d] transition-transform group-open:rotate-180" />
                     </summary>
-                    <div className="border-t border-[#f1ebeb] px-5 py-4 sm:px-6">
-                      <p className="text-sm leading-6 text-[#686868]">{module.description}</p>
-                      {module.module_items?.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{module.module_items.map((item) => <li key={`${item.position}-${item.title}`} className="text-sm text-[#555]">{item.title}</li>)}</ul> : <p className="mt-3 text-sm text-[#777]">Module resources will be added soon.</p>}
+                    <div className="border-t border-[#f1ebeb] px-5 py-5 sm:ml-[84px] sm:px-6 sm:py-6">
+                      {module.description && <p className="max-w-3xl text-sm leading-7 text-[#62616a]">{module.description}</p>}
+                      {module.module_items?.length ? <ul className="mt-5 grid gap-3 sm:grid-cols-2">{module.module_items.map((item) => { const Icon = /video/i.test(item.title) ? PlayCircle : /test|practice|question/i.test(item.title) ? CheckCircle2 : FileText; return <li key={`${item.position}-${item.title}`} className="flex items-center gap-3 rounded-xl border border-[#f0e8e9] bg-[#fdfafa] px-4 py-3 text-sm font-medium text-[#41404a]"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-white text-[#941d2d] shadow-sm"><Icon size={17} aria-hidden="true" /></span>{item.title}</li>; })}</ul> : <p className="mt-3 text-sm text-[#777]">Module resources will be added soon.</p>}
                     </div>
                   </details>
                 )) : <div className="rounded-2xl border border-dashed border-[#dfb8bb] bg-white p-7 text-center text-sm text-[#686868]">Course modules will be added soon.</div>}
               </div>
+              {!!practiceResources.length && <div className="mt-7 rounded-2xl bg-[#f9f4f4] p-5 sm:p-6"><h3 className="font-serif text-xl font-bold">Practice and assignments</h3><p className="mt-1 text-sm leading-6 text-[#686868]">Practice components currently listed across the course modules:</p><div className="mt-4 flex flex-wrap gap-2">{practiceResources.map(({ title, moduleCount }) => <span key={title} className="rounded-full border border-[#e9d5d7] bg-white px-4 py-2 text-xs font-semibold text-[#6c3440]">{title} <span className="text-[#8a8588]">· {moduleCount} {moduleCount === 1 ? "module" : "modules"}</span></span>)}</div><p className="mt-4 text-xs leading-5 text-[#777]">Assignment quantities and due dates are shared with the batch schedule.</p></div>}
             </div>
           </section>
 
           {/* Test series cards */}
           <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-16 lg:px-8">
             <div><p className="text-xs font-bold uppercase tracking-[.15em] text-[#d74752]">Practice and review</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Test series</h2><p className="mt-3 max-w-2xl leading-7 text-[#686868]">See the practice tests and review methods included in this course.</p></div>
-            {course.course_tests?.length ? (
-              <div className="mt-8 grid gap-4 md:grid-cols-3">{course.course_tests.map((test) => <article key={`${test.position}-${test.title}`} className="rounded-2xl border border-[#eee8e8] p-5"><h3 className="font-bold">{test.title}</h3><p className="mt-2 text-sm leading-6 text-[#686868]">{test.description}</p></article>)}</div>
+            {courseTests.length ? (
+              <div className="mt-8 grid gap-4 md:grid-cols-3">{courseTests.map((test, index) => <article key={`${test.position}-${test.title}`} className="relative overflow-hidden rounded-2xl border border-[#eee3e4] bg-white p-6 shadow-[0_8px_26px_rgba(35,25,25,.035)]"><span className="grid h-11 w-11 place-items-center rounded-xl bg-[#fbf1f2] text-[#941d2d]"><Target size={20} aria-hidden="true" /></span><p className="mt-5 text-[10px] font-bold uppercase tracking-[.15em] text-[#a13a46]">Assessment {String(index + 1).padStart(2, "0")}</p><h3 className="mt-1 font-serif text-xl font-bold">{test.title}</h3><p className="mt-2 text-sm leading-6 text-[#686868]">{test.description}</p></article>)}</div>
             ) : <p className="mt-7 rounded-2xl border border-dashed border-[#dfb8bb] p-6 text-sm text-[#686868]">Test series details will be added soon.</p>}
           </section>
 
