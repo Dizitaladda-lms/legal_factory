@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../lib/api";
 import BatchesHeader from "../../components/batches/BatchesHeader";
 import BatchesFooter from "../../components/batches/BatchesFooter";
+import CourseInquiryForm from "../../components/landing/CourseInquiryForm";
+import { getLawCourseImage } from "../../utils/lawCourseImage";
 
 const formatDate = (value) => {
   if (!value) return "To be announced";
@@ -79,6 +81,28 @@ export default function LandingPage() {
   const [latestBlogs, setLatestBlogs] = useState([]);
   const [newsPeriod, setNewsPeriod] = useState("current");
   const [newsLoading, setNewsLoading] = useState(true);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
+  const inquiryDialogRef = useRef(null);
+
+  useEffect(() => {
+    if (window.sessionStorage.getItem("law-inquiry-seen")) return undefined;
+    const timer = window.setTimeout(() => {
+      window.sessionStorage.setItem("law-inquiry-seen", "1");
+      setInquiryOpen(true);
+    }, 10000);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const dialog = inquiryDialogRef.current;
+    if (inquiryOpen && dialog && !dialog.open) dialog.showModal();
+    if (!inquiryOpen && dialog?.open) dialog.close();
+  }, [inquiryOpen]);
+
+  const openInquiry = () => {
+    window.sessionStorage.setItem("law-inquiry-seen", "1");
+    setInquiryOpen(true);
+  };
 
   useEffect(() => {
     let active = true;
@@ -142,7 +166,7 @@ export default function LandingPage() {
 
   return (
     <div className="law-site min-h-screen bg-white text-[#292929]">
-      <BatchesHeader brandName="Lawyer Factory" />
+      <BatchesHeader brandName="Lawyer Factory" onContactClick={openInquiry} />
       <main>
         {/* Hero and primary course discovery */}
         <section className="hero-section relative overflow-hidden border-b border-[#eee8e8] bg-[#ffffff]">
@@ -171,9 +195,9 @@ export default function LandingPage() {
                 <a href="#courses" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#d74752] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#b73540]">
                   Explore Courses
                 </a>
-                <a href="#contact" className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] transition hover:bg-[#f5f5f5]">
+                <button type="button" onClick={openInquiry} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#d74752] bg-white px-6 text-sm font-bold text-[#d74752] transition hover:bg-[#f5f5f5]">
                   Book a Free Demo
-                </a>
+                </button>
               </div>
               <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#676767]">
                 <span>Hindi + English support</span>
@@ -307,9 +331,9 @@ export default function LandingPage() {
               <div className="mt-9 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {courses.map((course) => (
                   <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
-                    <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f5f5f5] p-5">
-                      <div className="absolute -right-7 -top-14 h-44 w-44 rounded-full border border-[#e9c1c4]" />
-                      <div className="absolute -right-1 -top-8 h-32 w-32 rounded-full border border-[#e9c1c4]" />
+                    <div className="relative flex h-44 items-end overflow-hidden bg-[#f5f5f5] p-5 sm:h-48">
+                      <img src={getLawCourseImage(course)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
                       <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold tracking-wide text-[#d74752]">{courseType(course)}</span>
                     </div>
                     <div className="flex flex-1 flex-col p-5">
@@ -501,7 +525,42 @@ export default function LandingPage() {
             <Link to="/courses" className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#d74752] px-6 text-sm font-bold text-white hover:bg-[#b73540]">Browse courses</Link>
           </div>
         </section>
+
+        <section id="admission-inquiry" className="border-t border-[#eee8e8] bg-[#fbf8f8] py-16 sm:py-20">
+          <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:px-8">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.16em] text-[#a32131]">Talk to our counsellor</p>
+              <h2 className="mt-3 text-3xl font-bold leading-tight tracking-tight text-[#292929] sm:text-4xl">Get guidance for your law entrance preparation</h2>
+              <p className="mt-4 max-w-xl leading-7 text-[#686868]">Tell us which course you’re considering. Our team will call you with program details and help you choose your next step.</p>
+            </div>
+            <div className="rounded-[24px] border border-[#eee1e2] bg-white p-6 shadow-[0_16px_48px_rgba(55,20,25,.06)] sm:p-8">
+              <CourseInquiryForm source="homepage" />
+            </div>
+          </div>
+        </section>
       </main>
+      <dialog
+        ref={inquiryDialogRef}
+        aria-labelledby="inquiry-dialog-title"
+        onCancel={(event) => { event.preventDefault(); setInquiryOpen(false); }}
+        onClose={() => setInquiryOpen(false)}
+        onClick={(event) => { if (event.target === event.currentTarget) setInquiryOpen(false); }}
+        className="m-auto w-[calc(100%-2rem)] max-w-xl rounded-[24px] border border-[#eee1e2] bg-white p-0 text-[#292929] shadow-2xl backdrop:bg-[#201012]/60"
+      >
+        <div className="p-6 sm:p-8">
+          <div className="flex items-start justify-between gap-5">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.16em] text-[#a32131]">Free course guidance</p>
+              <h2 id="inquiry-dialog-title" className="mt-2 text-2xl font-bold leading-tight">Request a call back</h2>
+              <p className="mt-2 text-sm leading-6 text-[#686868]">Share your details and our counsellor will get in touch.</p>
+            </div>
+            <button type="button" onClick={() => setInquiryOpen(false)} aria-label="Close enquiry form" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[#eadcdd] text-xl text-[#555] transition hover:bg-[#fbf5f5] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#a32131]">×</button>
+          </div>
+          <div className="mt-6">
+            <CourseInquiryForm source="popup" compact />
+          </div>
+        </div>
+      </dialog>
       <BatchesFooter brandName="Lawyer Factory" />
     </div>
   );

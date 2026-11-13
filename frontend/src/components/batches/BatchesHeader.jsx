@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 // Shared responsive navigation for the public law coaching pages.
-export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
+export default function BatchesHeader({ brandName = "Lawyer Factory", onContactClick }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
@@ -10,7 +10,6 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
     { label: "Faculty", href: "/#faculty" },
     { label: "Results", href: "/#results" },
     { label: "Free Resources", href: "/#resources" },
-    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -22,18 +21,16 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
         </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <Link key={item.label} to={item.href} className="text-sm font-medium text-white/90 transition hover:text-white">
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => <Link key={item.label} to={item.href} className="text-sm font-medium text-white/90 transition hover:text-white">{item.label}</Link>)}
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
           <Link to="/login" className="text-sm font-semibold text-white hover:text-white/80">Login</Link>
-          <Link to="/courses" className="inline-flex min-h-11 items-center rounded-full bg-[#b73540] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">
-            Explore Courses
-          </Link>
+          {onContactClick ? (
+            <button type="button" onClick={onContactClick} className="inline-flex min-h-11 items-center rounded-full bg-[#b73540] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">Contact</button>
+          ) : (
+            <Link to="/#admission-inquiry" className="inline-flex min-h-11 items-center rounded-full bg-[#b73540] px-5 text-sm font-bold text-white transition hover:bg-[#861722]">Contact</Link>
+          )}
         </div>
 
         <button
@@ -49,14 +46,14 @@ export default function BatchesHeader({ brandName = "Lawyer Factory" }) {
 
       {mobileOpen && (
         <nav className="border-t border-[#b73540] bg-white px-4 py-3 text-[#292929] shadow-lg lg:hidden" aria-label="Mobile navigation">
-          {navItems.map((item) => (
-            <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#f5f5f5] hover:text-[#d74752]">
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => <Link key={item.label} to={item.href} onClick={() => setMobileOpen(false)} className="block rounded-lg px-3 py-3 text-sm font-semibold text-[#3d3d3d] hover:bg-[#f5f5f5] hover:text-[#d74752]">{item.label}</Link>)}
           <div className="mt-2 grid grid-cols-2 gap-2 border-t border-[#f0eaea] pt-3">
             <Link to="/login" onClick={() => setMobileOpen(false)} className="rounded-full border border-[#d74752] px-4 py-2.5 text-center text-sm font-semibold text-[#d74752]">Login</Link>
-            <Link to="/courses" onClick={() => setMobileOpen(false)} className="rounded-full bg-[#d74752] px-4 py-2.5 text-center text-sm font-bold text-white">Explore Courses</Link>
+            {onContactClick ? (
+              <button type="button" onClick={() => { setMobileOpen(false); onContactClick(); }} className="rounded-full bg-[#d74752] px-4 py-2.5 text-center text-sm font-bold text-white">Contact</button>
+            ) : (
+              <Link to="/#admission-inquiry" onClick={() => setMobileOpen(false)} className="rounded-full bg-[#d74752] px-4 py-2.5 text-center text-sm font-bold text-white">Contact</Link>
+            )}
           </div>
         </nav>
       )}

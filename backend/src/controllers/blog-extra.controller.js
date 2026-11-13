@@ -21,6 +21,26 @@ exports.createLead = async (req, res, next) => {
   } catch (error) { next(error); }
 };
 
+exports.createCourseInquiry = async (req, res, next) => {
+  try {
+    const name = cleanText(req.body.name, 160);
+    const phone = cleanText(req.body.phone, 40);
+    const course = cleanText(req.body.course_interest, 80);
+    const source = cleanText(req.body.source, 40) || "homepage";
+    const validCourses = ["CLAT UG", "Judiciary", "CLAT PG", "Not sure yet"];
+    if (!name || !/^\+?[0-9 ()-]{7,20}$/.test(phone) || !validCourses.includes(course)) {
+      return res.status(400).json({ success: false, message: "Enter your name, a valid phone number, and select a course." });
+    }
+    const db = getDb();
+    if (!db) return res.status(503).json({ success: false, message: "Enquiry service is temporarily unavailable." });
+    const saved = await db.query(
+      "INSERT INTO course_inquiries(name,phone,course_interest,source) VALUES($1,$2,$3,$4) RETURNING id",
+      [name, phone, course, source]
+    );
+    res.status(201).json({ success: true, inquiryId: saved.rows[0].id });
+  } catch (error) { next(error); }
+};
+
 exports.createComment = async (req, res, next) => {
   try {
     const blogId = Number(req.body.blog_id);

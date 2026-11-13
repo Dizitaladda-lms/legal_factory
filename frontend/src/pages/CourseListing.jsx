@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../lib/api";
 import BatchesHeader from "../components/batches/BatchesHeader";
 import BatchesFooter from "../components/batches/BatchesFooter";
+import { getLawCourseImage } from "../utils/lawCourseImage";
 
 const filters = ["All courses", "CLAT UG", "Judiciary", "CLAT PG"];
 
@@ -83,9 +84,9 @@ export default function CourseListing() {
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {visibleCourses.map((course) => (
                 <article key={course.slug} className="flex flex-col overflow-hidden rounded-2xl border border-[#eee8e8] bg-white transition hover:-translate-y-1 hover:shadow-[0_16px_44px_rgba(65,27,30,.09)]">
-                  <div className="relative flex min-h-36 items-end overflow-hidden bg-[#f5f5f5] p-5">
-                    <div className="absolute -right-4 -top-12 h-40 w-40 rounded-full border border-[#e6c3c5]" />
-                    <div className="absolute right-8 -top-6 h-28 w-28 rounded-full border border-[#e6c3c5]" />
+                  <div className="relative flex h-48 items-end overflow-hidden bg-[#f5f5f5] p-5">
+                    <img src={getLawCourseImage(course)} alt="" aria-hidden="true" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" aria-hidden="true" />
                     <span className="relative inline-flex items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold text-[#d74752]">{getType(course)}</span>
                   </div>
                   <div className="flex flex-1 flex-col p-5">

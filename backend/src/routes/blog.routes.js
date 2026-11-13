@@ -50,6 +50,7 @@ router.get("/posts/:slug", getBlogBySlug);
 router.get("/categories", getBlogCategories);
 router.get("/search", getBlogs);
 router.post("/leads", publicPostLimiter, extra.createLead);
+router.post("/inquiries", publicPostLimiter, extra.createCourseInquiry);
 router.post("/comments", publicPostLimiter, extra.createComment);
 router.post("/analytics", publicPostLimiter, extra.trackEvent);
 router.get("/comments/:blogId", extra.listComments);
